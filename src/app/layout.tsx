@@ -19,9 +19,12 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <p>signed in: {(!!session?.user).toString()}</p>
+        <div>
+          <Link href="/">Home</Link>
+          <Link href="/dashboard">Dashboard</Link>
+        </div>
         <SigninButton />
         <SignoutButton />
-        <Link href="/dashboard">Dashboard</Link>
         {children}
       </body>
     </html>
