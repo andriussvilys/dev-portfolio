@@ -19,24 +19,16 @@ export async function GET(request: Request) {
 
 export async function PUT(request: Request) {
   try {
-    console.log("being upload ----------------------")
     const formData = await request.formData();
     const file = formData.get("file") as File;
     const buffer = Buffer.from(await file.arrayBuffer());
-
-    console.log(formData.get("metadata"))
-
     const params:PutObjectCommandInput = {
       Bucket,
       Key: file.name,
       Body: buffer,
-      Metadata: formData.get("metadata") ? JSON.parse(formData.get("metadata") as string) : {}
     }
-
-    console.log(params)
-
-    await  s3.send(new PutObjectCommand(params));
-    return NextResponse.json({ succes: true }, {status: 200});
+    const res = await s3.send(new PutObjectCommand(params));
+    return NextResponse.json({body: {...res, key: params.Key}}, {status: 200});
   } 
   catch (e) {
     return NextResponse.json({ status: "fail", error: e }, {status: 500});

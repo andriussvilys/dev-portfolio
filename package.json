@@ -11,6 +11,8 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.616.0",
     "dotenv": "^16.4.5",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.5.1",
     "next": "14.2.5",
     "next-auth": "^4.24.7",
     "react": "^18",
