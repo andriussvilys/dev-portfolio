@@ -9,7 +9,6 @@ const upload = async (formData: FormData) => {
         body: formData,
         cache: 'no-store'
         })
-    console.log("storageUplead", res)
     return res
 }
 

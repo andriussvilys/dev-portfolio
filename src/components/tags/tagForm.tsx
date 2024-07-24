@@ -29,7 +29,6 @@ export default function TagForm({onSubmit, tagData}: TagFormProps){
     }, [tagData])
 
     const onFileChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-        console.log("File change")
         const inputFile = event.target.files && event.target.files[0]
 
         if(inputFile){
