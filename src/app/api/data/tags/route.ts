@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { MongoInstance } from "../connection";
 import { collections } from "../collections";
+import { Filter } from "mongodb";
+import queryString from "query-string";
 
 export async function POST(request: Request) {
   try{
@@ -20,11 +22,17 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: Request, {searchParams}:{searchParams:any}) {
     try{
+        // const url = new URL(request.url);
+        // const searchParams = url.searchParams;
+
+        // const query = queryString.parse(searchParams.toString());
+        // console.log(`-----------query`, query)
+        const query = {}
         const db = await MongoInstance.getDb();
         const collection = db.collection(collections.tags);
-        const cursor = collection.find({});
+        const cursor = collection.find(query);
         const results = await cursor.toArray();
         return NextResponse.json({results}, {status: 200});
     }

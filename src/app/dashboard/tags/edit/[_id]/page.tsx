@@ -12,7 +12,7 @@ export default async function Page({params}: {params: any}) {
         <section>
             <h1>Edit tag</h1>
             <div style={{border: "1px solid blue", padding: "2px"}}>
-                <TagFormEdit tagData={tag}/>
+                <TagFormEdit tagData={tag} _id={_id}/>
             </div>
         </section>
     )

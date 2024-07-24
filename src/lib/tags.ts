@@ -19,7 +19,7 @@ const upload = async (formData: FormData) => {
         }
     }
     catch(e){
-        throw new Error("failed to upload ", e as Error)
+        throw new Error((e as Error).message)
     }
 }
 
@@ -29,23 +29,19 @@ const listAll = async () => {
         return await res.json()
     }
     catch(e){
-        throw new Error("failed to get from db")
+        throw new Error((e as Error).message)
     }
 }
 
 const deleteOne = async (id: string) => {
     try{
-        console.log("delete tag", id)
         const tag = await getById(id) 
-        console.log("delete tag", tag)
-        const dataRes = await fetch(`http://localhost:3000/api/data/tags/${id}`, {method: 'DELETE', cache: 'no-store'})
-        console.log("dataRes", dataRes)
+        await fetch(`http://localhost:3000/api/data/tags/${id}`, {method: 'DELETE', cache: 'no-store'})
         const storageRes = await deleteByKey(tag.key)
-        console.log("storageRes", storageRes)
         return await storageRes.json()
     }
     catch(e){
-        throw new Error("failed to delete from db")
+        throw new Error((e as Error).message)
     }
 }
 
@@ -60,4 +56,18 @@ const getById = async (id: string) => {
 
 }
 
-export {upload, listAll, deleteOne, getById}
+const patchById = async (formData: FormData, id: string, ) => {
+    try{
+        if(formData.get("file")!= null){
+            await storageUpload(formData);
+        }
+        const res = await fetch(`http://localhost:3000/api/data/tags/${id}`, {method: 'PATCH', cache: 'no-store', body: formData})
+        return await res.json()
+    }
+    catch(e){
+        throw new Error("failed to patch db")
+    }
+
+}
+
+export {upload, listAll, deleteOne, getById, patchById}

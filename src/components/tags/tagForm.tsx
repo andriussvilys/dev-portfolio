@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useState } from "react"
 import Image from "next/image"
 
 interface TagFormProps {
-    onSubmit: (formData: FormData) => Promise<any>,
+    onSubmit: (formData: FormData, id?: string) => Promise<any>,
     tagData?: Tag
 }
 
@@ -45,18 +45,13 @@ export default function TagForm({onSubmit, tagData}: TagFormProps){
         const formData = new FormData()
         if(file){
             formData.append("metadata", JSON.stringify(metadata))
-            formData.append("file", file)
-            formData.append("name", name)
             formData.append("key", file.name)
+            formData.append("file", file)
+        }
+        formData.append("name", name)
 
-            console.log("formData",formData)
-    
-            await onSubmit(formData)
-            window.location.reload()
-        }
-        else{
-            throw new Error("No file selected")
-        }
+        await onSubmit(formData)
+        window.location.reload()
     }
 
 

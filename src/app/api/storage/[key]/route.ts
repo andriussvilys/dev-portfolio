@@ -1,4 +1,4 @@
-import { DeleteObjectCommand, DeleteObjectCommandInput } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, DeleteObjectCommandInput, GetObjectCommand, GetObjectCommandInput, HeadObjectCommand } from "@aws-sdk/client-s3";
 import { Bucket, s3 } from "../vars";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -14,14 +14,21 @@ export async function DELETE(request: Request, {params}:{params:Params}) {
   };
 
   try {
-    await s3.send(new DeleteObjectCommand(command));
-    return NextResponse.json({ status: "success" }, {status: 200});
+    const res = await s3.send(new DeleteObjectCommand(command));
+    return NextResponse.json({...res}, {status: 200});
   } 
   catch (err) {
     return NextResponse.json({ status: "fail", error: err }, {status: 500});
   }
 };  
 
-export async function GET(request: NextRequest, {params}:{params:Params}) {
-  return NextResponse.json({key: params.key}, {status: 200});
+export async function HEAD(request: NextRequest, {params}:{params:Params}) {
+    const Key = params.key;
+    try{
+        const result = await s3.send(new HeadObjectCommand({ Bucket, Key }));
+        return NextResponse.json({...result}, {status: 200});
+    }
+    catch(e){
+        return NextResponse.json({ status: "fail", error: e }, {status: 500});
+    }
 }
