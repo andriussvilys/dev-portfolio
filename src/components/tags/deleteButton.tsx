@@ -8,7 +8,15 @@ interface DeleteButtonProps {
 }
 
 export default function DeleteButton({disabled, _id}: DeleteButtonProps) {
-    const onDelete = async () => {await deleteOne(_id); location.reload()}
+    const onDelete = async () => {
+        try{
+            const res = await deleteOne(_id); 
+            location.reload()
+        }
+        catch(err){
+            throw err
+        }
+    }
     return(
         <button disabled={disabled} onClick={onDelete}>Delete</button>
     )

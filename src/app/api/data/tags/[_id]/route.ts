@@ -13,7 +13,7 @@ export async function GET(request: Request, {params}:{params:Params}) {
         if(!result){
             return NextResponse.json({}, {status: 404});
         }
-        return NextResponse.json({result}, {status: 200});
+        return NextResponse.json(result, {status: 200});
     }
     catch(e){
         return NextResponse.json({ status: "fail", error: e }, {status: 500});
@@ -29,7 +29,7 @@ export async function DELETE(request: Request, {params}:{params:Params}) {
         if(!result){
             return NextResponse.json({}, {status: 404});
         }
-        return NextResponse.json({...result}, {status: 200});
+        return NextResponse.json(result, {status: 200});
     }
     catch(e){
         return NextResponse.json({ status: "fail", error: e }, {status: 500});
@@ -53,7 +53,7 @@ export async function PATCH(request: Request, {params}:{params:Params}) {
         if(!result){
             return NextResponse.json({}, {status: 404});
         }
-        return NextResponse.json({...result}, {status: 200});
+        return NextResponse.json(result, {status: 200});
     }
     catch(e){
         return NextResponse.json({ status: "fail", error: e }, {status: 500});

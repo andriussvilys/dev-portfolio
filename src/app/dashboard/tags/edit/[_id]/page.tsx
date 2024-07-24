@@ -4,7 +4,7 @@ import { getById } from "@/src/lib/tags"
 
 export default async function Page({params}: {params: any}) {
     const _id = params._id
-    const result = (await getById(_id)).result
+    const result = await getById(_id)
     const url = getURL(result.key) 
     const tag = {...result, url}
 

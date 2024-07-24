@@ -4,17 +4,29 @@ const getURL = (key: string) => {
 }
 
 const upload = async (formData: FormData) => {
-    return fetch('/api/storage', {
-        method: 'POST',
-        body: formData,
-      })
+    try{
+        const res = await fetch('/api/storage', {
+            method: 'POST',
+            body: formData,
+          })
+        return await res.json()
+    }
+    catch(e){
+        throw e
+    }
 }
 
 const deleteByKey = async (key: string) => {
-    return fetch(`/api/storage/${key}`, {
-        method: 'DELETE',
-        cache: 'no-store'
-      })
+    try{
+        const res = await fetch(`/api/storage/${key}`, {
+            method: 'DELETE',
+            cache: 'no-store'
+          })
+        return await res.json()
+    }
+    catch(e){
+        throw e
+    }
 }
 
 export {getURL, upload, deleteByKey}

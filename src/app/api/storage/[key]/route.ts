@@ -15,7 +15,7 @@ export async function DELETE(request: Request, {params}:{params:Params}) {
 
   try {
     const res = await s3.send(new DeleteObjectCommand(command));
-    return NextResponse.json({...res}, {status: 200});
+    return NextResponse.json(res, {status: 200});
   } 
   catch (err) {
     return NextResponse.json({ status: "fail", error: err }, {status: 500});
@@ -25,8 +25,8 @@ export async function DELETE(request: Request, {params}:{params:Params}) {
 export async function HEAD(request: NextRequest, {params}:{params:Params}) {
     const Key = params.key;
     try{
-        const result = await s3.send(new HeadObjectCommand({ Bucket, Key }));
-        return NextResponse.json({...result}, {status: 200});
+        const res = await s3.send(new HeadObjectCommand({ Bucket, Key }));
+        return NextResponse.json(res, {status: 200});
     }
     catch(e){
         return NextResponse.json({ status: "fail", error: e }, {status: 500});

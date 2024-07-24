@@ -5,7 +5,7 @@ import Tag from "@/src/components/tags/tag"
 import { revalidatePath } from "next/cache"
 
 export default async function Page() {
-    const tags = (await listAll()).results
+    const tags = await listAll()
     revalidatePath("/dashboard/tags")
     return (
         <main>
