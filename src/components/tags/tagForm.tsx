@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react"
 import Image from "next/image"
+import { createKey } from "@/src/lib/storage"
 
 interface TagFormProps {
     onSubmit: (formData: FormData, id?: string) => Promise<any>,
@@ -28,12 +29,13 @@ export default function TagForm({onSubmit, tagData}: TagFormProps){
     }, [tagData])
 
     const onFileChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files && event.target.files[0]
+        console.log("File change")
+        const inputFile = event.target.files && event.target.files[0]
 
-        if(file){
-            setFile(file)
-            setName(file.name)
-            setImageSrc(URL.createObjectURL(file))
+        if(inputFile){
+            setFile(inputFile)
+            setName(inputFile.name)
+            setImageSrc(URL.createObjectURL(inputFile))
         }
     }
     const onImageLoad = (img:HTMLImageElement) => {
@@ -45,13 +47,18 @@ export default function TagForm({onSubmit, tagData}: TagFormProps){
         const formData = new FormData()
         if(file){
             formData.append("metadata", JSON.stringify(metadata))
-            formData.append("key", file.name)
+            formData.append("key", createKey(file))
             formData.append("file", file)
         }
         formData.append("name", name)
 
-        await onSubmit(formData)
-        window.location.reload()
+        try{
+            await onSubmit(formData)
+        }
+        catch(err){
+            return err
+        }
+        // window.location.reload()
     }
 
 

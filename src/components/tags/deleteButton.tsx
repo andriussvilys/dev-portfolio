@@ -1,6 +1,6 @@
 "use client"
 
-import { deleteOne } from "@/src/lib/tags"
+import { deleteById } from "@/src/lib/tags"
 
 interface DeleteButtonProps {
     _id: string,
@@ -10,7 +10,7 @@ interface DeleteButtonProps {
 export default function DeleteButton({disabled, _id}: DeleteButtonProps) {
     const onDelete = async () => {
         try{
-            const res = await deleteOne(_id); 
+            const res = await deleteById(_id); 
             location.reload()
         }
         catch(err){

@@ -2,17 +2,23 @@ import {deleteByKey, upload as storageUpload} from './storage'
 
 const upload = async (formData: FormData) => {
     try{
-        await storageUpload(formData)
-        try{
-            const dbRes = await fetch('/api/data/tags', {
-                method: 'POST',
-                body: formData,
-            })
-            return await dbRes.json()
+        const storageRes = await storageUpload(formData)
+        if(storageRes.ok){
+            try{
+                const dbRes = await fetch('/api/data/tags', {
+                    method: 'POST',
+                    cache: 'no-store',
+                    body: formData,
+                })
+                return await dbRes.json()
+            }
+            catch(e){
+                deleteByKey(formData.get("key") as string)
+                throw e
+            }
         }
-        catch(e){
-            deleteByKey(formData.get("key") as string)
-            throw new Error("failed to upload to db ", e as Error)
+        else{
+            throw new Error(storageRes.statusText)
         }
     }
     catch(e){
@@ -31,10 +37,11 @@ const listAll = async () => {
 }
 
 const deleteById = async (id: string) => {
+    // delete storage object first; if data delete fails, the record will be visible in the front and user can try again 
     try{
         const tag = await getById(id) 
-        const dataRes = await fetch(`http://localhost:3000/api/data/tags/${id}`, {method: 'DELETE', cache: 'no-store'})
         const storageRes = await deleteByKey(tag.key)
+        const dataRes = await fetch(`http://localhost:3000/api/data/tags/${id}`, {method: 'DELETE', cache: 'no-store'})
         return {storageRes, dataRes}
     }
     catch(e){
@@ -67,4 +74,4 @@ const patchById = async (formData: FormData, id: string, ) => {
 
 }
 
-export {upload, listAll, deleteById as deleteOne, getById, patchById}
+export {upload, listAll, deleteById, getById, patchById}

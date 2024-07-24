@@ -16,24 +16,6 @@ export async function GET(request: Request) {
   }
 }
 
-export async function PUT(request: Request) {
-  try {
-    const formData = await request.formData();
-    const file = formData.get("file") as File;
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const params:PutObjectCommandInput = {
-      Bucket,
-      Key: file.name,
-      Body: buffer,
-    }
-    const res = await s3.send(new PutObjectCommand(params));
-    return NextResponse.json({...res, key: params.Key}, {status: 200});
-  } 
-  catch (e) {
-    return NextResponse.json({ status: "fail", error: e }, {status: 500});
-  }
-}
-
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
@@ -41,7 +23,7 @@ export async function POST(request: Request) {
     const buffer = Buffer.from(await file.arrayBuffer());
     const params:PutObjectCommandInput = {
       Bucket,
-      Key: file.name,
+      Key: formData.get("key")?.toString(),
       Body: buffer,
     }
     const res = await s3.send(new PutObjectCommand(params));

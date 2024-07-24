@@ -1,19 +1,22 @@
+
 const getURL = (key: string) => {
     return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_BUCKET_REGION}.amazonaws.com/${key}`
-    // return `https://asvil-dev-dashboard.s3.us-east-2.amazonaws.com/${key}`
 }
 
 const upload = async (formData: FormData) => {
-    try{
-        const res = await fetch('/api/storage', {
-            method: 'POST',
-            body: formData,
-          })
-        return await res.json()
-    }
-    catch(e){
-        throw e
-    }
+    const res = await fetch('/api/storage', {
+        method: 'POST',
+        body: formData,
+        cache: 'no-store'
+        })
+    console.log("storageUplead", res)
+    return res
+}
+
+const createKey = (file:File) => {
+    const extension = file.type.split('/')[1]
+    const key = crypto.randomUUID() + "." + extension
+    return key
 }
 
 const deleteByKey = async (key: string) => {
@@ -29,4 +32,4 @@ const deleteByKey = async (key: string) => {
     }
 }
 
-export {getURL, upload, deleteByKey}
+export {getURL, upload, deleteByKey, createKey}
