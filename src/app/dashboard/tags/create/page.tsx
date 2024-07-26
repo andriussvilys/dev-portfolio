@@ -8,6 +8,7 @@ export default function Page(){
         await upload(formData)
       }
       catch(err){
+        console.error(err)
         throw err
       }
     }

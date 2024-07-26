@@ -6,7 +6,6 @@ import { Box, Button, Container, Stack, Typography } from "@mui/material"
 import {AddCircle as AddCircleIcon } from "@mui/icons-material"
 import Pagination from "@/src/components/pagination"
 import { tagsLimitPerPage } from "@/src/lib/constants"
-import { ReadonlyURLSearchParams } from "next/navigation"
 
 interface TagsPageParams{
     page: number,
