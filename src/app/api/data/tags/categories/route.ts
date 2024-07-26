@@ -7,7 +7,6 @@ export async function GET(request: NextRequest) {
           const db = await MongoInstance.getDb();
           const collection = db.collection(collections.tags);
           const categories = await collection.distinct('category');
-          console.log({categories})
           return NextResponse.json(categories, {status: 200});
       }
       catch(e){
