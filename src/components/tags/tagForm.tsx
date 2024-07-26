@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react"
 import Image from "next/image"
 import { createKey } from "@/src/lib/storage"
+import type { Tag } from "@/src/lib/data/tags"
 
 interface TagFormProps {
     onSubmit: (formData: FormData, id?: string) => Promise<any>,

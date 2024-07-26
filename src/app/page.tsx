@@ -1,9 +1,10 @@
-"use client"
+import { getServerSession } from "next-auth";
+import authOptions from "./api/auth/[...nextauth]/authOptions";
+import Home from "../components/home/home";
 
-export default function Home() {
+export default async function Page() {
+  const session = await getServerSession(authOptions);
   return (
-    <section>
-      <p>home</p>
-    </section>
+    <Home signedIn={!!session?.user}/>
   );
 }
