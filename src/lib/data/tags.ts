@@ -3,6 +3,7 @@ interface Tag {
     key: string,
     _id: string,
     url?: string,
+    category?: string,
     metadata: {
         width: number,
         height: number

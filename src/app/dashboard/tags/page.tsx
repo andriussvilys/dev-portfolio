@@ -1,4 +1,4 @@
-import { listAll } from "@/src/lib/tags"
+import { getCategories, listAll } from "@/src/lib/tags"
 import { revalidatePath } from "next/cache"
 import DashboardTag from "@/src/components/dashboard/dashboardTag"
 import { Box, Button, Container, Stack, Typography } from "@mui/material"
@@ -33,6 +33,7 @@ const parseParams = (params:any):TagsPageParams => {
 export default async function Page({searchParams}:{searchParams:URLSearchParams}) {
 
     revalidatePath("/dashboard/tags")
+    const categories = await getCategories()
     const {page, limit} = parseParams(searchParams)
     const tagsData = await listAll({page, limit})
     const tags:Tag[] = tagsData.tags.map((tag:Tag) => {return {...tag, url: getURL(tag.key)}})
@@ -55,7 +56,7 @@ export default async function Page({searchParams}:{searchParams:URLSearchParams}
                     {tags.map((tag) => {
                         return(
                             <DashboardTag key={tag.key} tag={tag}>
-                                <TagFormEdit tagData={tag} _id={tag._id}/>
+                                <TagFormEdit categories={categories} tagData={tag} _id={tag._id}/>
                             </DashboardTag>
                         )
                     })}

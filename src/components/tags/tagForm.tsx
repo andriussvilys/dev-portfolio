@@ -10,6 +10,7 @@ import DeleteButton from "./deleteButton"
 interface TagFormProps {
     onSubmit: (formData: FormData, id?: string) => Promise<any>,
     tagData?: Tag
+    categories: string[]
 }
 
 interface FileMetadata {
@@ -17,7 +18,7 @@ interface FileMetadata {
     height: number
 }
 
-export default function TagForm({onSubmit, tagData}: TagFormProps){
+export default function TagForm({onSubmit, tagData, categories}: TagFormProps){
     const [file, setFile] = useState<File | null>()
     const [name, setName] = useState<string>("")
     const [metadata, setMetadata] = useState<FileMetadata | null>()
@@ -29,6 +30,7 @@ export default function TagForm({onSubmit, tagData}: TagFormProps){
             setName(tagData.name)
             setMetadata(tagData.metadata)
             setImageSrc(tagData.url ?? "")
+            setCategory(tagData.category ?? "")
         }
     }, [tagData])
 
@@ -53,6 +55,7 @@ export default function TagForm({onSubmit, tagData}: TagFormProps){
             formData.append("key", createKey(file))
             formData.append("file", file)
         }
+        formData.append("category", category)
         formData.append("name", name)
 
         try{
@@ -75,7 +78,7 @@ export default function TagForm({onSubmit, tagData}: TagFormProps){
                 <TextField size="small" InputLabelProps={{shrink:true}} label="name" variant="outlined" value={name} onChange={e => setName(e.target.value)}/>
                 <Autocomplete
                     freeSolo
-                    options={options.map((option) => option)}
+                    options={categories.map((option) => option)}
                     value={category}
                     renderInput={(params) => (
                     <TextField
@@ -101,7 +104,5 @@ export default function TagForm({onSubmit, tagData}: TagFormProps){
         </Box>
     )
 }
-
-const options = ["option1", "option2", "option3"]
 
 export type {TagFormProps}

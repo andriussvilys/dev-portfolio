@@ -6,9 +6,9 @@ import type {TagFormProps} from "./tagForm"
 
 interface TagFormEditProps extends Omit<TagFormProps, 'onSubmit'> {_id: string}
 
-export default function TagFormEdit ({tagData, _id}: TagFormEditProps){
+export default function TagFormEdit ({tagData, _id, categories}: TagFormEditProps){
     return (
-        <TagForm onSubmit={(formData) => {return patchById(formData, _id)}} tagData={tagData}/>
+        <TagForm categories={categories} onSubmit={(formData) => {return patchById(formData, _id)}} tagData={tagData}/>
     )
 }
 
