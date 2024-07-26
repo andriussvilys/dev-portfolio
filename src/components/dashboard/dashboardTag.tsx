@@ -14,7 +14,7 @@ export default function DashboardTag({tag, children}: DashboardTagProps) {
     return(
         <Card sx={{p: 1, m:1}}>
             {children}
-            <Box>
+            <Box gap={1} sx={{display:"flex"}}>
                 <Button href={`/dashboard/tags/edit/${tag._id}`} variant="contained" startIcon={<EditIcon/>}>                    
                         <Typography>Edit</Typography>
                 </Button>
