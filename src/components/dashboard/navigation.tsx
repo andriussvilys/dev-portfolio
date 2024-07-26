@@ -62,10 +62,6 @@ export default function Navigation({children}: {children: React.ReactNode}) {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const router = useRouter()
     const drawerWidth = 240;
-    useEffect(() => {
-        console.log("drawerOpen", drawerOpen)
-    }, [drawerOpen])
-
 
     return(
         <Box sx={{display:"flex", height: "100vh"}}>
@@ -91,7 +87,7 @@ export default function Navigation({children}: {children: React.ReactNode}) {
                 open={drawerOpen}
             >
             <Toolbar sx={{display:"flex", justifyContent:"end"}}>
-                <IconButton onClick={() => {console.log("icon clicked");setDrawerOpen(!drawerOpen)}}>
+                <IconButton onClick={() => {setDrawerOpen(!drawerOpen)}}>
                     <ChevronLeftIcon />
                 </IconButton>
             </Toolbar>
