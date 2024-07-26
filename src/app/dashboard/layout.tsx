@@ -1,3 +1,5 @@
+import Navigation from "@/src/components/dashboard/navigation";
+import { Container, Toolbar } from "@mui/material";
 import Link from "next/link";
 
 export default function Layout({
@@ -6,13 +8,8 @@ export default function Layout({
     children: React.ReactNode;
   }>) {
     return (
-        <main>
-            <nav>
-                <ul>
-                    <li key={crypto.randomUUID()}><Link href="/dashboard/tags">Tags</Link></li>
-                </ul>
-            </nav>
+        <Navigation >
             {children}
-        </main>
+        </Navigation>
     )
 }

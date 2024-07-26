@@ -37,7 +37,8 @@ const listAll = async () => {
 }
 
 const deleteById = async (id: string) => {
-    // delete storage object first; if data delete fails, the record will be visible in the front and user can try again 
+    // delete storage object first; if data delete fails, the record will be visible without image
+    //  in the front and user can try again to delete record
     try{
         const tag = await getById(id) 
         const storageRes = await deleteByKey(tag.key)

@@ -8,3 +8,8 @@ interface Tag {
         height: number
     }
 }
+
+const tagsPerPage = 3
+
+export {tagsPerPage}
+export type {Tag}

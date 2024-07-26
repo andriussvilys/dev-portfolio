@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import authOptions from "./api/auth/[...nextauth]/authOptions";
-import SigninButton from "../components/signin/signinButton";
-import SignoutButton from "../components/signin/signoutButton";
-import Link from "next/link";
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import { Box, Button, Container, Link, Typography } from "@mui/material";
+import "../style/global.css"
 
 export const metadata: Metadata = {
   title: "Dashboard"
@@ -18,14 +18,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <p>signed in: {(!!session?.user).toString()}</p>
-        <div>
-          <Link href="/">Home</Link>
-          <Link href="/dashboard">Dashboard</Link>
-        </div>
-        <SigninButton />
-        <SignoutButton />
-        {children}
+        <AppRouterCacheProvider>
+            {children}
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

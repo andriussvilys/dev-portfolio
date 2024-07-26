@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { MongoInstance } from "../connection";
 import { collections } from "../collections";
 
@@ -20,8 +20,9 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request, {searchParams}:{searchParams:any}) {
-    try{
+export async function GET(request: NextRequest) {
+  console.log(request.nextUrl.searchParams)
+  try{
         const query = {}
         const db = await MongoInstance.getDb();
         const collection = db.collection(collections.tags);

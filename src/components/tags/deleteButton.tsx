@@ -1,6 +1,8 @@
 "use client"
 
 import { deleteById } from "@/src/lib/tags"
+import { Button } from "@mui/material";
+import {Delete as DeleteIcon } from "@mui/icons-material"
 
 interface DeleteButtonProps {
     _id: string,
@@ -18,7 +20,7 @@ export default function DeleteButton({disabled, _id}: DeleteButtonProps) {
         }
     }
     return(
-        <button disabled={disabled} onClick={onDelete}>Delete</button>
+        <Button color="error" startIcon={<DeleteIcon/>} variant="outlined" disabled={disabled} onClick={onDelete}>Delete</Button>
     )
 }
 
