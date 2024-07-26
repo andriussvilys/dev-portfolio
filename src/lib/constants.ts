@@ -1,3 +1,4 @@
 const tagsLimitPerPage = 3;
+const defaultRoute = "/dashboard/tags";
 
-export { tagsLimitPerPage };
+export { tagsLimitPerPage, defaultRoute };
