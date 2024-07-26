@@ -26,9 +26,10 @@ const upload = async (formData: FormData) => {
     }
 }
 
-const listAll = async () => {
+const listAll = async ({page, limit}: {page:number|null, limit: number|null}) => {
+    const query = page && limit ? `?page=${page}&limit=${limit}` : ''
     try{
-        const res = await fetch('http://localhost:3000/api/data/tags', {method: 'GET', cache: 'no-store'})
+        const res = await fetch(`http://localhost:3000/api/data/tags${query}`, {method: 'GET', cache: 'no-store'})
         return await res.json()
     }
     catch(e){
