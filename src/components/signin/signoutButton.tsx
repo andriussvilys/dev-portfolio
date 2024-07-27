@@ -9,6 +9,6 @@ interface SignoutButtonProps{
 
 export default function SignoutButton({signedIn}: SignoutButtonProps) {
     return (
-      <Button variant="contained" disabled={!signedIn} onClick={()=>signOut({callbackUrl: "/"})}><Typography>sign out</Typography></Button>
+      <Button variant="outlined" disabled={!signedIn} onClick={()=>signOut({callbackUrl: "/"})}><Typography>sign out</Typography></Button>
     );
 }
