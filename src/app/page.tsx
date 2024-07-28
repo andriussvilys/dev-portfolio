@@ -1,10 +1,7 @@
-import { getServerSession } from "next-auth";
-import authOptions from "./api/auth/[...nextauth]/authOptions";
-import Home from "../components/home/home";
+import Front from "../components/front/front";
 
 export default async function Page() {
-  const session = await getServerSession(authOptions);
   return (
-    <Home signedIn={!!session?.user}/>
+    <Front/>
   );
 }

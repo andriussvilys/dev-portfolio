@@ -29,6 +29,9 @@ const authOptions:AuthOptions = {
         strategy: "jwt",
         maxAge: 60*60 //1h 
     },
+    pages:{
+        signIn: '/signin'
+    },
     secret: process.env.NEXTAUTH_SECRET as string,
 }
 

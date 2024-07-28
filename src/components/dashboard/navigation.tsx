@@ -4,7 +4,7 @@ import { AppBar as MuiAppBar, Box, Divider, Drawer as MuiDrawer, IconButton, Lis
 import {ChevronLeft as ChevronLeftIcon, Menu as MenuIcon, Label as LabelIcon, Article as ArticleIcon, AccountCircle, SentimentSatisfiedAlt } from "@mui/icons-material";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 
 const drawerWidth: number = 240;
