@@ -1,3 +1,5 @@
+"use client"
+
 import { upload } from "@/src/lib/storage";
 import TagForm from "./tagForm";
 

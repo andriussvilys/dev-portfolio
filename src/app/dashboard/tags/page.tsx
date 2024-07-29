@@ -48,7 +48,13 @@ export default async function Page({searchParams}:{searchParams:URLSearchParams}
                 flexDirection:"column",
                 }}
             >
-            <Button sx={{alignSelf:"end", m:2}} startIcon={<AddCircleIcon/>} variant="contained" href="/dashboard/tags/create" color="success">
+            <Button 
+                sx={{alignSelf:"end", m:2}} 
+                startIcon={<AddCircleIcon/>} 
+                variant="contained" 
+                href="/dashboard/tags/create" 
+                color="success"
+            >
                 <Typography>Add new tag</Typography>
             </Button>
             <Stack sx={{overflow:"auto", alignItems:"stretch", width: "100%"}} gap={2}>
