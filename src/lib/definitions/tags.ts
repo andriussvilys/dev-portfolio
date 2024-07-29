@@ -1,9 +1,3 @@
-
-
-interface Tag extends TagFormData{
-    _id: string
-}
-
 interface TagMetadata{
     width: number,
     height: number
@@ -17,7 +11,8 @@ interface TagFormData {
     category?: string
 }
 
-const tagsPerPage = 3
+interface Tag extends TagFormData{
+    _id: string
+}
 
-export {tagsPerPage}
 export type {Tag, TagFormData, TagMetadata}

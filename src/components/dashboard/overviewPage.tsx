@@ -30,14 +30,18 @@ const parseParams = (params:any):TagsPageParams => {
     return parsed
 }
 
-export default async function Page({searchParams}:{searchParams:URLSearchParams}) {
+interface OverviewPageProps {
+    searchParams: URLSearchParams,
+    children: React.ReactNode,
+    itemCount: number,
+    actionButton: React.ReactNode
+}
+
+export default async function OverviewPage({searchParams, children, itemCount, actionButton}:OverviewPageProps) {
 
     revalidatePath("/dashboard/tags")
-    const categories = await getCategories()
     const {page, limit} = parseParams(searchParams)
-    const tagsData = await listAll({page, limit})
-    const tags:Tag[] = tagsData.tags.map((tag:Tag) => {return {...tag, url: getURL(tag.key)}})
-    const total = tagsData.total
+    const total = Math.ceil(itemCount / limit)
 
     return (
         <Container component="section" 
@@ -48,24 +52,10 @@ export default async function Page({searchParams}:{searchParams:URLSearchParams}
                 flexDirection:"column",
                 }}
             >
-            <Button 
-                sx={{alignSelf:"end", m:2}} 
-                startIcon={<AddCircleIcon/>} 
-                variant="contained" 
-                href="/dashboard/tags/create" 
-                color="success"
-            >
-                <Typography>Add new tag</Typography>
-            </Button>
+            {actionButton}
             <Stack sx={{overflow:"auto", width: "100%", alignItems:"center"}} gap={2}>
                 <Box sx={{display:"flex", flexWrap:"wrap"}}>
-                    {tags.map((tag:Tag) => {
-                        return(
-                            <DashboardTag key={tag.key} tag={tag}>
-                                <TagFormEdit categories={categories} tagData={tag} _id={tag._id}/>
-                            </DashboardTag>
-                        )
-                    })}
+                    {children}
                 </Box>
                 <Pagination page={page} totalPages={total} limit={limit} />
             </Stack>

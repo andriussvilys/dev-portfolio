@@ -3,9 +3,9 @@
 import { FormEvent, useEffect, useState } from "react"
 import Image from "next/image"
 import { createKey } from "@/src/lib/storage"
-import type { Tag } from "@/src/lib/data/tags"
 import { Autocomplete, Box, Button, Stack, TextField } from "@mui/material"
 import DeleteButton from "./deleteButton"
+import { Tag, TagMetadata } from "@/src/lib/definitions/tags"
 
 interface TagFormProps {
     onSubmit: (formData: FormData, id?: string) => Promise<any>,
@@ -13,15 +13,10 @@ interface TagFormProps {
     categories: string[]
 }
 
-interface FileMetadata {
-    width: number,
-    height: number
-}
-
 export default function TagForm({onSubmit, tagData, categories}: TagFormProps){
     const [file, setFile] = useState<File | null>()
     const [name, setName] = useState<string>("")
-    const [metadata, setMetadata] = useState<FileMetadata | null>()
+    const [metadata, setMetadata] = useState<TagMetadata | null>()
     const [imageSrc, setImageSrc] = useState<string>("")
     const [category, setCategory] = useState<string>("")
 

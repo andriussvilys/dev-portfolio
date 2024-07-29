@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MongoInstance } from "../connection";
 import { collections, getCollection } from "../collections";
-import { PostFormData } from "@/src/lib/posts/posts";
-import { Tag } from "@/src/lib/data/tags";
+import { PostFormData } from "@/src/lib/definitions/posts";
 
 const parsePostFormData = (formData: FormData): PostFormData => {
     const tags = formData.getAll("tags") ? formData.getAll("tags").map(entry => entry.toString()) : []

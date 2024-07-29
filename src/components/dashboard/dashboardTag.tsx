@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Tag } from "../../lib/data/tags";
+import { Tag } from "../../lib/definitions/tags";
 import { Card} from "@mui/material";
 
 interface DashboardTagProps {
