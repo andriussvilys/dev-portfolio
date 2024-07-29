@@ -1,17 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MongoInstance } from "../connection";
-import { collections } from "../collections";
-import { TagFormData, TagMetadata } from "@/src/lib/data/tags";
+import { collections, getCollection } from "../collections";
+import { PostFormData } from "@/src/lib/posts/posts";
+import { Tag } from "@/src/lib/data/tags";
+
+const parsePostFormData = (formData: FormData): PostFormData => {
+    const tags = formData.getAll("tags") ? formData.getAll("tags").map(entry => entry.toString()) : []
+    return {
+        name: formData.get("name")?.toString() ?? "",
+        description: formData.get("description")?.toString() ?? "",
+        media: (formData.getAll("media") as string[]) ?? [],
+        tags,
+        liveSite: formData.get("liveSite")?.toString() ?? "",
+        github: formData.get("github")?.toString() ?? ""
+    }
+}
 
 export async function POST(request: Request) {
   try{
     const formData = await request.formData();
-    const db = await MongoInstance.getDb();
-    const collection = db.collection(collections.tags);
-    const name = formData.get("name")?.toString() ?? "";
-    const key = formData.get("key")?.toString() ?? "";
-    const metadata:TagMetadata = formData.get("metadata") ? JSON.parse(formData.get("metadata") as string) : {width: 0, height: 0}
-    const body:TagFormData = {name, key, metadata}
+    const collection = await getCollection(collections.posts);
+    const body:PostFormData = parsePostFormData(formData)
     const res = await collection.insertOne(body);
     return NextResponse.json(res, {status: 200});  
   }

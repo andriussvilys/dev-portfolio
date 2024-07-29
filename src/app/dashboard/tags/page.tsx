@@ -1,11 +1,12 @@
 import { listAll } from "@/src/lib/tags"
-import Tag from "@/src/components/tags/tag"
 import { revalidatePath } from "next/cache"
 import DashboardTag from "@/src/components/dashboard/dashboardTag"
 import { Box, Button, Container, Stack, Typography } from "@mui/material"
 import {AddCircle as AddCircleIcon } from "@mui/icons-material"
 import Pagination from "@/src/components/pagination"
 import { tagsLimitPerPage } from "@/src/lib/constants"
+import type { Tag as TagType } from "@/src/lib/data/tags"
+import Tag from "@/src/components/tags/tag"
 
 interface TagsPageParams{
     page: number,
@@ -49,7 +50,7 @@ export default async function Page({searchParams}:{searchParams:URLSearchParams}
             </Button>
             <Stack sx={{overflow:"auto", alignItems:"stretch", width: "100%"}}>
                 <Box>
-                    {tags.map((tag: any) => {
+                    {tags.map((tag: TagType) => {
                         return(
                             <DashboardTag key={tag.key} tag={tag}>
                                 <Tag tag={tag}/>

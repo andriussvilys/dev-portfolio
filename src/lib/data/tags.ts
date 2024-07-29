@@ -1,15 +1,23 @@
-interface Tag {
+
+
+interface Tag extends TagFormData{
+    _id: string
+}
+
+interface TagMetadata{
+    width: number,
+    height: number
+}
+
+interface TagFormData {
     name: string,
     key: string,
-    _id: string,
+    metadata: TagMetadata,
     url?: string,
-    metadata: {
-        width: number,
-        height: number
-    }
+    category?: string
 }
 
 const tagsPerPage = 3
 
 export {tagsPerPage}
-export type {Tag}
+export type {Tag, TagFormData, TagMetadata}
