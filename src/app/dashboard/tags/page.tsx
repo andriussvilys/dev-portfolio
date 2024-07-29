@@ -1,12 +1,13 @@
-import { listAll } from "@/src/lib/tags"
+import { getCategories, listAll } from "@/src/lib/tags"
 import { revalidatePath } from "next/cache"
 import DashboardTag from "@/src/components/dashboard/dashboardTag"
 import { Box, Button, Container, Stack, Typography } from "@mui/material"
 import {AddCircle as AddCircleIcon } from "@mui/icons-material"
 import Pagination from "@/src/components/pagination"
 import { tagsLimitPerPage } from "@/src/lib/constants"
-import type { Tag as TagType } from "@/src/lib/data/tags"
-import Tag from "@/src/components/tags/tag"
+import TagFormEdit from "@/src/components/tags/tagFormEdit"
+import { getURL } from "@/src/lib/storage"
+import { Tag } from "@/src/lib/data/tags"
 
 interface TagsPageParams{
     page: number,
@@ -32,9 +33,10 @@ const parseParams = (params:any):TagsPageParams => {
 export default async function Page({searchParams}:{searchParams:URLSearchParams}) {
 
     revalidatePath("/dashboard/tags")
+    const categories = await getCategories()
     const {page, limit} = parseParams(searchParams)
     const tagsData = await listAll({page, limit})
-    const tags = tagsData.tags
+    const tags:Tag[] = tagsData.tags.map((tag:Tag) => {return {...tag, url: getURL(tag.key)}})
     const total = tagsData.total
 
     return (
@@ -44,21 +46,28 @@ export default async function Page({searchParams}:{searchParams:URLSearchParams}
                 height: "100%", 
                 display:"flex",
                 flexDirection:"column",
-                }}>
-            <Button sx={{alignSelf:"end"}} startIcon={<AddCircleIcon/>} variant="contained" href="/dashboard/tags/create" color="success">
+                }}
+            >
+            <Button 
+                sx={{alignSelf:"end", m:2}} 
+                startIcon={<AddCircleIcon/>} 
+                variant="contained" 
+                href="/dashboard/tags/create" 
+                color="success"
+            >
                 <Typography>Add new tag</Typography>
             </Button>
             <Stack sx={{overflow:"auto", alignItems:"stretch", width: "100%"}}>
                 <Box>
-                    {tags.map((tag: TagType) => {
+                    {tags.map((tag: Tag) => {
                         return(
                             <DashboardTag key={tag.key} tag={tag}>
-                                <Tag tag={tag}/>
+                                <TagFormEdit categories={categories} tagData={tag} _id={tag._id}/>
                             </DashboardTag>
                         )
                     })}
                 </Box>
-                    <Pagination page={page} totalPages={total} limit={limit} />
+                <Pagination page={page} totalPages={total} limit={limit} />
             </Stack>
         </Container>
     )
