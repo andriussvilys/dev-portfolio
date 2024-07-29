@@ -1,4 +1,9 @@
-const postsPerPage = 3
-const tagsPerPage = 3
+const overviewPageLimit = 3
 
-export {tagsPerPage, postsPerPage}
+interface OverviewPageParams{
+    page: number,
+    limit: number
+}
+
+export {overviewPageLimit}
+export type {OverviewPageParams}

@@ -4,11 +4,10 @@ import { FormEvent, useEffect, useState } from "react"
 
 interface PostFormProps {
     onSubmit: (formData: FormData, id?: string) => Promise<any>,
-    postData?: Post,
-    categories: string[]
+    postData?: Post
 }
 
-export default function PostForm({onSubmit, postData, categories}: PostFormProps){
+export default function PostForm({onSubmit, postData}: PostFormProps){
     const [name, setName] = useState<string>("")
     const [description, setDescription] = useState<string>("")
     const [liveSite, setLiveSite] = useState<string>("")

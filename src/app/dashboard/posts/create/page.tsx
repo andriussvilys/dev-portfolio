@@ -1,7 +1,16 @@
-import { Box } from "@mui/material";
+import PostFormCreate from "@/src/components/posts/postFormCreate";
+import { Container } from "@mui/material";
 
 export default function CreatePost(){
     return(
-        <Box>Create post</Box>
+        <Container sx={{
+            height:"100%", 
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            pt: 2
+          }}>
+            <PostFormCreate/>
+        </Container>
     )
 }

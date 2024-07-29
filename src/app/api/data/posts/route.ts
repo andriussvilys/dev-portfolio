@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
   try{
         const query = {}
         const db = await MongoInstance.getDb();
-        const collection = db.collection(collections.tags);
+        const collection = db.collection(collections.posts);
         const total = await collection.countDocuments()
         const cursor = collection.find(query)
         if(page && limit){
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
         }
         const res = await cursor.toArray();
         const resWithTotal = {res, total}
-        return NextResponse.json({tags:res, total}, {status: 200});
+        return NextResponse.json({posts:res, total}, {status: 200});
     }
     catch(e){
         return NextResponse.json({ status: "fail", error: e }, {status: 500});

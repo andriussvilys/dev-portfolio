@@ -1,13 +1,7 @@
-import { getCategories, listAll } from "@/src/lib/tags"
 import { revalidatePath } from "next/cache"
-import DashboardTag from "@/src/components/dashboard/dashboardTag"
-import { Box, Button, Container, Stack, Typography } from "@mui/material"
-import {AddCircle as AddCircleIcon } from "@mui/icons-material"
+import { Box, Container, Stack } from "@mui/material"
 import Pagination from "@/src/components/pagination"
 import { tagsLimitPerPage } from "@/src/lib/constants"
-import TagFormEdit from "@/src/components/tags/tagFormEdit"
-import { getURL } from "@/src/lib/storage"
-import { Tag } from "@/src/lib/definitions/tags"
 
 interface TagsPageParams{
     page: number,
@@ -41,7 +35,6 @@ export default async function OverviewPage({searchParams, children, itemCount, a
 
     revalidatePath("/dashboard/tags")
     const {page, limit} = parseParams(searchParams)
-    const total = Math.ceil(itemCount / limit)
 
     return (
         <Container component="section" 
@@ -57,7 +50,7 @@ export default async function OverviewPage({searchParams, children, itemCount, a
                 <Box sx={{display:"flex", flexWrap:"wrap"}}>
                     {children}
                 </Box>
-                <Pagination page={page} totalPages={total} limit={limit} />
+                <Pagination page={page} itemCount={itemCount} limit={limit} />
             </Stack>
         </Container>
     )
