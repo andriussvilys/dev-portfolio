@@ -62,7 +62,6 @@ export default function TagForm({onSubmit, tagData, categories}: TagFormProps){
         // window.location.reload()
     }
 
-
     return(
         <Box component="form" onSubmit={e => handleSubmit(e)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
             <Box sx={{height: 100, width: 100, padding: 1, border: "1px solid grey", borderRadius: 2}}>
