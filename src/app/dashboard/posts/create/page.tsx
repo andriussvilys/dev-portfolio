@@ -1,5 +1,5 @@
 import PostFormCreate from "@/src/components/posts/postFormCreate";
-import { Container } from "@mui/material";
+import { Card, Container } from "@mui/material";
 
 export default function CreatePost(){
     return(
@@ -10,7 +10,9 @@ export default function CreatePost(){
             alignItems: "center",
             pt: 2
           }}>
-            <PostFormCreate/>
+            <Card sx={{p: 2, m:1, display:"flex", justifyContent:"center"}}>
+                <PostFormCreate/>
+            </Card>
         </Container>
     )
 }

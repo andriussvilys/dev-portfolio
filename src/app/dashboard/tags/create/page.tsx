@@ -1,5 +1,5 @@
 import {getCategories, upload} from "@/src/lib/tags"
-import { Container } from "@mui/material"
+import { Card, Container } from "@mui/material"
 import TagFormCreate from "@/src/components/tags/tagFormCreate"
 
 export default async function Page(){
@@ -12,7 +12,9 @@ export default async function Page(){
           alignItems: "center",
           pt: 2
         }}>
-          <TagFormCreate categories={categories}/>
+          <Card sx={{p: 2, m:1, display:"flex", justifyContent:"center"}}>
+            <TagFormCreate categories={categories}/>
+          </Card>
       </Container>
     )
 }

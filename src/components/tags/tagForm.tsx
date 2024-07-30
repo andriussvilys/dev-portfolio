@@ -3,9 +3,10 @@
 import { FormEvent, useEffect, useState } from "react"
 import Image from "next/image"
 import { createKey } from "@/src/lib/storage"
-import { Autocomplete, Box, Button, Stack, TextField } from "@mui/material"
+import { Autocomplete, Box, Button, Divider, Stack, TextField } from "@mui/material"
 import DeleteButton from "./deleteButton"
 import { Tag, TagMetadata } from "@/src/lib/definitions/tags"
+import FileUpload from "../fileUpload"
 
 interface TagFormProps {
     onSubmit: (formData: FormData, id?: string) => Promise<any>,
@@ -64,32 +65,35 @@ export default function TagForm({onSubmit, tagData, categories}: TagFormProps){
 
     return(
         <Box component="form" onSubmit={e => handleSubmit(e)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
-            <Box sx={{height: 100, width: 100, padding: 1, border: "1px solid grey", borderRadius: 2}}>
-                {!!imageSrc ? <Image src={imageSrc} height={100} width={100} alt={name} onLoad={(e) => {onImageLoad(e.target as HTMLImageElement)}}/> : null}
-            </Box>
             <Stack gap={2}>
-                <TextField size="small" InputLabelProps={{shrink:true}} label="select file" type="file" id="new-file" variant="outlined" onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFileChange(e)}/>
-                <TextField size="small" InputLabelProps={{shrink:true}} label="name" variant="outlined" value={name} onChange={e => setName(e.target.value)}/>
-                <Autocomplete
-                    freeSolo
-                    options={categories.map((option) => option)}
-                    value={category}
-                    renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        size="small"
-                        InputLabelProps={{shrink:true}}
-                        label="category"
-                        InputProps={{
-                        ...params.InputProps,
-                        type: 'search',
-                        value: category,
-                        }}
-                        onChange={(e) => setCategory(e.target.value)}
-                    />
-                    )}
-                    onChange={(e, value) => setCategory(value ?? "")}
-                />
+                <Box sx={{display:"flex"}} gap={2}>
+                    <FileUpload setFile={setFile} setMetadata={setMetadata} fileSrc={imageSrc}/>
+                    <Divider orientation="vertical"/>
+                    <Stack gap={2}>
+                        <TextField size="small" InputLabelProps={{shrink:true}} label="name" variant="outlined" value={name} onChange={e => setName(e.target.value)}/>
+                        <Autocomplete
+                            freeSolo
+                            options={categories.map((option) => option)}
+                            value={category}
+                            renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                size="small"
+                                InputLabelProps={{shrink:true}}
+                                label="category"
+                                InputProps={{
+                                ...params.InputProps,
+                                type: 'search',
+                                value: category,
+                                }}
+                                onChange={(e) => setCategory(e.target.value)}
+                            />
+                            )}
+                            onChange={(e, value) => setCategory(value ?? "")}
+                        />
+                    </Stack>
+                </Box>
+                <Divider/>
                 <Box sx={{alignSelf:"end", display:"flex"}} gap={2}>
                     <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
                     {tagData?._id ? <DeleteButton disabled={false} _id={tagData._id}/> : null}

@@ -3,8 +3,10 @@ import {deleteByKey, upload as storageUpload} from './storage'
 const upload = async (formData: FormData) => {
     try{
         const storageRes = await storageUpload(formData)
+        console.log(storageRes)
         if(storageRes.ok){
             try{
+                console.log("try db upload")
                 const dbRes = await fetch('/api/data/tags', {
                     method: 'POST',
                     cache: 'no-store',
