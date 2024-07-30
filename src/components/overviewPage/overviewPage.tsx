@@ -47,7 +47,7 @@ export default async function OverviewPage({searchParams, children, itemCount, a
             >
             {actionButton}
             <Stack sx={{overflow:"auto", width: "100%", alignItems:"center"}} gap={2}>
-                <Box sx={{display:"flex", flexWrap:"wrap"}}>
+                <Box sx={{display:"flex", justifyContent:"center", flexWrap:"wrap"}}>
                     {children}
                 </Box>
                 <Pagination page={page} itemCount={itemCount} limit={limit} />

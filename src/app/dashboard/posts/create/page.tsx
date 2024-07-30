@@ -10,9 +10,7 @@ export default function CreatePost(){
             alignItems: "center",
             pt: 2
           }}>
-            <Card sx={{p: 2, m:1, display:"flex", justifyContent:"center"}}>
-                <PostFormCreate/>
-            </Card>
+            <PostFormCreate/>
         </Container>
     )
 }

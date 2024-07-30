@@ -1,6 +1,7 @@
 import { Post } from "@/src/lib/definitions/posts"
-import { Box, Button, Stack, TextField } from "@mui/material"
+import { Box, Button, Card, Container, Stack, TextField } from "@mui/material"
 import { FormEvent, useEffect, useState } from "react"
+import FormStepper from "./formStepper"
 
 interface PostFormProps {
     onSubmit: (formData: FormData, id?: string) => Promise<any>,
@@ -39,19 +40,27 @@ export default function PostForm({onSubmit, postData}: PostFormProps){
         // window.location.reload()
     }
 
+    const steps = ["Basic Info", "Media", "Tags"]
+
 
     return(
-        <Box component="form" onSubmit={e => handleSubmit(e)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
-            <Stack gap={2}>
-                <TextField size="small" InputLabelProps={{shrink:true}} label="name" variant="outlined" value={name} onChange={e => setName(e.target.value)}/>
-                <TextField size="small" InputLabelProps={{shrink:true}} label="description" variant="outlined" value={description} onChange={e => setDescription(e.target.value)}/>
-                <TextField size="small" InputLabelProps={{shrink:true}} label="live site" variant="outlined" value={liveSite} onChange={e => setLiveSite(e.target.value)}/>
-                <TextField size="small" InputLabelProps={{shrink:true}} label="github" variant="outlined" value={github} onChange={e => setGithub(e.target.value)}/>
-                <Box sx={{alignSelf:"end", display:"flex"}} gap={2}>
-                    <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
-                    {/* {tagData?._id ? <DeleteButton disabled={false} _id={tagData._id}/> : null} */}
-                </Box>
-            </Stack>
-        </Box>
+        <Container>
+            <FormStepper steps={steps}>
+                <Card sx={{p: 2, m:1, display:"flex", justifyContent:"center"}}>
+                    <Box component="form" onSubmit={e => handleSubmit(e)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
+                        <Stack gap={2}>
+                            <TextField size="small" InputLabelProps={{shrink:true}} label="name" variant="outlined" value={name} onChange={e => setName(e.target.value)}/>
+                            <TextField size="small" InputLabelProps={{shrink:true}} label="description" variant="outlined" value={description} onChange={e => setDescription(e.target.value)}/>
+                            <TextField size="small" InputLabelProps={{shrink:true}} label="live site" variant="outlined" value={liveSite} onChange={e => setLiveSite(e.target.value)}/>
+                            <TextField size="small" InputLabelProps={{shrink:true}} label="github" variant="outlined" value={github} onChange={e => setGithub(e.target.value)}/>
+                            <Box sx={{alignSelf:"end", display:"flex"}} gap={2}>
+                                <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
+                                {/* {tagData?._id ? <DeleteButton disabled={false} _id={tagData._id}/> : null} */}
+                            </Box>
+                        </Stack>
+                    </Box>
+                </Card>
+            </FormStepper>
+        </Container>
     )
 }
