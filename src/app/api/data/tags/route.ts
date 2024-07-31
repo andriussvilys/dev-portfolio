@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MongoInstance } from "../connection";
 import { collections } from "../collections";
-import { TagFormData, TagMetadata } from "@/src/lib/data/tags";
+import { TagFormData, TagMetadata } from "@/src/lib/definitions/tags";
 
 export async function POST(request: Request) {
   try{
