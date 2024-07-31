@@ -1,6 +1,5 @@
 import { Box, Stack, TextField } from "@mui/material"
-import { useEffect, useState } from "react"
-import Image from "next/image"
+import { useEffect } from "react"
 import { TagMetadata } from "../../lib/definitions/tags"
 import FilePreview from "./filePreview"
 
@@ -12,21 +11,12 @@ interface FileUploadProps{
 }
 
 export default function FileUpload({setFile, setMetadata, file, src}: FileUploadProps){
-    // const [fileSrc, setFileSrc] = useState<string>("")
-
-    useEffect(() => {
-        if(file){
-            const fileSrc = URL.createObjectURL(file)
-            // setFileSrc(fileSrc)
-        } 
-    }, [file])
 
     const onFileChange = (event:React.ChangeEvent<HTMLInputElement>) => {
         const inputFile = event.target.files && event.target.files[0]
 
         if(inputFile){
             setFile(inputFile)
-            // setFileSrc(URL.createObjectURL(inputFile))
         }
     }
 

@@ -15,7 +15,7 @@ export default function ActionButton({href, buttonText}:ActionButtonProps){
             href={href} 
             color="success"
         >
-            <Typography>{buttonText}</Typography>
+            <Typography sx={{textWrap:"nowrap"}}>{buttonText}</Typography>
         </Button>
     )
 }

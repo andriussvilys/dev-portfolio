@@ -8,11 +8,13 @@ import Typography from '@mui/material/Typography';
 
 interface FormStepperProps {
   steps: string[],
-  children: React.ReactNode
+  children: React.ReactNode,
+  activeStep: number,
+  setActiveStep: React.Dispatch<React.SetStateAction<number>>
 }
 
-export default function FormStepper({steps, children}: FormStepperProps) {
-  const [activeStep, setActiveStep] = React.useState(0);
+export default function FormStepper({steps, children, activeStep, setActiveStep}: FormStepperProps) {
+  // const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean;
   }>({});

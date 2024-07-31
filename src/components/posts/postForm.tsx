@@ -1,64 +1,62 @@
-import { Post } from "@/src/lib/definitions/posts"
+import { Post, PostFormData } from "@/src/lib/definitions/posts"
 import { Box, Button, Card, Container, Stack, TextField } from "@mui/material"
 import { FormEvent, useEffect, useState } from "react"
 import FormStepper from "./formStepper"
+import { SubmitHandler, useForm } from "react-hook-form"
+import BasicInfo from "./basicInfo"
+import TestForm from "./testForm"
 
 interface PostFormProps {
     onSubmit: (formData: FormData, id?: string) => Promise<any>,
     postData?: Post
 }
 
-export default function PostForm({onSubmit, postData}: PostFormProps){
-    const [name, setName] = useState<string>("")
-    const [description, setDescription] = useState<string>("")
-    const [liveSite, setLiveSite] = useState<string>("")
-    const [github, setGithub] = useState<string>("")
+export default function PostForm(props: PostFormProps){
 
-    useEffect(() => {
-        if(postData){
-            setName(postData.name)
-            setDescription(postData.description)
-            setLiveSite(postData.liveSite ?? "")
-            setGithub(postData.github)}
-    }, [postData])
+    const {register, handleSubmit, watch} = useForm<PostFormData>()
 
-    const handleSubmit = async (event:FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        const formData = new FormData()
-  
-        formData.append("name", name)
-        formData.append("description", description)
-        formData.append("liveSite", liveSite)
-        formData.append("github", github)
+    const [activeStep, setActiveStep] = useState(0);
 
-        try{
-            await onSubmit(formData)
-        }
-        catch(err){
-            throw err
-        }
-        // window.location.reload()
+    const onSubmit: SubmitHandler<PostFormData> = (data) => {
+        console.log(data)
+        //     event.preventDefault()
+        //     const formData = new FormData()
+
+        //     formData.append("name", name)
+        //     formData.append("description", description)
+        //     formData.append("liveSite", liveSite)
+        //     formData.append("github", github)
+
+        //     try{
+        //         await onSubmit(formData)
+        //     }
+        //     catch(err){
+        //         throw err
+        //     }
+        //     // window.location.reload()
+        // }
     }
 
     const steps = ["Basic Info", "Media", "Tags"]
 
+    const name = watch("name")
+
 
     return(
         <Container>
-            <FormStepper steps={steps}>
-                <Card sx={{p: 2, m:1, display:"flex", justifyContent:"center"}}>
-                    <Box component="form" onSubmit={e => handleSubmit(e)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
-                        <Stack gap={2}>
-                            <TextField size="small" InputLabelProps={{shrink:true}} label="name" variant="outlined" value={name} onChange={e => setName(e.target.value)}/>
-                            <TextField size="small" sx={{minWidth:"60ch"}} multiline rows={4} type="textArea" InputLabelProps={{shrink:true}} label="description" variant="outlined" value={description} onChange={e => setDescription(e.target.value)}/>
-                            <TextField size="small" InputLabelProps={{shrink:true}} label="live site" variant="outlined" value={liveSite} onChange={e => setLiveSite(e.target.value)}/>
-                            <TextField size="small" InputLabelProps={{shrink:true}} label="github" variant="outlined" value={github} onChange={e => setGithub(e.target.value)}/>
-                            <Box sx={{alignSelf:"end", display:"flex"}} gap={2}>
-                                <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
-                            </Box>
-                        </Stack>
-                    </Box>
-                </Card>
+            <FormStepper steps={steps} activeStep={activeStep} setActiveStep={setActiveStep}>
+                <Stack gap={2}>
+                    <Card sx={{p: 2, m:1, display:"flex", justifyContent:"center"}}>
+                        <Box 
+                            component="form" 
+                            onSubmit={handleSubmit(onSubmit)} 
+                            sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}
+                        >
+                            <BasicInfo register={register}/>
+                            <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
+                        </Box>
+                    </Card>
+                </Stack>
             </FormStepper>
         </Container>
     )

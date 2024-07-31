@@ -2,8 +2,6 @@
 
 import { TagMetadata } from "@/src/lib/definitions/tags"
 import { Box } from "@mui/material"
-// import Image from "next/image"
-import { useEffect, useRef, useState } from "react"
 
 interface FilePreviewProps {
     src?: string,
