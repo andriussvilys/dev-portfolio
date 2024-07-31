@@ -50,12 +50,11 @@ export default function PostForm({onSubmit, postData}: PostFormProps){
                     <Box component="form" onSubmit={e => handleSubmit(e)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
                         <Stack gap={2}>
                             <TextField size="small" InputLabelProps={{shrink:true}} label="name" variant="outlined" value={name} onChange={e => setName(e.target.value)}/>
-                            <TextField size="small" InputLabelProps={{shrink:true}} label="description" variant="outlined" value={description} onChange={e => setDescription(e.target.value)}/>
+                            <TextField size="small" sx={{minWidth:"60ch"}} multiline rows={4} type="textArea" InputLabelProps={{shrink:true}} label="description" variant="outlined" value={description} onChange={e => setDescription(e.target.value)}/>
                             <TextField size="small" InputLabelProps={{shrink:true}} label="live site" variant="outlined" value={liveSite} onChange={e => setLiveSite(e.target.value)}/>
                             <TextField size="small" InputLabelProps={{shrink:true}} label="github" variant="outlined" value={github} onChange={e => setGithub(e.target.value)}/>
                             <Box sx={{alignSelf:"end", display:"flex"}} gap={2}>
                                 <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
-                                {/* {tagData?._id ? <DeleteButton disabled={false} _id={tagData._id}/> : null} */}
                             </Box>
                         </Stack>
                     </Box>

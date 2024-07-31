@@ -13,7 +13,12 @@ export async function POST(request: Request) {
       Body: buffer,
     }
     const res = await s3.send(new PutObjectCommand(params));
-    return NextResponse.json({...res, key: params.Key}, {status: 200});
+    if(res.$metadata.httpStatusCode === 200){
+      return NextResponse.json({...res, key: params.Key}, {status: 200});
+    }
+    else{
+      throw new Error("failed to upload");
+    }
   } 
   catch (e) {
     return NextResponse.json({ status: "fail", error: e }, {status: 500});

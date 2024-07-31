@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import { getURL } from '@/src/lib/storage';
 import { Suspense } from 'react';
-import type {Tag} from '@/src/lib/data/tags';
 import { Box, Typography } from '@mui/material';
+import type {Tag} from '@/src/lib/definitions/tags'
 
 const getAlt = (tag: Tag) => {
     if(!tag){

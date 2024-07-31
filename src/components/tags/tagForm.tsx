@@ -6,7 +6,7 @@ import { createKey } from "@/src/lib/storage"
 import { Autocomplete, Box, Button, Divider, Stack, TextField } from "@mui/material"
 import DeleteButton from "./deleteButton"
 import { Tag, TagMetadata } from "@/src/lib/definitions/tags"
-import FileUpload from "../fileUpload"
+import FileUpload from "../fileUpload/fileUpload"
 
 interface TagFormProps {
     onSubmit: (formData: FormData, id?: string) => Promise<any>,
@@ -15,7 +15,7 @@ interface TagFormProps {
 }
 
 export default function TagForm({onSubmit, tagData, categories}: TagFormProps){
-    const [file, setFile] = useState<File | null>()
+    const [file, setFile] = useState<File>()
     const [name, setName] = useState<string>("")
     const [metadata, setMetadata] = useState<TagMetadata | null>()
     const [imageSrc, setImageSrc] = useState<string>("")
@@ -29,19 +29,6 @@ export default function TagForm({onSubmit, tagData, categories}: TagFormProps){
             setCategory(tagData.category ?? "")
         }
     }, [tagData])
-
-    const onFileChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-        const inputFile = event.target.files && event.target.files[0]
-
-        if(inputFile){
-            setFile(inputFile)
-            setName(inputFile.name)
-            setImageSrc(URL.createObjectURL(inputFile))
-        }
-    }
-    const onImageLoad = (img:HTMLImageElement) => {
-        setMetadata({width: img.naturalWidth, height: img.naturalHeight})
-    }
 
     const handleSubmit = async (event:FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -63,11 +50,18 @@ export default function TagForm({onSubmit, tagData, categories}: TagFormProps){
         // window.location.reload()
     }
 
+    useEffect(() => {
+        if(file){
+            const fileSrc = URL.createObjectURL(file)
+            setImageSrc(fileSrc)
+        }
+    }, [file])
+
     return(
         <Box component="form" onSubmit={e => handleSubmit(e)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
             <Stack gap={2}>
                 <Box sx={{display:"flex"}} gap={2}>
-                    <FileUpload setFile={setFile} setMetadata={setMetadata} fileSrc={imageSrc}/>
+                    <FileUpload setFile={setFile} setMetadata={setMetadata} file={file} src={imageSrc}/>
                     <Divider orientation="vertical"/>
                     <Stack gap={2}>
                         <TextField size="small" InputLabelProps={{shrink:true}} label="name" variant="outlined" value={name} onChange={e => setName(e.target.value)}/>
