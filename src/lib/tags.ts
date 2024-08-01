@@ -5,6 +5,7 @@ const upload = async (formData: FormData) => {
         const storageRes = await storageUpload(formData)
         if(storageRes.ok){
             try{
+                console.log("try db upload")
                 const dbRes = await fetch('/api/data/tags', {
                     method: 'POST',
                     cache: 'no-store',
@@ -26,7 +27,7 @@ const upload = async (formData: FormData) => {
     }
 }
 
-const listAll = async ({page, limit}: {page:number|null, limit: number|null}) => {
+const listAll = async ({page, limit}: {page?:number|null, limit?: number|null}) => {
     const query = page && limit ? `?page=${page}&limit=${limit}` : ''
     try{
         const res = await fetch(`http://localhost:3000/api/data/tags${query}`, {method: 'GET', cache: 'no-store'})
@@ -76,4 +77,14 @@ const patchById = async (formData: FormData, id: string, ) => {
 
 }
 
-export {upload, listAll, deleteById, getById, patchById}
+const getCategories = async () => {
+    try{
+        const res = await fetch('http://localhost:3000/api/data/tags/categories', {method: 'GET', cache: 'no-store'})
+        return await res.json()
+    }
+    catch(e){
+        throw new Error("failed to get categories")
+    }
+}
+
+export {upload, listAll, deleteById, getById, patchById, getCategories}

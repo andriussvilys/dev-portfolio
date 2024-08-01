@@ -141,7 +141,7 @@ export default function Navigation({children}: {children: React.ReactNode}) {
                 }}>
             <Toolbar />
             <Box 
-                sx={{overflow:"hidden", pt: 1, pb: 1}}
+                sx={{height:"100%", overflow:"hidden", pt: 1, pb: 1}}
             >
                 {children}
             </Box>

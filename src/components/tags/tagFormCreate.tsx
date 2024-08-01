@@ -1,8 +1,13 @@
-import { upload } from "@/src/lib/storage";
+"use client"
+import { upload } from "@/src/lib/tags";
 import TagForm from "./tagForm";
 
-export default function TagFormCreate(){
+interface TagFormCreateProps{
+    categories: string[]
+}
+
+export default function TagFormCreate({categories}:TagFormCreateProps){
     return(
-        <TagForm onSubmit={upload}/>
+        <TagForm categories={categories} onSubmit={upload}/>
     )
 }
