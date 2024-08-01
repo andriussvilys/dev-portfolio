@@ -16,20 +16,24 @@ interface PostFormProps {
     postData?: Post
 }
 
-const switchForm = (activeStep: number, register: UseFormRegister<PostFormData>, tags:Tag[]) => {
-    switch(activeStep){
-        case 0:
-            return <BasicInfo register={register}/>
-        case 1:
-            return <MediaForm register={register} setFile={function (file: File): void {
-                throw new Error("Function not implemented.")
-            } } setMetadata={function (metadata: TagMetadata): void {
-                throw new Error("Function not implemented.")
-            } }/>
-        case 2:
-            return <TagSelect register={register} tags={tags}/>
-        default: return null
-    }
+const switchForm = (
+        activeStep: number, 
+        register: UseFormRegister<PostFormData>, 
+        tags:Tag[],
+    ) => {
+        switch(activeStep){
+            case 0:
+                return <BasicInfo register={register}/>
+            case 1:
+                return <MediaForm register={register} setFile={function (file: File): void {
+                    throw new Error("Function not implemented.")
+                } } setMetadata={function (metadata: TagMetadata): void {
+                    throw new Error("Function not implemented.")
+                } }/>
+            case 2:
+                return <TagSelect register={register} tags={tags}/>
+            default: return null
+        }
 }
 
 export default function PostForm(props: PostFormProps){

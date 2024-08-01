@@ -16,7 +16,7 @@ interface BasicInfoProps {
 
 export default function BasicInfo({register, defaults}: BasicInfoProps) {
     return(
-        <Stack gap={2}>
+        <Stack gap={2} sx={{justifyContent:"center", flexWrap:"wrap"}}>
             <TextField 
                 size="small" 
                 label="name" 

@@ -12,16 +12,14 @@ interface TagSelectProps{
 
 export default function TagSelect({register, tags}:TagSelectProps){
     return(
-        <Box sx={{height:"100%", overflow:"auto"}}>
-            <List>
-                {tags.map(tag => {
-                    return(
-                        <ListItem key={tag.key}>
-                            <SelectableTag register={register} tag={tag}/>
-                        </ListItem>
-                    )
-                })}
-            </List>
-        </Box>
+        <List sx={{display:"flex"}}>
+            {tags.map(tag => {
+                return(
+                    <ListItem key={tag.key}>
+                        <SelectableTag register={register} tag={tag}/>
+                    </ListItem>
+                )
+            })}
+        </List>
     )
 }

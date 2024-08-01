@@ -13,7 +13,7 @@ interface MediaFormProps {
 
 export default function MediaForm({setFile, files, setMetadata, register}: MediaFormProps){
     return (
-        <Box>
+        <Box sx={{display:"flex", alignItems:"center"}}>
             {
                 files?.map((file, index) => {
                     return(

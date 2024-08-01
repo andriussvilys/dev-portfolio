@@ -25,6 +25,5 @@ export default function FileUpload({setFile, setMetadata, file, src}: FileUpload
             <FilePreview src={src} setMetadata={setMetadata}/>
             <TextField size="small" InputLabelProps={{shrink:true}} label="select file" type="file" id="new-file" variant="outlined" onChange={(e: React.ChangeEvent<HTMLInputElement>) => onFileChange(e)}/>
         </Stack>
-
     )
 }
