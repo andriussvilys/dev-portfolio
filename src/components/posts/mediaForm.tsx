@@ -1,5 +1,5 @@
 import { UseFormRegister } from "react-hook-form";
-import FileUpload from "../fileUpload/fileUpload";
+import FileUploadField from "../fileUpload/fileUploadField";
 import { TagMetadata } from "@/src/lib/definitions/tags";
 import { PostFormData } from "@/src/lib/definitions/posts";
 import { Box } from "@mui/material";
@@ -17,7 +17,7 @@ export default function MediaForm({setFile, files, setMetadata, register}: Media
             {
                 files?.map((file, index) => {
                     return(
-                        <FileUpload 
+                        <FileUploadField 
                             key={crypto.randomUUID()} 
                             setFile={setFile} 
                             file={file}
@@ -26,7 +26,7 @@ export default function MediaForm({setFile, files, setMetadata, register}: Media
                     ) 
                 })
             }
-            <FileUpload setFile={setFile} setMetadata={setMetadata}/>
+            <FileUploadField setFile={setFile} setMetadata={setMetadata}/>
             
         </Box>
     )

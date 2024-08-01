@@ -16,9 +16,9 @@ const upload = async (formData: FormData) => {
             cache: 'no-store'
             })
         if(res.ok){
-            return res
+            return await res.json()
         }
-        throw new Error(res.statusText)
+        throw new Error("failed to upload to storage: " + res.statusText)
     }
     catch(e){
         throw e
@@ -32,7 +32,7 @@ const deleteByKey = async (key: string) => {
             cache: 'no-store'
           })
         if(res.ok){
-            return res
+            return await res.json()
         }
         throw new Error(res.statusText)
     }

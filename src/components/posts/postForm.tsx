@@ -7,8 +7,9 @@ import FormStepper from "./formStepper"
 import { SubmitHandler, useForm, UseFormRegister } from "react-hook-form"
 import BasicInfo from "./basicInfo"
 import MediaForm from "./mediaForm"
-import { Tag, TagMetadata } from "@/src/lib/definitions/tags"
+import { Tag } from "@/src/lib/definitions/tags"
 import TagSelect from "./tagSelect"
+import { FileMetadata } from "@/src/lib/definitions/fileUpload"
 
 interface PostFormProps {
     onSubmit: (formData: FormData, id?: string) => Promise<any>,
@@ -27,7 +28,7 @@ const switchForm = (
             case 1:
                 return <MediaForm register={register} setFile={function (file: File): void {
                     throw new Error("Function not implemented.")
-                } } setMetadata={function (metadata: TagMetadata): void {
+                } } setMetadata={function (metadata: FileMetadata): void {
                     throw new Error("Function not implemented.")
                 } }/>
             case 2:
@@ -38,7 +39,7 @@ const switchForm = (
 
 export default function PostForm(props: PostFormProps){
 
-    const {register, handleSubmit, watch} = useForm<PostFormData>()
+    const {register, handleSubmit} = useForm<PostFormData>()
 
     const [activeStep, setActiveStep] = useState(0);
 

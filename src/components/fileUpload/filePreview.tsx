@@ -1,18 +1,16 @@
 "use client"
 
-import { TagMetadata } from "@/src/lib/definitions/tags"
+import { FileMetadata } from "@/src/lib/definitions/fileUpload"
 import { Box } from "@mui/material"
+import { Dispatch, SetStateAction } from "react"
+import { UseFormRegister, UseFormSetValue } from "react-hook-form"
 
 interface FilePreviewProps {
-    src?: string,
-    setMetadata: (metadata: TagMetadata) => void
+    setValue: UseFormSetValue<any>,
+    src?: string
 }
 
-export default function FilePreview({src, setMetadata}: FilePreviewProps){
-
-    const onImageLoad = (img:HTMLImageElement) => {
-        setMetadata({width: img.naturalWidth, height: img.naturalHeight})
-    }
+export default function FilePreview({src, setValue}: FilePreviewProps){
 
     return(
         <Box sx={{height: 100, width: 100, padding: 1, border: "1px solid grey", borderRadius: 2}}>
@@ -20,9 +18,13 @@ export default function FilePreview({src, setMetadata}: FilePreviewProps){
                 <Box 
                     component="img" 
                     src={src} 
-                    height={100} width={100} alt="file upload" 
+                    height={100} width={100} alt="file upload"
                     onLoad={(e) => {
-                        onImageLoad(e.target as HTMLImageElement)
+                        const target = e.target as HTMLImageElement
+                        setValue("metadata",{
+                            width: target.naturalWidth,
+                            height: target.naturalHeight
+                        })
                     }}
                 />
                 : null}

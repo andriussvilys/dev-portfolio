@@ -1,89 +1,44 @@
 "use client"
 
-import { FormEvent, useEffect, useState } from "react"
-import Image from "next/image"
-import { createKey } from "@/src/lib/storage"
-import { Autocomplete, Box, Button, Divider, Stack, TextField } from "@mui/material"
+import { Box, Button, Divider, Stack, TextField } from "@mui/material"
 import DeleteButton from "./deleteButton"
-import { Tag, TagMetadata } from "@/src/lib/definitions/tags"
-import FileUpload from "../fileUpload/fileUpload"
+import { Tag, TagFormInput } from "@/src/lib/definitions/tags"
+import FileUploadField from "../fileUpload/fileUploadField"
+import { useForm} from "react-hook-form"
+import ControlledSelect from "./ControlledSelect"
 
 interface TagFormProps {
-    onSubmit: (formData: FormData, id?: string) => Promise<any>,
+    onSubmit: (inputs: TagFormInput) => Promise<any>,
     tagData?: Tag
     categories: string[]
 }
 
-export default function TagForm({onSubmit, tagData, categories}: TagFormProps){
-    const [file, setFile] = useState<File>()
-    const [name, setName] = useState<string>("")
-    const [metadata, setMetadata] = useState<TagMetadata | null>()
-    const [imageSrc, setImageSrc] = useState<string>("")
-    const [category, setCategory] = useState<string>("")
-
-    useEffect(() => {
-        if(tagData){
-            setName(tagData.name)
-            setMetadata(tagData.metadata)
-            setImageSrc(tagData.url ?? "")
-            setCategory(tagData.category ?? "")
+export default function TagForm(props: TagFormProps){
+    const {tagData, categories} = props
+    const {register, handleSubmit, watch, setValue, control} = useForm<TagFormInput>({
+        defaultValues: {
+            category: tagData?.category ?? "",
         }
-    }, [tagData])
-
-    const handleSubmit = async (event:FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        const formData = new FormData()
-        if(file){
-            formData.append("metadata", JSON.stringify(metadata))
-            formData.append("key", createKey(file))
-            formData.append("file", file)
-        }
-        formData.append("category", category)
-        formData.append("name", name)
-
-        try{
-            await onSubmit(formData)
-        }
-        catch(err){
-            throw err
-        }
-        // window.location.reload()
-    }
-
-    useEffect(() => {
-        if(file){
-            const fileSrc = URL.createObjectURL(file)
-            setImageSrc(fileSrc)
-        }
-    }, [file])
+    })
 
     return(
-        <Box component="form" onSubmit={e => handleSubmit(e)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
+        <Box component="form" onSubmit={handleSubmit(props.onSubmit)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
             <Stack gap={2}>
                 <Box sx={{display:"flex"}} gap={2}>
-                    <FileUpload setFile={setFile} setMetadata={setMetadata} file={file} src={imageSrc}/>
+                    <FileUploadField register={register} watch={watch} setValue={setValue} src={props.tagData?.url}/>
                     <Divider orientation="vertical"/>
                     <Stack gap={2}>
-                        <TextField size="small" InputLabelProps={{shrink:true}} label="name" variant="outlined" value={name} onChange={e => setName(e.target.value)}/>
-                        <Autocomplete
-                            freeSolo
-                            options={categories.map((option) => option)}
-                            value={category}
-                            renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                size="small"
-                                InputLabelProps={{shrink:true}}
-                                label="category"
-                                InputProps={{
-                                ...params.InputProps,
-                                type: 'search',
-                                value: category,
-                                }}
-                                onChange={(e) => setCategory(e.target.value)}
-                            />
-                            )}
-                            onChange={(e, value) => setCategory(value ?? "")}
+                        <TextField 
+                            size="small" 
+                            InputLabelProps={{shrink:true}} 
+                            label="name" 
+                            variant="outlined"
+                            defaultValue={props.tagData?.name}
+                            {...register("name")}
+                        />
+                        <ControlledSelect 
+                            control={control} 
+                            options={categories}
                         />
                     </Stack>
                 </Box>
