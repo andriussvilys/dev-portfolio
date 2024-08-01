@@ -1,11 +1,11 @@
 import {deleteByKey, upload as storageUpload} from './storage'
 
 const upload = async (formData: FormData) => {
+
     try{
         const storageRes = await storageUpload(formData)
-        if(storageRes.ok){
             try{
-                console.log("try db upload")
+                formData.append("key", storageRes.key)
                 const dbRes = await fetch('/api/data/tags', {
                     method: 'POST',
                     cache: 'no-store',
@@ -14,13 +14,10 @@ const upload = async (formData: FormData) => {
                 return await dbRes.json()
             }
             catch(e){
+                console.log("rollback s3 upload")
                 deleteByKey(formData.get("key") as string)
                 throw e
             }
-        }
-        else{
-            throw new Error(storageRes.statusText)
-        }
     }
     catch(e){
         throw e
@@ -48,7 +45,7 @@ const deleteById = async (id: string) => {
         return {storageRes, dataRes}
     }
     catch(e){
-        throw new Error((e as Error).message)
+        throw new Error("failed to delete data: " + (e as Error).message)
     }
 }
 
@@ -58,7 +55,7 @@ const getById = async (id: string) => {
         return await res.json()
     }
     catch(e){
-        throw new Error("failed to get from db")
+        throw new Error("failed to get from db" + (e as Error).message)
     }
 
 }
@@ -66,13 +63,18 @@ const getById = async (id: string) => {
 const patchById = async (formData: FormData, id: string, ) => {
     try{
         if(formData.get("file")!= null){
-            await storageUpload(formData);
+
+            await deleteByKey(formData.get("key") as string)
+            console.log("deleted old image")	
+            const storageRes = await storageUpload(formData);
+            console.log("uploaded new image:", storageRes.key)
+            formData.append("key",storageRes.key)
         }
         const res = await fetch(`http://localhost:3000/api/data/tags/${id}`, {method: 'PATCH', cache: 'no-store', body: formData})
         return await res.json()
     }
     catch(e){
-        throw new Error("failed to patch db")
+        throw new Error ("failed to patch: " + (e as Error).message)
     }
 
 }
@@ -83,7 +85,7 @@ const getCategories = async () => {
         return await res.json()
     }
     catch(e){
-        throw new Error("failed to get categories")
+        throw new Error("failed to get categories: " + (e as Error).message)
     }
 }
 
