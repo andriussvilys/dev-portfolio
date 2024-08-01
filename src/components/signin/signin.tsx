@@ -1,14 +1,14 @@
 import { Avatar, Box, Container, Link, Typography } from "@mui/material"
-import {Button as GoogleSigninButton} from "../signin/googleSignin/button"
-import SignoutButton from "../signin/signoutButton"
+import {Button as GoogleSigninButton} from "./buttons/googleSignin/button"
+import SignoutButton from "./buttons/signoutButton"
 import {LockOutlined as LockOutlinedIcon } from "@mui/icons-material"
 import { defaultRoute } from "@/src/lib/constants"
 
-interface HomeProps {
+interface SigninProps {
     signedIn: boolean
 }
 
-const Home = ({signedIn}: HomeProps) => {
+const Signin = ({signedIn}: SigninProps) => {
     return(
         <Container component="section" sx={{display:"flex", justifyContent:"center", alignItems:"center", mt:"25vh"}}>
             <Box sx={{display: "flex", flexDirection:"column", alignItems:"center", gap:2, p: 2}}>
@@ -30,4 +30,4 @@ const Home = ({signedIn}: HomeProps) => {
     )
 }
 
-export default Home
+export default Signin

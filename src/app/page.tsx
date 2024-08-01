@@ -1,10 +1,13 @@
-import { getServerSession } from "next-auth";
-import authOptions from "./api/auth/[...nextauth]/authOptions";
-import Home from "../components/home/home";
+import { Metadata } from "next";
+import Front from "../components/front/front";
+
+export const metadata: Metadata = {
+  title: 'Andrius Svilys | Software developer',
+  description: '...',
+}
 
 export default async function Page() {
-  const session = await getServerSession(authOptions);
   return (
-    <Home signedIn={!!session?.user}/>
+    <Front/>
   );
 }
