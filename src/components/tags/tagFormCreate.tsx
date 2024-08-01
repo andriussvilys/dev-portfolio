@@ -1,6 +1,5 @@
 "use client"
-
-import { upload } from "@/src/lib/storage";
+import { upload } from "@/src/lib/tags";
 import TagForm from "./tagForm";
 
 interface TagFormCreateProps{
