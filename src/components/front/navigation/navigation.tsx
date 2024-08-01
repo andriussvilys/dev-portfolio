@@ -49,22 +49,5 @@ export default function Navigation({children}: {children?: React.ReactNode}) {
             </AppBar>
             <NavDrawer isOpen={drawerOpen} setOpen={(val:boolean) => {setDrawerOpen(val)}}/>
         </>
-        // <Box component="main" 
-        //     sx={{ flexGrow: 1, 
-        //         bgcolor: 'background.default', 
-        //         pr: 3, 
-        //         pl: 3, 
-        //         overflow:"hidden",
-        //         display:"flex",
-        //         flexDirection:"column"
-        //         }}>
-        //     <Toolbar />
-        //     <Box 
-        //         sx={{overflow:"hidden", pt: 1, pb: 1}}
-        //     >
-        //         {children}
-        //     </Box>
-        // </Box>
-        // </Box>
     )
 }
