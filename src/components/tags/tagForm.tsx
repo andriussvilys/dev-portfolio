@@ -25,7 +25,7 @@ export default function TagForm(props: TagFormProps){
         <Box component="form" onSubmit={handleSubmit(props.onSubmit)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
             <Stack gap={2}>
                 <Box sx={{display:"flex"}} gap={2}>
-                    <FileUploadField register={register} watch={watch} setValue={setValue} src={props.tagData?.url}/>
+                    <FileUploadField register={register} watch={watch} setValue={setValue} src={props.tagData?.url} fieldName={"file"}/>
                     <Divider orientation="vertical"/>
                     <Stack gap={2}>
                         <TextField 

@@ -1,4 +1,4 @@
-import { PostFormData } from "@/src/lib/definitions/posts";
+import { PostFormData, PostFormInput } from "@/src/lib/definitions/posts";
 import { Box, Button, Stack, TextField } from "@mui/material";
 import { UseFormRegister } from "react-hook-form";
 
@@ -10,7 +10,7 @@ interface BasicInfoDefaults{
 }
 
 interface BasicInfoProps {
-    register: UseFormRegister<PostFormData>,
+    register: UseFormRegister<PostFormInput>,
     defaults?: BasicInfoDefaults
 }
 
