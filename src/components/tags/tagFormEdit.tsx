@@ -9,13 +9,12 @@ interface TagFormEditProps extends Omit<TagFormProps, 'onSubmit'> {tagData: Tag}
 
 export default function TagFormEdit ({tagData, categories}: TagFormEditProps){
     const handleSubmit = async (inputs: TagFormInput) => {
-        console.log({inputs})
         try{
             const formData = new FormData()
             const name = inputs.name ?? tagData.name
             const category = inputs.category ?? tagData.category
-            const metadata = inputs.metadata ?? tagData.metadata
-            const file = inputs.file?.[0] ?? null
+            const metadata = inputs.fileData.metadata ?? tagData.metadata
+            const file = inputs.fileData.data ?? null
             formData.append("name", name)
             formData.append("category", category)
             formData.append("metadata", JSON.stringify(metadata))

@@ -2,12 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { MongoInstance } from "../connection";
 import { collections } from "../collections";
 import { TagFormData } from "@/src/lib/definitions/tags";
-import { FileData, FileMetadata } from "@/src/lib/definitions/fileUpload";
+import { FileMetadata } from "@/src/lib/definitions/fileUpload";
 
 export async function POST(request: Request) {
   try{
     const formData = await request.formData();
-    console.log("data/tags/POST", formData)
     const db = await MongoInstance.getDb();
     const collection = db.collection(collections.tags);
     const name = formData.get("name")?.toString() ?? "";

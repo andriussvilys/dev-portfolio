@@ -14,7 +14,6 @@ const upload = async (formData: FormData) => {
                 return await dbRes.json()
             }
             catch(e){
-                console.log("rollback s3 upload")
                 deleteByKey(formData.get("key") as string)
                 throw e
             }
@@ -65,9 +64,7 @@ const patchById = async (formData: FormData, id: string, ) => {
         if(formData.get("file")!= null){
 
             await deleteByKey(formData.get("key") as string)
-            console.log("deleted old image")	
             const storageRes = await storageUpload(formData);
-            console.log("uploaded new image:", storageRes.key)
             formData.append("key",storageRes.key)
         }
         const res = await fetch(`http://localhost:3000/api/data/tags/${id}`, {method: 'PATCH', cache: 'no-store', body: formData})

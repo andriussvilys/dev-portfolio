@@ -2,70 +2,51 @@
 
 import { Stack, TextField } from "@mui/material"
 import FilePreview from "./filePreview"
-import { Control, Controller, UseFormRegister, UseFormSetValue } from "react-hook-form"
+import { UseFormSetValue } from "react-hook-form"
 import { useEffect, useState } from "react"
+import useFileUpload from "./useFileUpload"
 
 interface FileUploadProps{
-    control?: Control<any>,
-    register: UseFormRegister<any>,
-    setValue: UseFormSetValue<any>,
+    src?: string,
     fieldName: string,
-    watch: any,
-    src?: string
+    setValue: UseFormSetValue<any>,
 }
 
-export default function FileUploadField({register, watch, fieldName, setValue, src, control}: FileUploadProps){
-    const fileWatcher = watch(fieldName)
+export default function FileUploadField({setValue, fieldName, src,}: FileUploadProps){
     const [imageSrc, setImageSrc] = useState<string>("")
+    const {fileData, setFile} = useFileUpload()
 
     useEffect(() => {
         if(src){
             setImageSrc(src)
         }
     }, [src])
-    
+
     useEffect(() => {
-        if(fileWatcher?.length > 0){
-            setImageSrc(URL.createObjectURL(fileWatcher[0]))
+        if(fileData){
+            setValue(fieldName, fileData)
+            const url = URL.createObjectURL(fileData.data)
+            setImageSrc(url)
         }
-    }, [fileWatcher])
+    }, [fileData, setValue, fieldName])
 
     return(
         <Stack gap={2}>
-            <FilePreview src={imageSrc} setValue={setValue}/>
+            <FilePreview src={imageSrc}/>
             <TextField 
                 size="small" 
                 InputLabelProps={{shrink:true}} 
                 label="select file" 
                 type="file" 
                 id="new-file"
-                {...register(fieldName)}
+                onChange={e => {
+                    const file: File|undefined = (e.target as HTMLInputElement).files?.[0]
+                    if(!!file){
+                        setFile(file)
+                    }
+                }}
             />
         </Stack>
-
-        // <Stack gap={2}>
-        //     <FilePreview src={imageSrc} setValue={setValue}/>
-
-        //     <Controller
-        //         control={control}
-        //         name={fieldName}
-        //         render={({
-        //             field: { onChange, value, name },
-        //             fieldState: { invalid, isTouched, isDirty, error },
-        //             formState,
-        //         }) => (
-        //             <TextField 
-        //                 size="small" 
-        //                 InputLabelProps={{shrink:true}} 
-        //                 label="select file" 
-        //                 type="file" 
-        //                 id="new-file"
-        //                 onChange={onChange}
-        //                 value={value}
-        //             />
-        //         )}
-        //     />
-        // </Stack>
     )
 }
 

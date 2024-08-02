@@ -13,8 +13,8 @@ export default function TagFormCreate({categories}:TagFormCreateProps){
             const formData = new FormData()
             formData.append("name", inputs.name)
             formData.append("category", inputs.category)
-            formData.append("metadata", JSON.stringify(inputs.metadata))
-            formData.append("file", inputs.file[0])
+            formData.append("metadata", JSON.stringify(inputs.fileData.metadata))
+            formData.append("file", inputs.fileData.data)
             await upload(formData)
         }
         catch(e){

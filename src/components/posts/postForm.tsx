@@ -1,6 +1,6 @@
 "use client"
 
-import { Post, PostFormData, PostFormInput } from "@/src/lib/definitions/posts"
+import { Post, PostFormInput } from "@/src/lib/definitions/posts"
 import { Box, Button, Card } from "@mui/material"
 import { useState } from "react"
 import FormStepper from "./formStepper"
@@ -9,7 +9,6 @@ import BasicInfo from "./basicInfo"
 import MediaForm from "./mediaForm"
 import { Tag } from "@/src/lib/definitions/tags"
 import TagSelect from "./tagSelect"
-import { FileMetadata } from "@/src/lib/definitions/fileUpload"
 
 interface PostFormProps {
     onSubmit: (input: PostFormInput) => Promise<any>,
@@ -29,7 +28,8 @@ const switchForm = (
             case 0:
                 return <BasicInfo register={register}/>
             case 1:
-                return <MediaForm register={register} setValue={setValue} watch={watch} files={files} fieldName={"files"}/>
+                // return <MediaForm register={register} setValue={setValue} watch={watch} files={files} fieldName={"files"}/>
+                return null
             case 2:
                 return <TagSelect register={register} tags={tags}/>
             default: return null
@@ -40,7 +40,6 @@ export default function PostForm(props: PostFormProps){
 
     const {register, handleSubmit, watch, setValue} = useForm<PostFormInput>()
     const files = watch("files")
-    console.log(files)
     const [activeStep, setActiveStep] = useState(0);
     const steps = ["Basic Info", "Media", "Tags"]
 

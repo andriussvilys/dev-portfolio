@@ -1,4 +1,4 @@
-import { FileMetadata, FileUpload } from "./fileUpload"
+import { FileData, FileMetadata, FileUpload } from "./fileUpload"
 
 interface TagFormData{
     metadata: FileMetadata,
@@ -9,8 +9,7 @@ interface TagFormData{
 }
 
 interface TagFormInput{ 
-    metadata: FileMetadata,
-    file: File[],
+    fileData: FileData,
     name: string,
     category: string
 }
