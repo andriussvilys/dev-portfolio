@@ -7,7 +7,6 @@ interface FilePreviewProps {
 }
 
 export default function FilePreview({src}: FilePreviewProps){
-
     return(
         <Box sx={{height: 100, width: 100, padding: 1, border: "1px solid grey", borderRadius: 2}}>
             {!!src ? 

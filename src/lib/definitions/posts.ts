@@ -1,4 +1,4 @@
-import { FileMetadata } from "./fileUpload"
+import { FileData, FileMetadata } from "./fileUpload"
 
 interface Post extends PostFormData {
     _id: string
@@ -16,8 +16,7 @@ interface PostFormData {
 
 
 interface PostFormInput {
-    files: FileList,
-    metadata: FileMetadata[],
+    fileDataList: FileData[],
     name: string,
     description: string,
     liveSite?: string,

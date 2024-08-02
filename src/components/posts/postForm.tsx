@@ -4,11 +4,12 @@ import { Post, PostFormInput } from "@/src/lib/definitions/posts"
 import { Box, Button, Card } from "@mui/material"
 import { useState } from "react"
 import FormStepper from "./formStepper"
-import { useForm, UseFormRegister } from "react-hook-form"
+import { useFieldArray, useForm, UseFormRegister } from "react-hook-form"
 import BasicInfo from "./basicInfo"
-import MediaForm from "./mediaForm"
 import { Tag } from "@/src/lib/definitions/tags"
 import TagSelect from "./tagSelect"
+import MultiFileUpload from "../fileUpload/multiFileUpload"
+import FieldArray from "./fieldArray"
 
 interface PostFormProps {
     onSubmit: (input: PostFormInput) => Promise<any>,
@@ -21,15 +22,17 @@ const switchForm = (
         register: UseFormRegister<PostFormInput>, 
         tags:Tag[],
         setValue: any,
-        watch: any,
-        files?: FileList
+        fields: any, 
+        append: any, 
+        remove: any,
+        control: any
     ) => {
         switch(activeStep){
             case 0:
                 return <BasicInfo register={register}/>
+                // return <FieldArray/>
             case 1:
-                // return <MediaForm register={register} setValue={setValue} watch={watch} files={files} fieldName={"files"}/>
-                return null
+                return <MultiFileUpload setValue={setValue} fieldName={"fileDataList"} fields={fields} append={append} remove={remove} control={control}/>
             case 2:
                 return <TagSelect register={register} tags={tags}/>
             default: return null
@@ -38,8 +41,15 @@ const switchForm = (
 
 export default function PostForm(props: PostFormProps){
 
-    const {register, handleSubmit, watch, setValue} = useForm<PostFormInput>()
-    const files = watch("files")
+    const {register, handleSubmit, setValue, control} = useForm<PostFormInput>({
+        defaultValues: {
+            fileDataList: [{}]
+        }
+    })
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "fileDataList"
+      });
     const [activeStep, setActiveStep] = useState(0);
     const steps = ["Basic Info", "Media", "Tags"]
 
@@ -61,8 +71,8 @@ export default function PostForm(props: PostFormProps){
                     activeStep={activeStep} 
                     setActiveStep={setActiveStep}
                 >
-                    <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center"}}>
-                        {switchForm(activeStep, register, props.tags, setValue, watch, files)}
+                    <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto"}}>
+                        {switchForm(activeStep, register, props.tags, setValue, fields, append, remove, control)}
                     </Card>
                 <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
                 </FormStepper>
