@@ -4,16 +4,25 @@ interface Post extends PostFormData {
     _id: string
 }
 
+interface PostFormRequest {
+    name: string,
+    description: string,
+    liveSite?: string,
+    github?: string,
+    files: FileData[],
+    tags: string[]
+}
+
 interface PostFormData {
     name: string,
     description: string,
     liveSite?: string,
     github?: string
-    files: string[], //storage keys
-    metadata: FileMetadata[],
+    files: {key:string, metadata: FileMetadata}[],
+    // files: string[], //storage keys
+    // metadata: FileMetadata[],
     tags: string[], //db ids
 }
-
 
 interface PostFormInput {
     fileDataList: FileData[],
@@ -24,4 +33,4 @@ interface PostFormInput {
     tags: string[]
 }
 
-export type {Post, PostFormData, PostFormInput}
+export type {Post, PostFormData, PostFormInput, PostFormRequest}

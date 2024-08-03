@@ -29,7 +29,7 @@ const switchForm = (
             case 0:
                 return <BasicInfo register={register}/>
             case 1:
-                return <MultiFileUpload setValue={setValue} fieldName={"fileDataList"} fields={fields} append={append} remove={remove} register={register}/>
+                return <MultiFileUpload setValue={setValue} fieldName={"fileDataList"} fields={fields} append={append} remove={remove}/>
             case 2:
                 return <TagSelect register={register} tags={tags}/>
             default: return null
@@ -40,7 +40,6 @@ export default function PostForm(props: PostFormProps){
 
     const {register, handleSubmit, setValue, control, formState:{dirtyFields}} = useForm<PostFormInput>({
         defaultValues: {
-            // name: "",
             fileDataList: [{}],
         }
     })

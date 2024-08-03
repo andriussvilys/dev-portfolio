@@ -3,10 +3,27 @@
 import PostForm from "./postForm"
 import { Tag } from "@/src/lib/definitions/tags"
 import { PostFormInput } from "@/src/lib/definitions/posts"
+import { upload } from "@/src/lib/posts"
 
-export default function TagFormCreate({tags}:{tags:Tag[]}){
-        const handleSubmit = async (data: PostFormInput) => {
-            console.log(data)
+export default function PostFormCreate({tags}:{tags:Tag[]}){
+        const handleSubmit = async (inputs: PostFormInput) => {
+            inputs.fileDataList = inputs.fileDataList.filter(fileData => {
+                return !!fileData.data
+            })
+            const tags = !!inputs.tags ? JSON.stringify(inputs.tags) : JSON.stringify([])
+            const formData = new FormData()
+            formData.append("name", inputs.name)
+            formData.append("description", inputs.description)
+            formData.append("liveSite", inputs?.liveSite ?? "")
+            formData.append("github", inputs?.github ?? "")
+            formData.append("tags", tags)
+            inputs.fileDataList.forEach((fileData) => {
+                formData.append("files", fileData.data)
+            })
+            inputs.fileDataList.forEach((fileData) => {
+                formData.append("metadata", JSON.stringify(fileData.metadata))
+            })
+            await upload(formData)
         }
     return(
         <PostForm onSubmit={handleSubmit} tags={tags}/>

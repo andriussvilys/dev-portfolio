@@ -14,7 +14,7 @@ export default function SelectableTag({tag, register}:SelectableTagProps){
     return(
         <Box sx={{display:"flex", alignItems:"center"}}>
             <Tag tag={tag} /> 
-            <Checkbox value={tag.key} {...register("tags")} />
+            <Checkbox value={tag._id} {...register("tags")} />
         </Box>
     )
 }

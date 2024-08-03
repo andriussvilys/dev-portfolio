@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { getURL } from '@/src/lib/storage';
 import { Stack, Typography } from '@mui/material';
 import type {Tag} from '@/src/lib/definitions/tags'
 

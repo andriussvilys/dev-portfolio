@@ -1,5 +1,22 @@
+import {upload as storageUpload} from './storage'
+
 const upload = async (formData: FormData) => {
     try{
+        const files = formData.getAll("files")
+        const metadata = formData.getAll("metadata")
+        const uploadPromises = files.map((file:any, index:number) => {
+          const fileFormData = new FormData()
+          fileFormData.append("file", file)
+          fileFormData.append("metadata", metadata[index])
+          return storageUpload(fileFormData)
+        });
+        const storageRes = await Promise.all(uploadPromises);
+        formData.delete("files")
+        formData.delete("metadata")
+        storageRes.forEach(({key, metadata}, index) => {
+            const fileData = JSON.stringify({key, metadata})
+            formData.append("files", fileData)
+        })
         const dbRes = await fetch('/api/data/posts', {
             method: 'POST',
             cache: 'no-store',

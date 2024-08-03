@@ -9,10 +9,9 @@ interface MultiFileUploadProps extends FileUploadProps{
     fields: any, 
     append: any, 
     remove: UseFieldArrayRemove,
-    register: any
 }
 
-export default function MultiFileUpload({setValue, fieldName, initialSrcs, fields, append, remove, register}: MultiFileUploadProps){
+export default function MultiFileUpload({setValue, fieldName, initialSrcs, fields, append, remove}: MultiFileUploadProps){
     return (
         <Stack gap={2} sx={{width:1, height:1, overflow:"hidden"}}>
             <Box sx={{overflow:"auto", height:1, width:1}}>
@@ -31,7 +30,6 @@ export default function MultiFileUpload({setValue, fieldName, initialSrcs, field
                                         setValue={setValue} 
                                         fieldName={`${fieldName}.${index}`}
                                         append={append}
-                                        register={register}
                                     />
                                     <Button 
                                         disabled={fields.length-1 === index}

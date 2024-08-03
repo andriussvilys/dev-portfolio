@@ -14,7 +14,6 @@ export default function useFileUpload({fieldName, setValue, append}: UseFileUplo
     
     const dirty = useRef(false)
     useEffect(() => {
-        console.log({dirty})
         if(!dirty.current && fileData && append){
             append({})
             dirty.current = true
