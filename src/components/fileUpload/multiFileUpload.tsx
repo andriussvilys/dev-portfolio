@@ -1,24 +1,18 @@
-import { Controller, UseFormSetValue } from "react-hook-form";
+import { UseFieldArrayRemove, UseFormSetValue } from "react-hook-form";
 import FileUploadField from "./fileUploadField";
 import type { FileUploadProps } from "./fileUploadField";
-import useMultiFileUpload from "./useMultiFileUpload";
-import { useEffect, useState } from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { metadata } from "@/src/app/layout";
 
 interface MultiFileUploadProps extends FileUploadProps{
     initialSrcs?: string[]
     setValue: UseFormSetValue<any>,
     fields: any, 
     append: any, 
-    remove: any,
-    control: any
+    remove: UseFieldArrayRemove,
+    register: any
 }
 
-export default function MultiFileUpload({setValue, fieldName, initialSrcs, fields, append, remove, control}: MultiFileUploadProps){
-    const {fileDataList, setFile, removeFile} = useMultiFileUpload()
-    const [srcs, setSrcs] = useState<string[]>(initialSrcs ?? [])
-    const mappableList = fileDataList ? [...fileDataList, null] : [null] 
+export default function MultiFileUpload({setValue, fieldName, initialSrcs, fields, append, remove, register}: MultiFileUploadProps){
     return (
         <Stack gap={2} sx={{width:1, height:1, overflow:"hidden"}}>
             <Box sx={{overflow:"auto", height:1, width:1}}>
@@ -31,17 +25,19 @@ export default function MultiFileUpload({setValue, fieldName, initialSrcs, field
                     {
                         fields.map((field: any, index: number) => {
                             return(
-                                <Stack key={index} gap={2}>
-                                    <Typography>index: {index}</Typography>
+                                <Stack key={field.id} gap={2}>
+                                    <Typography>index: {index}</Typography>                                 
                                     <FileUploadField 
                                         setValue={setValue} 
                                         fieldName={`${fieldName}.${index}`}
-                                        setFile={setFile}
+                                        append={append}
+                                        register={register}
                                     />
                                     <Button 
+                                        disabled={fields.length-1 === index}
                                         variant="contained"
                                         color="error"
-                                        onClick={()=>remove(index)}
+                                        onClick={() => remove(index)}
                                     >
                                         Remove
                                     </Button>

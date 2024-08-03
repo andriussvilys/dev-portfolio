@@ -9,7 +9,6 @@ import BasicInfo from "./basicInfo"
 import { Tag } from "@/src/lib/definitions/tags"
 import TagSelect from "./tagSelect"
 import MultiFileUpload from "../fileUpload/multiFileUpload"
-import FieldArray from "./fieldArray"
 
 interface PostFormProps {
     onSubmit: (input: PostFormInput) => Promise<any>,
@@ -24,15 +23,13 @@ const switchForm = (
         setValue: any,
         fields: any, 
         append: any, 
-        remove: any,
-        control: any
+        remove: any
     ) => {
         switch(activeStep){
             case 0:
                 return <BasicInfo register={register}/>
-                // return <FieldArray/>
             case 1:
-                return <MultiFileUpload setValue={setValue} fieldName={"fileDataList"} fields={fields} append={append} remove={remove} control={control}/>
+                return <MultiFileUpload setValue={setValue} fieldName={"fileDataList"} fields={fields} append={append} remove={remove} register={register}/>
             case 2:
                 return <TagSelect register={register} tags={tags}/>
             default: return null
@@ -41,9 +38,10 @@ const switchForm = (
 
 export default function PostForm(props: PostFormProps){
 
-    const {register, handleSubmit, setValue, control} = useForm<PostFormInput>({
+    const {register, handleSubmit, setValue, control, formState:{dirtyFields}} = useForm<PostFormInput>({
         defaultValues: {
-            fileDataList: [{}]
+            // name: "",
+            fileDataList: [{}],
         }
     })
     const { fields, append, remove } = useFieldArray({
@@ -72,7 +70,7 @@ export default function PostForm(props: PostFormProps){
                     setActiveStep={setActiveStep}
                 >
                     <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto"}}>
-                        {switchForm(activeStep, register, props.tags, setValue, fields, append, remove, control)}
+                        {switchForm(activeStep, register, props.tags, setValue, fields, append, remove)}
                     </Card>
                 <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
                 </FormStepper>
