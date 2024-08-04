@@ -1,3 +1,6 @@
+import { collections } from './data/commons/definitions';
+import { listCollection } from './data/commons/utils';
+import { PagingParams } from './definitions/pages';
 import {upload as storageUpload} from './storage'
 
 const upload = async (formData: FormData) => {
@@ -29,15 +32,16 @@ const upload = async (formData: FormData) => {
     }
 }
 
-const listAll = async ({page, limit}: {page:number|null, limit: number|null}) => {
-    const query = page && limit ? `?page=${page}&limit=${limit}` : ''
-    try{
-        const res = await fetch(`http://localhost:3000/api/data/posts${query}`, {method: 'GET', cache: 'no-store'})
-        return await res.json()
-    }
-    catch(e){
-        throw new Error((e as Error).message)
-    }
+const listAll = async (paging: PagingParams|undefined) => {
+    return await listCollection({collection: collections.posts, paging})
+    // const query = page && limit ? `?page=${page}&limit=${limit}` : ''
+    // try{
+    //     const res = await fetch(`http://localhost:3000/api/data/posts${query}`, {method: 'GET', cache: 'no-store'})
+    //     return await res.json()
+    // }
+    // catch(e){
+    //     throw new Error((e as Error).message)
+    // }
 }
 
 export {upload, listAll}

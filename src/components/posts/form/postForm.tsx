@@ -8,7 +8,7 @@ import { useFieldArray, useForm, UseFormRegister } from "react-hook-form"
 import BasicInfo from "./basicInfo"
 import { Tag } from "@/src/lib/definitions/tags"
 import TagSelect from "./tagSelect"
-import MultiFileUpload from "../fileUpload/multiFileUpload"
+import MultiFileUpload from "../../fileUpload/multiFileUpload"
 
 interface PostFormProps {
     onSubmit: (input: PostFormInput) => Promise<any>,
@@ -51,28 +51,28 @@ export default function PostForm(props: PostFormProps){
     const steps = ["Basic Info", "Media", "Tags"]
 
     return(
-            <Box 
-                component="form" 
-                onSubmit={handleSubmit(props.onSubmit)} 
-                sx={{
-                    height:"100%", 
-                    width:"100%", 
-                    display:"flex", 
-                    flexWrap:"wrap", 
-                    justifyContent:"center",
-                    overflow:"hidden"
-                }} gap={2}
+        <Box 
+            component="form" 
+            onSubmit={handleSubmit(props.onSubmit)} 
+            sx={{
+                height:"100%", 
+                width:"100%", 
+                display:"flex", 
+                flexWrap:"wrap", 
+                justifyContent:"center",
+                overflow:"hidden"
+            }} gap={2}
+        >
+            <FormStepper 
+                steps={steps} 
+                activeStep={activeStep} 
+                setActiveStep={setActiveStep}
             >
-                <FormStepper 
-                    steps={steps} 
-                    activeStep={activeStep} 
-                    setActiveStep={setActiveStep}
-                >
-                    <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto"}}>
-                        {switchForm(activeStep, register, props.tags, setValue, fields, append, remove)}
-                    </Card>
-                <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
-                </FormStepper>
-            </Box>
+                <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto"}}>
+                    {switchForm(activeStep, register, props.tags, setValue, fields, append, remove)}
+                </Card>
+            <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
+            </FormStepper>
+        </Box>
     )
 }

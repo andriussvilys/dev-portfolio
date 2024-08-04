@@ -6,15 +6,15 @@ import { getURL } from "@/src/lib/storage"
 import { Tag } from "@/src/lib/definitions/tags"
 import OverviewPage from "@/src/components/overviewPage/overviewPage"
 import ActionButton from "@/src/components/overviewPage/actionButton"
-import { parseParams } from "@/src/lib/utils"
+import { getPaging } from "@/src/lib/data/commons/utils"
 
 export default async function Page({searchParams}:{searchParams:URLSearchParams}) {
 
     revalidatePath("/dashboard/tags")
     const categories = await getCategories()
-    const {page, limit} = parseParams(searchParams)
+    const {page, limit} = getPaging(searchParams)
     const tagsData = await listAll({page, limit})
-    const tags:Tag[] = tagsData.tags.map((tag:Tag) => {return {...tag, url: getURL(tag.key)}})
+    const tags:Tag[] = tagsData.items.map((tag:Tag) => {return {...tag, url: getURL(tag.key)}})
     const total = tagsData.total
 
     return (
@@ -26,7 +26,7 @@ export default async function Page({searchParams}:{searchParams:URLSearchParams}
             {tags.map((tag:Tag) => {
                 return(
                     <DashboardTag key={tag.key} tag={tag}>
-                        <TagFormEdit categories={categories} tagData={tag} _id={tag._id}/>
+                        <TagFormEdit categories={categories} tagData={tag}/>
                     </DashboardTag>
                 )
             })}

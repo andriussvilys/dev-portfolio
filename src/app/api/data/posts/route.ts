@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MongoInstance } from "../connection";
-import { collections, getCollection } from "../collections";
-import { PostFormData, PostFormRequest } from "@/src/lib/definitions/posts";
+import { getCollection } from "../collections";
+import { PostFormRequest } from "@/src/lib/definitions/posts";
 import { FileData } from "@/src/lib/definitions/fileUpload";
-import { upload } from "@/src/lib/storage";
+import { collections } from "@/src/lib/data/commons/definitions";
+import { getPaging } from "@/src/lib/data/commons/utils";
+import { queryCollection } from "../commons";
 
 const parsePostFormData = (formData: FormData): PostFormRequest => {
     const tags = formData.getAll("tags") ? formData.getAll("tags").map(entry => entry.toString()) : []
@@ -47,24 +49,27 @@ export async function POST(request: Request) {
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
-  const page = searchParams.get("page")
-  const limit = searchParams.get("limit")
-  try{
-        const query = {}
-        const db = await MongoInstance.getDb();
-        const collection = db.collection(collections.posts);
-        const total = await collection.countDocuments()
-        const cursor = collection.find(query)
-        if(page && limit){
-          const pageInt = parseInt(page)
-          const limitInt = parseInt(limit)
-          cursor.skip((pageInt-1) * limitInt).limit(limitInt)
-        }
-        const res = await cursor.toArray();
-        const resWithTotal = {res, total}
-        return NextResponse.json({posts:res, total}, {status: 200});
-    }
-    catch(e){
-        return NextResponse.json({ status: "fail", error: e }, {status: 500});
-    }
+  const paging = getPaging(searchParams)
+  return queryCollection({collection: collections.posts, paging})
+  // const searchParams = request.nextUrl.searchParams
+  // const page = searchParams.get("page")
+  // const limit = searchParams.get("limit")
+  // try{
+  //       const query = {}
+  //       const db = await MongoInstance.getDb();
+  //       const collection = db.collection(collections.posts);
+  //       const total = await collection.countDocuments()
+  //       const cursor = collection.find(query)
+  //       if(page && limit){
+  //         const pageInt = parseInt(page)
+  //         const limitInt = parseInt(limit)
+  //         cursor.skip((pageInt-1) * limitInt).limit(limitInt)
+  //       }
+  //       const res = await cursor.toArray();
+  //       const resWithTotal = {res, total}
+  //       return NextResponse.json({posts:res, total}, {status: 200});
+  //   }
+  //   catch(e){
+  //       return NextResponse.json({ status: "fail", error: e }, {status: 500});
+  //   }
 }

@@ -3,7 +3,7 @@
 import { Tag as TagData } from "@/src/lib/definitions/tags";
 import { UseFormRegister } from "react-hook-form";
 import { Box, Checkbox, Stack } from "@mui/material";
-import Tag from "../tags/tag";
+import Tag from "../../tags/tag";
 
 interface SelectableTagProps{
     tag: TagData,

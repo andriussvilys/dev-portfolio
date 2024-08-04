@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MongoInstance } from "../../connection";
-import { collections } from "../../collections";
+import { collections } from "@/src/lib/data/commons/definitions";
 
 export async function GET(request: NextRequest) {
     try{

@@ -1,4 +1,4 @@
-import PostFormCreate from "@/src/components/posts/postFormCreate";
+import PostFormCreate from "@/src/components/posts/form/postFormCreate";
 import { Tag } from "@/src/lib/definitions/tags";
 import { getURL } from "@/src/lib/storage";
 import { listAll } from "@/src/lib/tags";
