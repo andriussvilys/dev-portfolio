@@ -22,8 +22,7 @@ export default function BasicInfo({register, defaults}: BasicInfoProps) {
                 label="name" 
                 variant="outlined"
                 InputLabelProps={{shrink:true}} 
-                defaultValue={defaults?.name ?? ""}
-                {...register("name")}
+                {...register("name", {value: "name"})}
             />
             <TextField 
                 size="small" 

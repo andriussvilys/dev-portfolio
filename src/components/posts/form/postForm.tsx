@@ -37,9 +37,15 @@ const switchForm = (
 }
 
 export default function PostForm(props: PostFormProps){
-
+    const {initialData} = props
+    console.log("POST FORM",initialData)
     const {register, handleSubmit, setValue, control, formState:{dirtyFields}} = useForm<PostFormInput>({
         defaultValues: {
+            name: initialData?.name || "",
+            description: initialData?.description || "",
+            liveSite: initialData?.liveSite || "",
+            github: initialData?.github || "",
+            tags: initialData?.tags || [],
             fileDataList: [{}],
         }
     })

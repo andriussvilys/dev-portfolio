@@ -45,6 +45,9 @@ const findInCollection = async (params: {collection: collections, _id: string}) 
     const {collection, _id} = params
     try{
         const res = await fetch(`http://localhost:3000/api/data/${collection}/${_id}`, {method: 'GET', cache: 'no-store'})
+        if(res.status !== 200){
+            throw new Error(`${res.status}: ${res.statusText}`)
+        }
         return await res.json()
     }
     catch(e){

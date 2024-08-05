@@ -1,7 +1,6 @@
 "use client"
 
 import PostForm, { PostFormProps } from "./postForm"
-import { Tag } from "@/src/lib/definitions/tags"
 import { Post, PostFormInput } from "@/src/lib/definitions/posts"
 
 interface PostFormEditProps extends Omit<PostFormProps, "onSubmit">{
@@ -9,10 +8,12 @@ interface PostFormEditProps extends Omit<PostFormProps, "onSubmit">{
 }
 
 export default function PostFormEdit({tags, initialData}:PostFormEditProps){
-        const handleSubmit = async (inputs: PostFormInput) => {
-            throw new Error("Not implemented")
-        }
+    console.log("PostFormEdit",{initialData})
+    const handleSubmit = async (inputs: PostFormInput) => {
+        console.log(inputs)
+        throw new Error("Not implemented")
+    }
     return(
-        <PostForm onSubmit={handleSubmit} tags={tags}/>
+        <PostForm onSubmit={handleSubmit} tags={tags} initialData={initialData}/>
     )
 }
