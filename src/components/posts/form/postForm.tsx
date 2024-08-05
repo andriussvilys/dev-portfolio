@@ -3,17 +3,17 @@
 import { Post, PostFormInput } from "@/src/lib/definitions/posts"
 import { Box, Button, Card } from "@mui/material"
 import { useState } from "react"
-import FormStepper from "./formStepper"
+import FormStepper from "./components/formStepper"
 import { useFieldArray, useForm, UseFormRegister } from "react-hook-form"
-import BasicInfo from "./basicInfo"
+import BasicInfo from "./components/basicInfo"
 import { Tag } from "@/src/lib/definitions/tags"
-import TagSelect from "./tagSelect"
+import TagSelect from "./components/tagSelect"
 import MultiFileUpload from "../../fileUpload/multiFileUpload"
 
 interface PostFormProps {
     onSubmit: (input: PostFormInput) => Promise<any>,
     tags: Tag[],
-    postData?: Post
+    initialData?: Post
 }
 
 const switchForm = (
@@ -76,3 +76,5 @@ export default function PostForm(props: PostFormProps){
         </Box>
     )
 }
+
+export type {PostFormProps}

@@ -1,5 +1,5 @@
 import { RegisterOptions, UseFormRegister, UseFormRegisterReturn, UseFormSetValue } from "react-hook-form";
-import FileUploadField, { FileUploadProps } from "../../fileUpload/fileUploadField";
+import FileUploadField, { FileUploadProps } from "../../../fileUpload/fileUploadField";
 import { Box } from "@mui/material";
 
 interface MediaFormProps extends FileUploadProps{

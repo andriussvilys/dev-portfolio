@@ -1,7 +1,8 @@
-import { collections } from './data/commons/definitions'
+import { collections, ListCollectionRes } from './data/commons/definitions'
 import { listCollection } from './data/commons/utils'
 import { defaultPaging, PagingParams } from './definitions/pages'
-import {deleteByKey, upload as storageUpload} from './storage'
+import { Tag } from './definitions/tags'
+import {deleteByKey, getURL, upload as storageUpload} from './storage'
 
 const upload = async (formData: FormData) => {
 
@@ -26,8 +27,10 @@ const upload = async (formData: FormData) => {
     }
 }
 
-const listAll = async (paging: PagingParams|undefined) => {
-    return await listCollection({collection: collections.tags, paging})
+const listTags = async (paging?: PagingParams|undefined):Promise<ListCollectionRes<Tag>> => {
+    const res:ListCollectionRes<Tag> =  await listCollection({collection: collections.tags, paging})
+    const tagsWithUrl = res.items.map(tag => {return {...tag, url: getURL(tag.key)}})
+    return {items: tagsWithUrl, total: res.total}
 }
 
 const deleteById = async (id: string) => {
@@ -82,4 +85,4 @@ const getCategories = async () => {
     }
 }
 
-export {upload, listAll, deleteById, getById, patchById, getCategories}
+export {upload, listTags, deleteById, getById, patchById, getCategories}

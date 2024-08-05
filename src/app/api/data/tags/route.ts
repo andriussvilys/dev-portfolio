@@ -3,20 +3,23 @@ import { MongoInstance } from "../connection";
 import { TagFormData } from "@/src/lib/definitions/tags";
 import { FileMetadata } from "@/src/lib/definitions/fileUpload";
 import { getPaging } from "@/src/lib/data/commons/utils";
-import { queryCollection } from "../commons";
+import { createItem, queryCollection } from "../commons";
 import { collections } from "@/src/lib/data/commons/definitions";
+
+const parseTagFormData = (formData: FormData): TagFormData => {
+  const name = formData.get("name")?.toString() ?? "";
+  const key = formData.get("key")?.toString() ?? "";
+  const metadata:FileMetadata = formData.get("metadata") ? JSON.parse(formData.get("metadata") as string) : {width: 0, height: 0}
+  const category = formData.get("category")?.toString() ?? "";
+  const body:TagFormData = {name, key, metadata, category}
+  return body
+}
 
 export async function POST(request: Request) {
   try{
     const formData = await request.formData();
-    const db = await MongoInstance.getDb();
-    const collection = db.collection(collections.tags);
-    const name = formData.get("name")?.toString() ?? "";
-    const key = formData.get("key")?.toString() ?? "";
-    const metadata:FileMetadata = formData.get("metadata") ? JSON.parse(formData.get("metadata") as string) : {width: 0, height: 0}
-    const category = formData.get("category")?.toString() ?? "";
-    const body:TagFormData = {name, key, metadata, category}
-    const res = await collection.insertOne(body);
+    const body = parseTagFormData(formData)
+    const res = await createItem({collection: collections.tags, body})
     return NextResponse.json(res, {status: 200});  
   }
   catch(e){

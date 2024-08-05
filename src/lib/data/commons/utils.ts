@@ -1,9 +1,9 @@
 import { defaultPaging, overviewPageLimit, PagingParams } from "../../definitions/pages"
-import { ListCollectionReq } from "./definitions"
+import { collections, ListCollectionReq, ListCollectionRes } from "./definitions"
 
-const getPaging = (params:URLSearchParams):PagingParams => {
-    const parsed:PagingParams = defaultPaging
+const getPaging = (params:URLSearchParams):PagingParams|undefined => {
     if(!!params){
+        const parsed:PagingParams = {...defaultPaging}
         if(params instanceof URLSearchParams){
             const pageParam = params.get("page")
             const limitParam = params.get("limit")
@@ -11,6 +11,7 @@ const getPaging = (params:URLSearchParams):PagingParams => {
                 parsed.page = parseInt(pageParam)
                 parsed.limit = parseInt(limitParam)
             }
+            else{return undefined}
         }
         else{
             const pageParam = (params as any).page
@@ -19,17 +20,20 @@ const getPaging = (params:URLSearchParams):PagingParams => {
                 parsed.page = parseInt(pageParam)
                 parsed.limit = parseInt(limitParam)
             }
+            else{return undefined}
         }
+        return parsed
     }
-    return parsed
+    return undefined
 }
 
-const listCollection = async (params:ListCollectionReq) => {
+async function listCollection<T>(params:ListCollectionReq):Promise<ListCollectionRes<T>>{
     const {collection, paging} = params
-    const {page, limit} = paging || defaultPaging
-    const query = `?page=${page}&limit=${limit}`
+    const pagingQuery = paging ? `?page=${paging.page}&limit=${paging.limit}` : ''
     try{
-        const res = await fetch(`http://localhost:3000/api/data/${collection}${query}`, {method: 'GET', cache: 'no-store'})
+        const res = await fetch(
+            `http://localhost:3000/api/data/${collection}${pagingQuery}`, 
+            {method: 'GET', cache: 'no-cache'})
         return await res.json()
     }
     catch(e){
@@ -37,4 +41,15 @@ const listCollection = async (params:ListCollectionReq) => {
     }
 }
 
-export {getPaging, listCollection}
+const findInCollection = async (params: {collection: collections, _id: string}) => {
+    const {collection, _id} = params
+    try{
+        const res = await fetch(`http://localhost:3000/api/data/${collection}/${_id}`, {method: 'GET', cache: 'no-store'})
+        return await res.json()
+    }
+    catch(e){
+        throw new Error((e as Error).message)
+    }
+}
+
+export {getPaging, listCollection, findInCollection}

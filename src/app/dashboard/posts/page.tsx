@@ -1,18 +1,18 @@
 import ActionButton from "@/src/components/overviewPage/actionButton";
 import OverviewPage from "@/src/components/overviewPage/overviewPage";
 import type { Post as PostData } from "@/src/lib/definitions/posts";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { revalidatePath } from "next/cache";
-import { listAll } from "@/src/lib/posts"
 import Post from "@/src/components/posts/post";
 import { getPaging } from "@/src/lib/data/commons/utils";
+import { listPosts } from "@/src/lib/posts";
+import { defaultPaging } from "@/src/lib/definitions/pages";
 
 export default async function PostsPage({searchParams}:{searchParams:URLSearchParams}){
     revalidatePath("/dashboard/posts")
     const paging = getPaging(searchParams)
-    const postsData = await listAll(paging)
-    const posts:PostData[] = postsData.items.map((post:PostData) => {return {...post}})
-    const total = postsData.total
+    const postsData = await listPosts(paging ?? defaultPaging)
+    const {items:posts, total} = postsData
     return(
         <OverviewPage 
             searchParams={searchParams} 
