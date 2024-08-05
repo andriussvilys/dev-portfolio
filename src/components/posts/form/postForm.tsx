@@ -23,7 +23,9 @@ const switchForm = (
         setValue: any,
         fields: any, 
         append: any, 
-        remove: any
+        remove: any,
+        control: any,
+        initialData?: Post
     ) => {
         switch(activeStep){
             case 0:
@@ -31,7 +33,7 @@ const switchForm = (
             case 1:
                 return <MultiFileUpload setValue={setValue} fieldName={"fileDataList"} fields={fields} append={append} remove={remove}/>
             case 2:
-                return <TagSelect register={register} tags={tags}/>
+                return <TagSelect control={control} selected={initialData?.tags} register={register} tags={tags}/>
             default: return null
         }
 }
@@ -46,7 +48,7 @@ export default function PostForm(props: PostFormProps){
             liveSite: initialData?.liveSite || "",
             github: initialData?.github || "",
             tags: initialData?.tags || [],
-            fileDataList: [{}],
+            fileDataList: initialData?.files ? [...initialData?.files, {}] : [{}],
         }
     })
     const { fields, append, remove } = useFieldArray({
@@ -75,7 +77,7 @@ export default function PostForm(props: PostFormProps){
                 setActiveStep={setActiveStep}
             >
                 <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto"}}>
-                    {switchForm(activeStep, register, props.tags, setValue, fields, append, remove)}
+                    {switchForm(activeStep, register, props.tags, setValue, fields, append, remove, control, initialData)}
                 </Card>
             <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
             </FormStepper>

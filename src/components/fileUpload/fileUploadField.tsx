@@ -17,7 +17,7 @@ interface FileUploadProps{
 const FileUploadField = forwardRef<HTMLDivElement, FileUploadProps>((props, ref) => {
         const {setValue, fieldName, src, initialData, append} = props
         const [imageSrc, setImageSrc] = useState<string>("")
-        const {fileData, setFile} = useFileUpload({fieldName, setValue, append})
+        const {fileData, setFile} = useFileUpload({fieldName, setValue, append, dirty: !!src})
     
         useEffect(() => {
             if(src){
@@ -46,15 +46,14 @@ const FileUploadField = forwardRef<HTMLDivElement, FileUploadProps>((props, ref)
                     size="small" 
                     InputLabelProps={{shrink:true}} 
                     label="select file" 
-                    type="file" 
-                    id="new-file"
+                    type="file"
                     onChange={e => {
                         const file: File|undefined = (e.target as HTMLInputElement).files?.[0]
                         if(!!file){
                             setFile(file)
                         }
                     }}
-                    ref={ref}
+                    // ref={ref}
                 />
             </Stack>
         )

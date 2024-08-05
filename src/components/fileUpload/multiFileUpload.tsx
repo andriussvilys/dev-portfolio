@@ -12,6 +12,7 @@ interface MultiFileUploadProps extends FileUploadProps{
 }
 
 export default function MultiFileUpload({setValue, fieldName, initialSrcs, fields, append, remove}: MultiFileUploadProps){
+    console.log({fields})
     return (
         <Stack gap={2} sx={{width:1, height:1, overflow:"hidden"}}>
             <Box sx={{overflow:"auto", height:1, width:1}}>
@@ -27,6 +28,7 @@ export default function MultiFileUpload({setValue, fieldName, initialSrcs, field
                                 <Stack key={field.id} gap={2}>
                                     <Typography>index: {index}</Typography>                                 
                                     <FileUploadField 
+                                        src={field.url}
                                         setValue={setValue} 
                                         fieldName={`${fieldName}.${index}`}
                                         append={append}

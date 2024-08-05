@@ -41,7 +41,7 @@ async function listCollection<T>(params:ListCollectionReq):Promise<ListCollectio
     }
 }
 
-const findInCollection = async (params: {collection: collections, _id: string}) => {
+async function findInCollection<T>(params: {collection: collections, _id: string}):Promise<T>{
     const {collection, _id} = params
     try{
         const res = await fetch(`http://localhost:3000/api/data/${collection}/${_id}`, {method: 'GET', cache: 'no-store'})

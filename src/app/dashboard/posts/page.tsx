@@ -7,6 +7,7 @@ import Post from "@/src/components/posts/post";
 import { getPaging } from "@/src/lib/data/commons/utils";
 import { listPosts } from "@/src/lib/posts";
 import { defaultPaging } from "@/src/lib/definitions/pages";
+import { getURL } from "@/src/lib/storage";
 
 export default async function PostsPage({searchParams}:{searchParams:URLSearchParams}){
     revalidatePath("/dashboard/posts")

@@ -6,13 +6,14 @@ interface UseFileUploadProps{
     fieldName: string,
     setValue: UseFormSetValue<any>,
     append?: UseFieldArrayAppend<any>,
-
+    dirty?: boolean
 }
 
-export default function useFileUpload({fieldName, setValue, append}: UseFileUploadProps){
+export default function useFileUpload(props: UseFileUploadProps){
+    const {fieldName, setValue, append} = props
     const [fileData, setFileData] = useState<FileData | null>(null)
     
-    const dirty = useRef(false)
+    const dirty = useRef(!!props.dirty)
     useEffect(() => {
         if(!dirty.current && fileData && append){
             append({})

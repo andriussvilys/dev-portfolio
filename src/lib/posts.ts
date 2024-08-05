@@ -1,8 +1,8 @@
 import { collections, ListCollectionRes } from './data/commons/definitions';
-import { listCollection } from './data/commons/utils';
+import { findInCollection, listCollection } from './data/commons/utils';
 import { PagingParams } from './definitions/pages';
 import { Post } from './definitions/posts';
-import {upload as storageUpload} from './storage'
+import {getURL, upload as storageUpload} from './storage'
 
 const upload = async (formData: FormData) => {
     try{
@@ -34,11 +34,18 @@ const upload = async (formData: FormData) => {
 }
 
 const listPosts = async (paging: PagingParams|undefined):Promise<ListCollectionRes<Post>> => {
-    return await listCollection({collection: collections.posts, paging})
+    const res = await listCollection<Post>({collection: collections.posts, paging})
+    res.items.forEach(post => {
+        post.files = post.files.map(file => {return {...file, url: getURL(file.key)}}) 
+     });
+     console.log("listPosts", res)
+     return res
 }
 
-const findById = async (params: {collection: collections, _id: string}) => {
-
+const findPost = async (_id:string) => {
+    const post = await findInCollection<Post>({collection:collections.posts,_id})
+    post.files = post.files.map(file => {return {...file, url: getURL(file.key)}})
+    return post
 }
 
-export {upload, listPosts}
+export {upload, listPosts, findPost}
