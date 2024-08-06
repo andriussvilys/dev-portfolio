@@ -26,6 +26,12 @@ interface CreateItemReq<CreateItemType>{
     body: CreateItemType
 }
 
+interface UpdateItemReq<CreateItemType>{
+    collection: collections,
+    body: Partial<CreateItemType>
+    _id: string
+}
+
 export {collections}
 
-export type {ListCollectionReq, ListCollectionRes, CreateItemReq, CreateItemType}
+export type {ListCollectionReq, ListCollectionRes, CreateItemReq, CreateItemType, UpdateItemReq}

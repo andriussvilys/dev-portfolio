@@ -8,12 +8,4 @@ interface FileData{
     metadata: FileMetadata
 }
 
-interface FileUpload{
-    file: FileData
-}
-
-interface MultiFileUpload{
-    files: FileUpload[]
-}
-
-export type {FileMetadata, FileData, FileUpload, MultiFileUpload}
+export type {FileMetadata, FileData}

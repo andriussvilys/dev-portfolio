@@ -1,5 +1,4 @@
 import { FileMetadata } from "./definitions/fileUpload"
-import { overviewPageLimit, PagingParams } from "./definitions/pages"
 
 const getMetadata = async (file:File):Promise<FileMetadata> => {
     const metadata:FileMetadata = {width: 0, height: 0}

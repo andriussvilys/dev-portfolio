@@ -17,15 +17,7 @@ interface SelectableTagProps{
 export default function SelectableTag({tag, register, checked, control, fieldName}:SelectableTagProps){
     return(
         <Box sx={{display:"flex", alignItems:"center"}}>
-            <Tag tag={tag} /> 
-            {/* <Controller 
-                name={fieldName} 
-                control={control}        
-                render={({ field, fieldState, formState, }) => {
-                    return <Checkbox {...field} value={tag._id} onChange={e => field.onChange(e.target.value)}/>
-                } } 
-            /> */}
-            {/* <Checkbox value={tag._id} {...register("tags")} /> */}
+            <Tag tag={tag} />
             <input type="checkbox" {...register("tags")} value={tag._id} />
         </Box>
     )

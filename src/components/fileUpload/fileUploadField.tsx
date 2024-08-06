@@ -12,7 +12,7 @@ interface FileUploadProps{
     fieldName: string,
     setValue: UseFormSetValue<any>,
     initialData?: FileData,
-    append?: UseFieldArrayAppend<any>
+    append?: UseFieldArrayAppend<any>,
 }
 const FileUploadField = forwardRef<HTMLDivElement, FileUploadProps>((props, ref) => {
         const {setValue, fieldName, src, initialData, append} = props
@@ -53,7 +53,6 @@ const FileUploadField = forwardRef<HTMLDivElement, FileUploadProps>((props, ref)
                             setFile(file)
                         }
                     }}
-                    // ref={ref}
                 />
             </Stack>
         )

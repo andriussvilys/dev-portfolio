@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
-import { MongoInstance } from "./connection"
-import { collections, CreateItemReq, CreateItemType, ListCollectionReq } from "@/src/lib/data/commons/definitions"
+import { collections, CreateItemReq, CreateItemType, ListCollectionReq, UpdateItemReq } from "@/src/lib/data/commons/definitions"
 import { ObjectId } from "mongodb"
 import { getCollection } from "./collections"
 
@@ -35,10 +34,21 @@ async function createItem(params: CreateItemReq<CreateItemType>):Promise<NextRes
       }
 }
 
-const findById = async (params: {collection: collections, _id: string}):Promise<NextResponse> => {
+async function updateItem(params: UpdateItemReq<CreateItemType>):Promise<NextResponse>{
+    const {collection:collectionName, _id, body} = params;
     try{
-        const db = await MongoInstance.getDb();
-        const collection = db.collection(params.collection);
+        const collection = await getCollection(collectionName);
+        const res = await collection.updateOne({_id: new ObjectId(_id)}, {$set: body}, {upsert: true});
+        return NextResponse.json(res, {status: 200});  
+      }
+      catch(e){
+        return NextResponse.json({ status: "fail", error: e }, {status: 500});
+      }
+}
+
+const findItem = async (params: {collection: collections, _id: string}):Promise<NextResponse> => {
+    try{
+        const collection = await getCollection(params.collection);
         const result = await collection.findOne({_id: new ObjectId(params._id)});
         if(!result){
             throw new Error("Not found")
@@ -50,4 +60,15 @@ const findById = async (params: {collection: collections, _id: string}):Promise<
     }
 }
 
-export {queryCollection, findById, createItem}
+const deleteItem = async (params: {collection: collections, _id: string}):Promise<NextResponse> => {
+    try{
+        const collection = await getCollection(params.collection);
+        const result = await collection.deleteOne({_id: new ObjectId(params._id)});
+        return NextResponse.json(result, {status: 200});
+    }
+    catch(e){
+        return NextResponse.json({ status: "fail", error: e }, {status: 500});
+    }
+}
+
+export {queryCollection, findItem, createItem, updateItem, deleteItem}

@@ -1,6 +1,6 @@
 "use client"
 
-import { patchById } from "@/src/lib/tags"
+import { updateTag } from "@/src/lib/tags"
 import TagForm from "./tagForm"
 import type {TagFormProps} from "./tagForm"
 import { Tag, TagFormInput } from "@/src/lib/definitions/tags"
@@ -10,7 +10,6 @@ interface TagFormEditProps extends Omit<TagFormProps, 'onSubmit'> {tagData: Tag}
 export default function TagFormEdit ({tagData, categories}: TagFormEditProps){
     const handleSubmit = async (inputs: TagFormInput) => {
         try{
-            console.log(inputs)
             const formData = new FormData()
             const name = inputs.name ?? tagData.name
             const category = inputs.category ?? tagData.category
@@ -23,7 +22,7 @@ export default function TagFormEdit ({tagData, categories}: TagFormEditProps){
                 formData.append("key", tagData.key) //add current key which will be used to delete the current image once it is replaced with new image
                 formData.append("file", file)
             }
-            await patchById(formData, tagData._id)
+            await updateTag(formData, tagData._id)
         }
         catch(e){
             throw e

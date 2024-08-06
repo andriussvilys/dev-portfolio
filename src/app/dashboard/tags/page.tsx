@@ -1,4 +1,4 @@
-import { getCategories, listTags } from "@/src/lib/tags"
+import { listCategories, listTags } from "@/src/lib/tags"
 import { revalidatePath } from "next/cache"
 import DashboardTag from "@/src/components/dashboard/dashboardTag"
 import TagFormEdit from "@/src/components/tags/tagFormEdit"
@@ -12,7 +12,7 @@ import { defaultPaging } from "@/src/lib/definitions/pages"
 export default async function Page({searchParams}:{searchParams:URLSearchParams}) {
 
     revalidatePath("/dashboard/tags")
-    const categories = await getCategories()
+    const categories = await listCategories()
     const paging = getPaging(searchParams)
     const tagsData = await listTags(paging ?? defaultPaging)
     const tags:Tag[] = tagsData.items.map((tag:Tag) => {return {...tag, url: getURL(tag.key)}})

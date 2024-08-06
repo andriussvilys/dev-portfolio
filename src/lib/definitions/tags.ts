@@ -8,11 +8,11 @@ interface TagFormInput{
 }
 
 interface TagFormData{
+    key: string,
     metadata: FileMetadata,
     name: string,
-    key: string,
+    category?: string,
     url?: string,
-    category?: string
 }
 
 interface Tag extends TagFormData{

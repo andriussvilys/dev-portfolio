@@ -3,7 +3,7 @@
 import PostForm from "./postForm"
 import { Tag } from "@/src/lib/definitions/tags"
 import { PostFormInput } from "@/src/lib/definitions/posts"
-import { upload } from "@/src/lib/posts"
+import { createPost } from "@/src/lib/posts"
 
 export default function PostFormCreate({tags}:{tags:Tag[]}){
         const handleSubmit = async (inputs: PostFormInput) => {
@@ -23,7 +23,7 @@ export default function PostFormCreate({tags}:{tags:Tag[]}){
             inputs.fileDataList.forEach((fileData) => {
                 formData.append("metadata", JSON.stringify(fileData.metadata))
             })
-            await upload(formData)
+            await createPost(formData)
         }
     return(
         <PostForm onSubmit={handleSubmit} tags={tags}/>

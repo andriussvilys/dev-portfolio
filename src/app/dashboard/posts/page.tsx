@@ -7,7 +7,7 @@ import Post from "@/src/components/posts/post";
 import { getPaging } from "@/src/lib/data/commons/utils";
 import { listPosts } from "@/src/lib/posts";
 import { defaultPaging } from "@/src/lib/definitions/pages";
-import { getURL } from "@/src/lib/storage";
+import DeletePostButton from "@/src/components/posts/deletePostButton";
 
 export default async function PostsPage({searchParams}:{searchParams:URLSearchParams}){
     revalidatePath("/dashboard/posts")
@@ -26,7 +26,7 @@ export default async function PostsPage({searchParams}:{searchParams:URLSearchPa
                         <Stack key={post._id}>
                             <Post post={post}/>
                             <Box gap={2} sx={{display:"flex", p:2, alignSelf:"end"}}>
-                                <Button disabled variant="outlined" color="error">Delete</Button>
+                                <DeletePostButton _id={post._id}/>
                                 <Button href={`/dashboard/posts/edit/${post._id}`} variant='contained'>Edit</Button>
                             </Box>
                         </Stack>

@@ -41,10 +41,13 @@ async function listCollection<T>(params:ListCollectionReq):Promise<ListCollectio
     }
 }
 
-async function findInCollection<T>(params: {collection: collections, _id: string}):Promise<T>{
+async function findItem<T>(params: {collection: collections, _id: string}):Promise<T>{
     const {collection, _id} = params
     try{
-        const res = await fetch(`http://localhost:3000/api/data/${collection}/${_id}`, {method: 'GET', cache: 'no-store'})
+        const res = await fetch(`http://localhost:3000/api/data/${collection}/${_id}`, {
+            method: 'GET', 
+            cache: 'no-store'
+        })
         if(res.status !== 200){
             throw new Error(`${res.status}: ${res.statusText}`)
         }
@@ -55,4 +58,47 @@ async function findInCollection<T>(params: {collection: collections, _id: string
     }
 }
 
-export {getPaging, listCollection, findInCollection}
+async function updateItem(params: {collection: collections, _id: string, body: FormData}){
+    const {collection, _id, body} = params
+    try{
+        const res = await fetch(`http://localhost:3000/api/data/${collection}/${_id}`, {
+            method: 'PUT',
+            cache: 'no-store',
+            body: body,
+        })
+        return res.json()
+    }
+    catch(e){
+        throw new Error((e as Error).message)
+    }
+}
+
+async function deleteItem(params: {collection: collections, _id: string}){
+    const {collection, _id} = params
+    try{
+        const res = await fetch(`http://localhost:3000/api/data/${collection}/${_id}`, {
+            method: 'DELETE',
+            cache: 'no-store',
+        })
+        return res.json()
+    }
+    catch(e){
+        throw new Error((e as Error).message)
+    }
+}
+
+const createItem = async (params: {collection:collections, formData: FormData}) => {
+    try{
+        const dbRes = await fetch(`/api/data/${params.collection}`, {
+            method: 'POST',
+            cache: 'no-store',
+            body: params.formData,
+        })
+        return await dbRes.json()
+    }
+    catch(e){
+        throw e
+    }
+}
+
+export {getPaging, listCollection, findItem, updateItem, deleteItem, createItem}

@@ -1,5 +1,5 @@
 "use client"
-import { upload } from "@/src/lib/tags";
+import { createTag } from "@/src/lib/tags";
 import TagForm from "./tagForm";
 import { TagFormInput } from "@/src/lib/definitions/tags";
 
@@ -15,7 +15,7 @@ export default function TagFormCreate({categories}:TagFormCreateProps){
             formData.append("category", inputs.category)
             formData.append("metadata", JSON.stringify(inputs.fileData.metadata))
             formData.append("file", inputs.fileData.data)
-            await upload(formData)
+            await createTag(formData)
         }
         catch(e){
             throw e

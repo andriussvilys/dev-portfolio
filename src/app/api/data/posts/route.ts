@@ -26,7 +26,6 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const parsedFormData = parsePostFormData(formData)
     const res = await createItem({collection: collections.posts, body: parsedFormData})
-    console.log(res)
     return NextResponse.json(res, {status: 200});  
   }
   catch(e){
