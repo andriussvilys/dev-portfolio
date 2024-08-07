@@ -25,13 +25,23 @@ const switchForm = (
         append: any, 
         remove: any,
         control: any,
-        initialData?: Post
+        storageFiles:any,
+        removeStorageFile:any,
+        initialData?: Post,
     ) => {
         switch(activeStep){
             case 0:
                 return <BasicInfo register={register}/>
             case 1:
-                return <MultiFileUpload setValue={setValue} fieldName={"fileDataList"} fields={fields} append={append} remove={remove}/>
+                return <MultiFileUpload 
+                            setValue={setValue} 
+                            fieldName={"fileDataList"} 
+                            fields={fields} 
+                            append={append} 
+                            remove={remove}
+                            storageFiles={storageFiles}
+                            removeStorageFile={removeStorageFile}
+                        />
             case 2:
                 return <TagSelect control={control} selected={initialData?.tags} register={register} tags={tags}/>
             default: return null
@@ -47,13 +57,18 @@ export default function PostForm(props: PostFormProps){
             liveSite: initialData?.liveSite || "",
             github: initialData?.github || "",
             tags: initialData?.tags || [],
-            fileDataList: initialData?.files ? [...initialData?.files, {}] : [{}],
+            files: [{}],
+            storageFiles: initialData?.files || []
         }
     })
-    const { fields, append, remove } = useFieldArray({
+    const { fields:newFiles, append:appendFile, remove:removeFile } = useFieldArray({
         control,
-        name: "fileDataList"
-      });
+        name: "files"
+    });
+    const { fields:storageFiles, remove:removeStorageFile } = useFieldArray({
+        control,
+        name: "storageFiles"
+    });
     const [activeStep, setActiveStep] = useState(0);
     const steps = ["Basic Info", "Media", "Tags"]
 
@@ -76,7 +91,8 @@ export default function PostForm(props: PostFormProps){
                 setActiveStep={setActiveStep}
             >
                 <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto"}}>
-                    {switchForm(activeStep, register, props.tags, setValue, fields, append, remove, control, initialData)}
+                    {switchForm(activeStep, register, props.tags, setValue, newFiles, appendFile, removeFile, control, storageFiles,
+removeStorageFile, initialData)}
                 </Card>
             <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
             </FormStepper>

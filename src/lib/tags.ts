@@ -5,12 +5,12 @@ import { Tag } from './definitions/tags'
 import {deleteByKey, getURL, upload as storageUpload} from './storage'
 
 const createTag = async (formData: FormData) => {
-
     try{
         const storageFormData = new FormData()
         storageFormData.append("file", formData.get("file") as File)
         const storageRes = await storageUpload(storageFormData)
             try{
+                console.log("createTag", storageRes)
                 formData.append("key", storageRes.key)
                 const dbRes = await createItem({collection: collections.tags, formData})
                 return await dbRes
@@ -52,10 +52,9 @@ const findTag = async (id: string) => {
 const updateTag = async (formData: FormData, id: string, ) => {
     try{
         if(formData.get("file")!= null){
-
             await deleteByKey(formData.get("key") as string)
             const storageRes = await storageUpload(formData);
-            formData.append("key",storageRes.key)
+            formData.append("key", storageRes.key)
         }
         const res = await updateItem({collection: collections.tags, _id: id, body: formData})
         return await res

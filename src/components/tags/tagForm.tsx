@@ -22,11 +22,13 @@ export default function TagForm(props: TagFormProps){
         }
     })
 
+    const initialData = tagData ? {data:tagData.url!, metadata: tagData.metadata} : undefined
+
     return(
         <Box component="form" onSubmit={handleSubmit(props.onSubmit)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
             <Stack gap={2}>
                 <Box sx={{display:"flex"}} gap={2}>
-                    <FileUploadField src={tagData?.url} fieldName="fileData" setValue={setValue}/>
+                    <FileUploadField initialData={initialData} fieldName="fileData" setValue={setValue}/>
                     <Divider orientation="vertical"/>
                     <Stack gap={2}>
                         <TextField 

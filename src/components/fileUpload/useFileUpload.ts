@@ -1,4 +1,4 @@
-import { FileData, FileMetadata } from "@/src/lib/definitions/fileUpload";
+import { FileData, FileMetadata, StorageFile } from "@/src/lib/definitions/fileUpload";
 import { useEffect, useRef, useState } from "react";
 import { UseFieldArrayAppend, UseFormSetValue } from "react-hook-form";
 
@@ -11,7 +11,7 @@ interface UseFileUploadProps{
 
 export default function useFileUpload(props: UseFileUploadProps){
     const {fieldName, setValue, append} = props
-    const [fileData, setFileData] = useState<FileData | null>(null)
+    const [fileData, setFileData] = useState<StorageFile | Blob | null>(null)
     
     const dirty = useRef(!!props.dirty)
     useEffect(() => {
@@ -21,24 +21,9 @@ export default function useFileUpload(props: UseFileUploadProps){
         }
     }, [fileData, append])
 
-    const setFile = async (file: File) => {
-        const url = URL.createObjectURL(file)
-        const metadata = await new Promise((resolve, reject) => {
-            const img = new Image()
-            img.onload = () => {
-                resolve({
-                    width: img.naturalWidth,
-                    height: img.naturalHeight
-                })
-            }
-            img.src = url
-        })
-        const newFileData = {
-            data: file,
-            metadata: metadata as FileMetadata
-        }
-        setValue(fieldName, newFileData)
-        setFileData(newFileData)
+    const setData = async (data: StorageFile | Blob) => {
+        setValue(fieldName, data)
+        setFileData(data)
     }
-    return {fileData, setFile}
+    return {fileData, setData}
 }

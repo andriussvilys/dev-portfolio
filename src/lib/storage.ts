@@ -1,3 +1,5 @@
+import { getMetadata } from "./utils"
+
 const createKey = (file:File) => {
     const extension = file.type.split('/')[1]
     const key = crypto.randomUUID() + "." + extension
@@ -9,16 +11,20 @@ const getURL = (key: string) => {
 }
 
 const upload = async (formData: FormData) => {
+    const file = formData.get("file") as File
     try{
-        const res = await fetch('/api/storage', {
+        const uploadRes = await fetch('/api/storage', {
             method: 'POST',
             body: formData,
             cache: 'no-store'
-            })
-        if(res.ok){
-            return await res.json()
+        })
+        if(uploadRes.ok){
+            const metadata = await getMetadata(file)
+            const resJSON = await uploadRes.json()
+            const res = {...resJSON, metadata}
+            return await res
         }
-        throw new Error("failed to upload to storage: " + res.statusText)
+        throw new Error("failed to upload to storage: " + uploadRes.statusText)
     }
     catch(e){
         throw e

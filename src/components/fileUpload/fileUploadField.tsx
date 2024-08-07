@@ -5,37 +5,36 @@ import FilePreview from "./filePreview"
 import { UseFieldArrayAppend, UseFormSetValue } from "react-hook-form"
 import { forwardRef, useEffect, useState } from "react"
 import useFileUpload from "./useFileUpload"
-import { FileData } from "@/src/lib/definitions/fileUpload"
+import { FileData, StorageFile } from "@/src/lib/definitions/fileUpload"
 
 interface FileUploadProps{
-    src?: string,
     fieldName: string,
     setValue: UseFormSetValue<any>,
-    initialData?: FileData,
+    initialData?: StorageFile,
     append?: UseFieldArrayAppend<any>,
 }
 const FileUploadField = forwardRef<HTMLDivElement, FileUploadProps>((props, ref) => {
-        const {setValue, fieldName, src, initialData, append} = props
+        const {setValue, fieldName, initialData, append} = props
         const [imageSrc, setImageSrc] = useState<string>("")
-        const {fileData, setFile} = useFileUpload({fieldName, setValue, append, dirty: !!src})
+        const {fileData, setData} = useFileUpload({fieldName, setValue, append, dirty: !!initialData})
     
         useEffect(() => {
-            if(src){
-                setImageSrc(src)
-            }
-        }, [src])
-    
-        useEffect(() => {
+            console.log("FileUploadField",{initialData})
             if(initialData){
-                setFile(initialData.data)
+                setData(initialData)
             }
-        }, [initialData, setFile])
+        }, [initialData, setData])
     
         useEffect(() => {
             if(fileData){
                 setValue(fieldName, fileData)
-                const url = URL.createObjectURL(fileData.data)
-                setImageSrc(url)
+                if(fileData instanceof Blob){
+                    const url = URL.createObjectURL(fileData)
+                    setImageSrc(url)
+                }
+                else{
+                    setImageSrc(fileData.url as string)
+                }
             }
         }, [fileData, setValue, fieldName])
     
@@ -50,7 +49,7 @@ const FileUploadField = forwardRef<HTMLDivElement, FileUploadProps>((props, ref)
                     onChange={e => {
                         const file: File|undefined = (e.target as HTMLInputElement).files?.[0]
                         if(!!file){
-                            setFile(file)
+                            setData(file)
                         }
                     }}
                 />

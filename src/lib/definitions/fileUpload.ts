@@ -3,9 +3,15 @@ interface FileMetadata{
     height: number
 }
 
-interface FileData{
-    data: File,
+interface StorageFile{
+    key: string,
+    metadata: FileMetadata,
+    url: string
+}
+
+interface FileData<File>{
+    file: File,
     metadata: FileMetadata
 }
 
-export type {FileMetadata, FileData}
+export type {FileMetadata, FileData, StorageFile}

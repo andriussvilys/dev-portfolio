@@ -1,34 +1,21 @@
-import { FileData, FileMetadata } from "./fileUpload"
+import { StorageFile } from "./fileUpload"
 
-interface PostFormRequest {
+interface PostRequest {
     name: string,
     description: string,
     liveSite?: string,
     github?: string,
-    files: FileData[],
+    files: StorageFile[],
     tags: string[]
 }
 
-interface PostFormData {
-    name: string,
-    description: string,
-    liveSite?: string,
-    github?: string
-    files: {key:string, metadata: FileMetadata}[],
-    tags: string[], //db ids
-}
-
-interface Post extends PostFormData {
+interface Post extends PostRequest {
     _id: string
 }
 
-interface PostFormInput {
-    fileDataList: FileData[],
-    name: string,
-    description: string,
-    liveSite?: string,
-    github?: string,
-    tags: string[]
+interface PostFormInput extends Omit<PostRequest, "files"> {
+    files: Blob[],
+    storageFiles?: StorageFile[]
 }
 
-export type {Post, PostFormData, PostFormInput, PostFormRequest}
+export type {Post, PostFormInput, PostRequest}

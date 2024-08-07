@@ -9,6 +9,7 @@ interface PostFormEditProps extends Omit<PostFormProps, "onSubmit">{
 }
 
 export default function PostFormEdit({tags, initialData}:PostFormEditProps){
+    console.log("PostFormEdit",{initialData})
     const handleSubmit = async (inputs: PostFormInput) => {
         console.log({inputs})
         try{
