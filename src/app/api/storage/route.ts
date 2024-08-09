@@ -7,9 +7,9 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;
-    const metadata = formData.get("metadata") as string;
+    const collection = formData.get("collection") as string;
     const Body = Buffer.from(await file.arrayBuffer());
-    const Key = createKey(file);
+    const Key = createKey(file, collection);
     const params:PutObjectCommandInput = {
       Bucket,
       Key,
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     }
     const res = await s3.send(new PutObjectCommand(params));
     if(res.$metadata.httpStatusCode === 200){
-      return NextResponse.json({...res, key: Key, metadata}, {status: 200});
+      return NextResponse.json({...res, key: Key}, {status: 200});
     }
     else{
       throw new Error("failed to upload");

@@ -7,7 +7,7 @@ type Params = {
 };
 
 export async function DELETE(request: Request, {params}:{params:Params}) {
-  const Key = params.key;
+  const Key = decodeURIComponent(params.key);
   const command:DeleteObjectCommandInput = {
     Bucket,
     Key

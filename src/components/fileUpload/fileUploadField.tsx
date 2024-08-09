@@ -1,11 +1,10 @@
 "use client"
 
-import { Stack, TextField } from "@mui/material"
+import { Button, FormControl, InputAdornment, InputBase, InputLabel, OutlinedInput, Stack, TextField } from "@mui/material"
 import FilePreview from "./filePreview"
 import { UseFieldArrayAppend, UseFormSetValue } from "react-hook-form"
-import { forwardRef, useEffect, useState } from "react"
-import useFileUpload from "./useFileUpload"
-import { FileData, StorageFile } from "@/src/lib/definitions/fileUpload"
+import { forwardRef, useEffect, useRef, useState } from "react"
+import { StorageFile } from "@/src/lib/definitions/fileUpload"
 
 interface FileUploadProps{
     fieldName: string,
@@ -16,30 +15,39 @@ interface FileUploadProps{
 const FileUploadField = forwardRef<HTMLDivElement, FileUploadProps>((props, ref) => {
         const {setValue, fieldName, initialData, append} = props
         const [imageSrc, setImageSrc] = useState<string>("")
-        const {fileData, setData} = useFileUpload({fieldName, setValue, append, dirty: !!initialData})
-    
-        useEffect(() => {
-            console.log("FileUploadField",{initialData})
-            if(initialData){
-                setData(initialData)
-            }
-        }, [initialData, setData])
-    
-        useEffect(() => {
-            if(fileData){
-                setValue(fieldName, fileData)
-                if(fileData instanceof Blob){
-                    const url = URL.createObjectURL(fileData)
+        const [file, setFile] = useState<StorageFile | File | undefined>(initialData)
+
+        const isFileValid = (file: StorageFile | File | undefined):boolean => {
+            const valid =  file instanceof File || !!file?.url 
+            return valid
+        }
+        const dirty = useRef(isFileValid(initialData))
+
+        const changeSrc = (file: StorageFile | File | undefined) => {
+            if(isFileValid(file) && !!file){
+                if(file instanceof File){
+                    const url = URL.createObjectURL(file)
                     setImageSrc(url)
                 }
                 else{
-                    setImageSrc(fileData.url as string)
+                    setImageSrc(file.url as string)
                 }
             }
-        }, [fileData, setValue, fieldName])
-    
+        }
+
+        useEffect(() => {
+            if(isFileValid(file)){
+                setValue(fieldName, file)
+                changeSrc(file)
+                if(!dirty.current && !!append){
+                    append({})
+                    dirty.current = true
+                }
+            }
+        }, [file])
+
         return(
-            <Stack component="div" gap={2}>
+            <Stack component="div" gap={2} ref={ref}>
                 <FilePreview src={imageSrc}/>
                 <TextField 
                     size="small" 
@@ -47,11 +55,12 @@ const FileUploadField = forwardRef<HTMLDivElement, FileUploadProps>((props, ref)
                     label="select file" 
                     type="file"
                     onChange={e => {
-                        const file: File|undefined = (e.target as HTMLInputElement).files?.[0]
+                        const file: File | StorageFile | undefined = (e.target as HTMLInputElement).files?.[0]
                         if(!!file){
-                            setData(file)
+                            setFile(file)
                         }
                     }}
+                    sx={{maxWidth:"30ch"}}
                 />
             </Stack>
         )

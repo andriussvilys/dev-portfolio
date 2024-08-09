@@ -28,17 +28,17 @@ async function createItem(params: CreateItemReq<CreateItemType>):Promise<NextRes
         const collection = await getCollection(collectionName);
         const res = await collection.insertOne(body);
         return NextResponse.json(res, {status: 200});  
-      }
-      catch(e){
+    }
+    catch(e){
         return NextResponse.json({ status: "fail", error: e }, {status: 500});
-      }
+    }
 }
 
 async function updateItem(params: UpdateItemReq<CreateItemType>):Promise<NextResponse>{
     const {collection:collectionName, _id, body} = params;
     try{
         const collection = await getCollection(collectionName);
-        const res = await collection.updateOne({_id: new ObjectId(_id)}, {$set: body}, {upsert: true});
+        const res = await collection.replaceOne({_id: new ObjectId(_id)}, body);
         return NextResponse.json(res, {status: 200});  
       }
       catch(e){

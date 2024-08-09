@@ -1,8 +1,8 @@
-import { FileData, FileMetadata, FileUpload } from "./fileUpload"
+import { FileMetadata } from "./fileUpload"
 
 
 interface TagFormInput{ 
-    fileData: FileData,
+    file: File,
     name: string,
     category: string
 }

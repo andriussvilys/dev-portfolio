@@ -9,9 +9,4 @@ interface StorageFile{
     url: string
 }
 
-interface FileData<File>{
-    file: File,
-    metadata: FileMetadata
-}
-
-export type {FileMetadata, FileData, StorageFile}
+export type {FileMetadata, StorageFile}

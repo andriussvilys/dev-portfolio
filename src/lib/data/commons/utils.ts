@@ -1,4 +1,4 @@
-import { defaultPaging, overviewPageLimit, PagingParams } from "../../definitions/pages"
+import { defaultPaging, PagingParams } from "../../definitions/pages"
 import { collections, ListCollectionReq, ListCollectionRes } from "./definitions"
 
 const getPaging = (params:URLSearchParams):PagingParams|undefined => {
@@ -31,9 +31,13 @@ async function listCollection<T>(params:ListCollectionReq):Promise<ListCollectio
     const {collection, paging} = params
     const pagingQuery = paging ? `?page=${paging.page}&limit=${paging.limit}` : ''
     try{
-        const res = await fetch(
-            `http://localhost:3000/api/data/${collection}${pagingQuery}`, 
-            {method: 'GET', cache: 'no-cache'})
+        const res = await fetch(`http://localhost:3000/api/data/${collection}${pagingQuery}`, {
+            method: 'GET', 
+            cache: 'no-cache'
+        })
+        if(!res.ok){
+            throw new Error(`${res.status}: ${res.statusText}`)
+        }
         return await res.json()
     }
     catch(e){
@@ -48,7 +52,7 @@ async function findItem<T>(params: {collection: collections, _id: string}):Promi
             method: 'GET', 
             cache: 'no-store'
         })
-        if(res.status !== 200){
+        if(!res.ok){
             throw new Error(`${res.status}: ${res.statusText}`)
         }
         return await res.json()
@@ -66,6 +70,9 @@ async function updateItem(params: {collection: collections, _id: string, body: F
             cache: 'no-store',
             body: body,
         })
+        if(!res.ok){
+            throw new Error ("DB failure: " + res.statusText)
+        }
         return res.json()
     }
     catch(e){
@@ -80,6 +87,9 @@ async function deleteItem(params: {collection: collections, _id: string}){
             method: 'DELETE',
             cache: 'no-store',
         })
+        if(!res.ok){
+            throw new Error ("DB failure: " + res.statusText)
+        }
         return res.json()
     }
     catch(e){
@@ -89,15 +99,18 @@ async function deleteItem(params: {collection: collections, _id: string}){
 
 const createItem = async (params: {collection:collections, formData: FormData}) => {
     try{
-        const dbRes = await fetch(`/api/data/${params.collection}`, {
+        const res = await fetch(`/api/data/${params.collection}`, {
             method: 'POST',
             cache: 'no-store',
             body: params.formData,
         })
-        return await dbRes.json()
+        if(!res.ok){
+            throw new Error ("DB failure: " + res.statusText)
+        }
+        return await res.json()
     }
     catch(e){
-        throw e
+        throw new Error((e as Error).message)
     }
 }
 

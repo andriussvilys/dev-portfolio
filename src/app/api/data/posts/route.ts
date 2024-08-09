@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PostFormData } from "@/src/lib/definitions/posts";
 import { collections } from "@/src/lib/data/commons/definitions";
 import { getPaging } from "@/src/lib/data/commons/utils";
 import { createItem, queryCollection } from "../commons";
+import { PostRequest } from "@/src/lib/definitions/posts";
 
-const parsePostFormData = (formData: FormData): PostFormData => {
-  const files = formData.getAll("files") ? formData.getAll("files").map(entry => {
+const parsePostFormData = (formData: FormData): PostRequest => {
+  const files = formData.get("storageFile") ? formData.getAll("storageFile").map(entry => {
     const {key, metadata} = JSON.parse(entry as string)
-    const parsedMetadata = JSON.parse(metadata)
-    return {key, metadata: parsedMetadata}
+    return {key, metadata, url:""}
   }) : []
   const tags = formData.get("tags") ? JSON.parse(formData.get("tags") as string) : []
     return {

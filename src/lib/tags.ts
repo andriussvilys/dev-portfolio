@@ -6,11 +6,9 @@ import {deleteByKey, getURL, upload as storageUpload} from './storage'
 
 const createTag = async (formData: FormData) => {
     try{
-        const storageFormData = new FormData()
-        storageFormData.append("file", formData.get("file") as File)
-        const storageRes = await storageUpload(storageFormData)
+        const file = formData.get("file") as File
+        const storageRes = await storageUpload(file, collections.tags)
             try{
-                console.log("createTag", storageRes)
                 formData.append("key", storageRes.key)
                 const dbRes = await createItem({collection: collections.tags, formData})
                 return await dbRes
@@ -51,9 +49,11 @@ const findTag = async (id: string) => {
 
 const updateTag = async (formData: FormData, id: string, ) => {
     try{
-        if(formData.get("file")!= null){
+        const file = formData.get("file") as File
+        if(file){
             await deleteByKey(formData.get("key") as string)
-            const storageRes = await storageUpload(formData);
+            const storageRes = await storageUpload(file, collections.tags);
+            formData.append("metadata", JSON.stringify(storageRes.metadata))
             formData.append("key", storageRes.key)
         }
         const res = await updateItem({collection: collections.tags, _id: id, body: formData})

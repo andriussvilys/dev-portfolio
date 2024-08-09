@@ -1,7 +1,5 @@
-import { OptionalId } from "mongodb";
 import { PagingParams } from "../../definitions/pages";
-import TagForm from "@/src/components/tags/tagForm";
-import { PostFormData } from "../../definitions/posts";
+import { PostRequest } from "../../definitions/posts";
 import { TagFormData } from "../../definitions/tags";
 
 enum collections {
@@ -19,7 +17,7 @@ interface ListCollectionRes<CollectionType>{
     total: number
 }
 
-type CreateItemType = PostFormData | TagFormData
+type CreateItemType = PostRequest | TagFormData
 
 interface CreateItemReq<CreateItemType>{
     collection: collections,
@@ -28,7 +26,7 @@ interface CreateItemReq<CreateItemType>{
 
 interface UpdateItemReq<CreateItemType>{
     collection: collections,
-    body: Partial<CreateItemType>
+    body: CreateItemType
     _id: string
 }
 

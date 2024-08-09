@@ -5,16 +5,16 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import { StorageFile } from "@/src/lib/definitions/fileUpload";
 
 interface MultiFileUploadProps extends FileUploadProps{
-    fields: any, 
+    newFiles: any, 
     append: any, 
     remove: UseFieldArrayRemove,
     storageFiles:any,
-    removeStorageFile:any
+    removeStorageFile:any,
+    watch:any
 }
 
-export default function MultiFileUpload({setValue, fieldName, fields, append, remove, initialData, storageFiles, removeStorageFile}: MultiFileUploadProps){
-    console.log("MultiFileUpload", initialData)
-    console.log("MultiFileUpload", fields)
+export default function MultiFileUpload({setValue, newFiles, append, remove, storageFiles, removeStorageFile, watch}: MultiFileUploadProps){
+    const watchedNewFiles = watch("files")
     return (
         <Stack gap={2} sx={{width:1, height:1, overflow:"hidden"}}>
             <Box sx={{overflow:"auto", height:1, width:1}}>
@@ -25,18 +25,18 @@ export default function MultiFileUpload({setValue, fieldName, fields, append, re
                         padding: 2, gap:2
                     }}>
                     {
-                        fields.map((field: any, index: number) => {
+                        newFiles.map((field: any, index: number) => {
                             return(
                                 <Stack key={field.id} gap={2}>
                                     <Typography>index: {index}</Typography>                                 
                                     <FileUploadField
-                                        setValue={setValue} 
-                                        // fieldName={`${fieldName}.${index}`}
+                                        initialData={watchedNewFiles[index]}
+                                        setValue={setValue}
                                         fieldName={`files.${index}`}
                                         append={append}
                                     />
                                     <Button 
-                                        disabled={fields.length-1 === index}
+                                        disabled={newFiles.length-1 === index}
                                         variant="contained"
                                         color="error"
                                         onClick={() => remove(index)}
@@ -64,10 +64,8 @@ export default function MultiFileUpload({setValue, fieldName, fields, append, re
                                     <Typography>index: {index}</Typography>                                 
                                     <FileUploadField
                                         initialData={initialData}
-                                        setValue={setValue} 
-                                        // fieldName={`${fieldName}.${index}`}
+                                        setValue={setValue}
                                         fieldName={`storageFiles.${index}`}
-                                        append={append}
                                     />
                                     <Button 
                                         variant="contained"

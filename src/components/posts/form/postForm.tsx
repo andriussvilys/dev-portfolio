@@ -21,12 +21,13 @@ const switchForm = (
         register: UseFormRegister<PostFormInput>, 
         tags:Tag[],
         setValue: any,
-        fields: any, 
+        newFiles: any, 
         append: any, 
         remove: any,
         control: any,
         storageFiles:any,
         removeStorageFile:any,
+        watch:any,
         initialData?: Post,
     ) => {
         switch(activeStep){
@@ -35,12 +36,13 @@ const switchForm = (
             case 1:
                 return <MultiFileUpload 
                             setValue={setValue} 
-                            fieldName={"fileDataList"} 
-                            fields={fields} 
+                            fieldName={"files"} 
+                            newFiles={newFiles} 
                             append={append} 
                             remove={remove}
                             storageFiles={storageFiles}
                             removeStorageFile={removeStorageFile}
+                            watch={watch}
                         />
             case 2:
                 return <TagSelect control={control} selected={initialData?.tags} register={register} tags={tags}/>
@@ -50,7 +52,7 @@ const switchForm = (
 
 export default function PostForm(props: PostFormProps){
     const {initialData} = props
-    const {register, handleSubmit, setValue, control, formState:{dirtyFields}} = useForm<PostFormInput>({
+    const {register, handleSubmit, setValue, control, watch, formState:{dirtyFields}} = useForm<PostFormInput>({
         defaultValues: {
             name: initialData?.name || "",
             description: initialData?.description || "",
@@ -61,7 +63,7 @@ export default function PostForm(props: PostFormProps){
             storageFiles: initialData?.files || []
         }
     })
-    const { fields:newFiles, append:appendFile, remove:removeFile } = useFieldArray({
+    const { fields, append:appendFile, remove:removeFile } = useFieldArray({
         control,
         name: "files"
     });
@@ -91,8 +93,21 @@ export default function PostForm(props: PostFormProps){
                 setActiveStep={setActiveStep}
             >
                 <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto"}}>
-                    {switchForm(activeStep, register, props.tags, setValue, newFiles, appendFile, removeFile, control, storageFiles,
-removeStorageFile, initialData)}
+                    {
+                    switchForm(
+                        activeStep,
+                        register,
+                        props.tags,
+                        setValue,
+                        fields,
+                        appendFile,
+                        removeFile,
+                        control,
+                        storageFiles,
+                        removeStorageFile,
+                        watch,
+                        initialData
+                    )}
                 </Card>
             <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
             </FormStepper>

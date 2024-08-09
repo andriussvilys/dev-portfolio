@@ -1,20 +1,12 @@
-import { PostFormData, PostFormInput } from "@/src/lib/definitions/posts";
-import { Box, Button, Stack, TextField } from "@mui/material";
+import { PostFormInput } from "@/src/lib/definitions/posts";
+import { Stack, TextField } from "@mui/material";
 import { UseFormRegister } from "react-hook-form";
 
-interface BasicInfoDefaults{
-    name: string,
-    description: string,
-    liveSite?: string,
-    github: string
-}
-
 interface BasicInfoProps {
-    register: UseFormRegister<PostFormInput>,
-    defaults?: BasicInfoDefaults
+    register: UseFormRegister<PostFormInput>
 }
 
-export default function BasicInfo({register, defaults}: BasicInfoProps) {
+export default function BasicInfo({register}: BasicInfoProps) {
     return(
         <Stack gap={2} sx={{justifyContent:"center", flexWrap:"wrap"}}>
             <TextField 
