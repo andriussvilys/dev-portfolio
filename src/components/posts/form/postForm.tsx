@@ -9,6 +9,7 @@ import BasicInfo from "./components/basicInfo"
 import { TagRecord } from "@/src/lib/definitions/tags"
 import TagSelect from "./components/tagSelect"
 import MultiFileUpload from "../../fileUpload/multiFileUpload"
+import LoadingBackdrop from "../../loading/backdrop/loadingBackdrop"
 
 interface PostFormProps {
     onSubmit: (input: PostFormInput) => Promise<any>,
@@ -50,6 +51,7 @@ const switchForm = (
 
 export default function PostForm(props: PostFormProps){
     const {initialData} = props
+    const [loading, setLoading] = useState(false)
     const {register, handleSubmit, setValue, control, watch, formState:{dirtyFields}} = useForm<PostFormInput>({
         defaultValues: {
             name: initialData?.name || "",
@@ -72,42 +74,52 @@ export default function PostForm(props: PostFormProps){
     const [activeStep, setActiveStep] = useState(0);
     const steps = ["Basic Info", "Media", "Tags"]
 
+    const loadingSubmit = async (inputs: PostFormInput) => {
+        setLoading(true)
+        await props.onSubmit(inputs)
+        location.reload()
+        setLoading(false)
+    }
+
     return(
-        <Box 
-            component="form" 
-            onSubmit={handleSubmit(props.onSubmit)} 
-            sx={{
-                height:"100%", 
-                width:"100%", 
-                display:"flex", 
-                flexWrap:"wrap", 
-                justifyContent:"center",
-                overflow:"hidden"
-            }} gap={2}
-        >
-            <FormStepper 
-                steps={steps} 
-                activeStep={activeStep} 
-                setActiveStep={setActiveStep}
+        <>
+            <LoadingBackdrop open={loading}/>
+            <Box 
+                component="form" 
+                onSubmit={handleSubmit(loadingSubmit)} 
+                sx={{
+                    height:"100%", 
+                    width:"100%", 
+                    display:"flex", 
+                    flexWrap:"wrap", 
+                    justifyContent:"center",
+                    overflow:"hidden"
+                }} gap={2}
             >
-                <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto"}}>
-                    {
-                    switchForm(
-                        activeStep,
-                        register,
-                        props.tags,
-                        setValue,
-                        fields,
-                        appendFile,
-                        removeFile,
-                        storageFiles,
-                        removeStorageFile,
-                        watch,
-                    )}
-                </Card>
-            <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
-            </FormStepper>
-        </Box>
+                <FormStepper 
+                    steps={steps} 
+                    activeStep={activeStep} 
+                    setActiveStep={setActiveStep}
+                >
+                    <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto"}}>
+                        {
+                        switchForm(
+                            activeStep,
+                            register,
+                            props.tags,
+                            setValue,
+                            fields,
+                            appendFile,
+                            removeFile,
+                            storageFiles,
+                            removeStorageFile,
+                            watch,
+                        )}
+                    </Card>
+                <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
+                </FormStepper>
+            </Box>
+        </>
     )
 }
 
