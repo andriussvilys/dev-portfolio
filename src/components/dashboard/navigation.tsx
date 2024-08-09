@@ -61,7 +61,6 @@ const AppBar = styled(MuiAppBar, {
 export default function Navigation({children}: {children: React.ReactNode}) {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const router = useRouter()
-    const drawerWidth = 240;
 
     return(
         <Box sx={{display:"flex", height: "100vh"}}>

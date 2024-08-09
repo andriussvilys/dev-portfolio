@@ -6,6 +6,8 @@ import { TagRecord, TagFormInput } from "@/src/lib/definitions/tags"
 import FileUploadField from "../fileUpload/fileUploadField"
 import { useForm} from "react-hook-form"
 import ControlledSelect from "./ControlledSelect"
+import { useState } from "react"
+import LoadingBackdrop from "../loading/backdrop/loadingBackdrop"
 
 interface TagFormProps {
     onSubmit: (inputs: TagFormInput) => Promise<any>,
@@ -15,16 +17,26 @@ interface TagFormProps {
 
 export default function TagForm(props: TagFormProps){
     const {tag, categories} = props
+    const [loading, setLoading] = useState(false)
     
-    const {register, handleSubmit, watch, setValue, control} = useForm<TagFormInput>({
+    const {register, handleSubmit, setValue, control} = useForm<TagFormInput>({
         defaultValues: {
             category: tag?.category ?? "",
         }
     })
     const initialData = tag ? {key: tag.file.key, url:tag.file.url!, metadata: tag.file.metadata} : undefined
 
+    const loadingSubmit = async (inputs: TagFormInput) => {
+        setLoading(true)
+        await props.onSubmit(inputs)
+        location.reload()
+        setLoading(false)
+    }
+
     return(
-        <Box component="form" onSubmit={handleSubmit(props.onSubmit)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
+        <>
+        <LoadingBackdrop open={loading}/>
+        <Box component="form" onSubmit={handleSubmit(loadingSubmit)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
             <Stack gap={2}>
                 <Box sx={{display:"flex"}} gap={2}>
                     <FileUploadField initialData={initialData} fieldName="file" setValue={setValue}/>
@@ -51,6 +63,7 @@ export default function TagForm(props: TagFormProps){
                 </Box>
             </Stack>
         </Box>
+        </>
     )
 }
 
