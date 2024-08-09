@@ -9,7 +9,7 @@ export default function Front(){
     return(
         <>
             <Navigation/>
-            <Container component="main" maxWidth="lg" sx={{height: "100vh", overflow:"auto", p:0}}>
+            <Container component="main" maxWidth="lg" sx={{height: "100vh", overflow:"auto"}}>
                 <Hero />
                 <Projects />
                 <Skills />
