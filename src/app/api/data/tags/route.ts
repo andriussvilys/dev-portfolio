@@ -1,17 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { MongoInstance } from "../connection";
-import { TagFormData } from "@/src/lib/definitions/tags";
+import { TagInput } from "@/src/lib/definitions/tags";
 import { FileMetadata } from "@/src/lib/definitions/fileUpload";
 import { getPaging } from "@/src/lib/data/commons/utils";
 import { createItem, queryCollection } from "../commons";
 import { collections } from "@/src/lib/data/commons/definitions";
 
-const parseTagFormData = (formData: FormData): TagFormData => {
+const parseTagFormData = (formData: FormData): TagInput => {
   const name = formData.get("name")?.toString() ?? "";
-  const key = formData.get("key")?.toString() ?? "";
-  const metadata:FileMetadata = formData.get("metadata") ? JSON.parse(formData.get("metadata") as string) : {width: 0, height: 0}
   const category = formData.get("category")?.toString() ?? "";
-  const body:TagFormData = {name, key, metadata, category}
+  const file = JSON.parse(formData.get("file") as string)
+  const body:TagInput = {name, category, file}
   return body
 }
 

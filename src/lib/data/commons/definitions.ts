@@ -1,6 +1,6 @@
 import { PagingParams } from "../../definitions/pages";
-import { PostRequest } from "../../definitions/posts";
-import { TagFormData } from "../../definitions/tags";
+import { PostInput } from "../../definitions/posts";
+import { TagInput } from "../../definitions/tags";
 
 enum collections {
     tags = "tags",
@@ -17,7 +17,7 @@ interface ListCollectionRes<CollectionType>{
     total: number
 }
 
-type CreateItemType = PostRequest | TagFormData
+type CreateItemType = PostInput | TagInput
 
 interface CreateItemReq<CreateItemType>{
     collection: collections,

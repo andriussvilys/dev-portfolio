@@ -1,24 +1,21 @@
 "use client"
 
-import { Tag as TagData } from "@/src/lib/definitions/tags";
-import { Controller, ControllerFieldState, ControllerRenderProps, FieldValues, UseFormRegister, UseFormStateReturn } from "react-hook-form";
-import { Box, Checkbox, Stack } from "@mui/material";
+import { TagRecord } from "@/src/lib/definitions/tags";
+import { UseFormRegister } from "react-hook-form";
+import { Box } from "@mui/material";
 import Tag from "../../../tags/tag";
-import { ReactElement } from "react";
 
 interface SelectableTagProps{
-    tag: TagData,
+    tag: TagRecord,
     register: UseFormRegister<any>
-    checked?: boolean
-    control: any,
     fieldName: string,
 }
 
-export default function SelectableTag({tag, register, checked, control, fieldName}:SelectableTagProps){
+export default function SelectableTag({tag, register, fieldName}:SelectableTagProps){
     return(
         <Box sx={{display:"flex", alignItems:"center"}}>
             <Tag tag={tag} />
-            <input type="checkbox" {...register("tags")} value={tag._id} />
+            <input type="checkbox" {...register(fieldName)} value={tag._id} />
         </Box>
     )
 }

@@ -1,17 +1,17 @@
 import { Box, Stack, Typography } from "@mui/material"
 import type {Post} from "../../lib/definitions/posts"
-import type { Tag as TagType } from "@/src/lib/definitions/tags"
+import type { TagRecord } from "@/src/lib/definitions/tags"
 import { getURL } from "@/src/lib/storage"
 import Tag from "../tags/tag"
 import Image from "next/image"
 import { listTags } from "@/src/lib/tags"
 
 export default async function Post({post}:{post:Post}){
-    const tags:TagType[] = (await listTags()).items
+    const tags:TagRecord[] = (await listTags()).items
     const postTags = post.tags?.map(tag => {
         const foundTag = tags.find(t => t._id === tag)
         if(foundTag){
-            foundTag["url"] = getURL(foundTag.key)  
+            foundTag.file["url"] = getURL(foundTag.file.key)  
         }
         return foundTag
     })

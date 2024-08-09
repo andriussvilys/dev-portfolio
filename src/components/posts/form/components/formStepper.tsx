@@ -77,9 +77,6 @@ export default function FormStepper({steps, children, activeStep, setActiveStep}
           </Step>
         ))}
       </Stepper>
-      {/* <Typography sx={{ mt: 2, mb: 1, py: 1 }}>
-            Step {activeStep + 1}
-      </Typography> */}
       <Stack sx={{flex:1, overflow:"hidden"}}>
         <Box sx={{height: "100%", display:"flex", justifyContent:"center", overflow:"auto"}}>
           {children}

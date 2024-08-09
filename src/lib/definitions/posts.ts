@@ -1,6 +1,6 @@
 import { StorageFile } from "./fileUpload"
 
-interface PostRequest {
+interface PostInput {
     name: string,
     description: string,
     liveSite?: string,
@@ -9,13 +9,13 @@ interface PostRequest {
     tags: string[]
 }
 
-interface Post extends PostRequest {
+interface PostRecord extends PostInput {
     _id: string
 }
 
-interface PostFormInput extends Omit<PostRequest, "files"> {
+interface PostFormInput extends Omit<PostInput, "files"> {
     files: Blob[],
     storageFiles?: StorageFile[]
 }
 
-export type {Post, PostFormInput, PostRequest}
+export type {PostRecord as Post, PostFormInput, PostInput}
