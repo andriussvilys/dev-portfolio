@@ -1,44 +1,73 @@
 "use client"
 
-import { Stack, TextField } from "@mui/material"
+import { Button, FormControl, InputAdornment, InputBase, InputLabel, OutlinedInput, Stack, TextField } from "@mui/material"
 import FilePreview from "./filePreview"
-import { UseFormRegister, UseFormSetValue } from "react-hook-form"
-import { useEffect, useState } from "react"
+import { UseFieldArrayAppend, UseFormSetValue } from "react-hook-form"
+import { forwardRef, useEffect, useRef, useState } from "react"
+import { StorageFile } from "@/src/lib/definitions/fileUpload"
 
 interface FileUploadProps{
-    register: UseFormRegister<any>,
+    fieldName: string,
     setValue: UseFormSetValue<any>,
-    watch: any,
-    src?: string
+    initialData?: StorageFile,
+    append?: UseFieldArrayAppend<any>,
 }
+const FileUploadField = forwardRef<HTMLDivElement, FileUploadProps>((props, ref) => {
+        const {setValue, fieldName, initialData, append} = props
+        const [imageSrc, setImageSrc] = useState<string>("")
+        const [file, setFile] = useState<StorageFile | File | undefined>(initialData)
 
-export default function FileUploadField({register, watch, setValue, src}: FileUploadProps){
-    const fileWatcher = watch("file")
-    const [imageSrc, setImageSrc] = useState<string>("")
-
-    useEffect(() => {
-        if(src){
-            setImageSrc(src)
+        const isFileValid = (file: StorageFile | File | undefined):boolean => {
+            const valid =  file instanceof File || !!file?.url 
+            return valid
         }
-    }, [src])
-    
-    useEffect(() => {
-        if(fileWatcher?.length > 0){
-            setImageSrc(URL.createObjectURL(fileWatcher[0]))
-        }
-    }, [fileWatcher])
+        const dirty = useRef(isFileValid(initialData))
 
-    return(
-        <Stack gap={2}>
-            <FilePreview src={imageSrc} setValue={setValue}/>
-            <TextField 
-                size="small" 
-                InputLabelProps={{shrink:true}} 
-                label="select file" 
-                type="file" 
-                id="new-file"
-                {...register("file")}
-            />
-        </Stack>
-    )
-}
+        const changeSrc = (file: StorageFile | File | undefined) => {
+            if(isFileValid(file) && !!file){
+                if(file instanceof File){
+                    const url = URL.createObjectURL(file)
+                    setImageSrc(url)
+                }
+                else{
+                    setImageSrc(file.url as string)
+                }
+            }
+        }
+
+        useEffect(() => {
+            if(isFileValid(file)){
+                setValue(fieldName, file)
+                changeSrc(file)
+                if(!dirty.current && !!append){
+                    append({})
+                    dirty.current = true
+                }
+            }
+        }, [file])
+
+        return(
+            <Stack component="div" gap={2} ref={ref}>
+                <FilePreview src={imageSrc}/>
+                <TextField 
+                    size="small" 
+                    InputLabelProps={{shrink:true}} 
+                    label="select file" 
+                    type="file"
+                    onChange={e => {
+                        const file: File | StorageFile | undefined = (e.target as HTMLInputElement).files?.[0]
+                        if(!!file){
+                            setFile(file)
+                        }
+                    }}
+                    sx={{maxWidth:"30ch"}}
+                />
+            </Stack>
+        )
+    }
+)
+
+FileUploadField.displayName = "FileUploadField"
+
+export default FileUploadField
+export type {FileUploadProps}

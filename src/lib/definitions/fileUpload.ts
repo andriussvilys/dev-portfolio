@@ -3,17 +3,10 @@ interface FileMetadata{
     height: number
 }
 
-interface FileData{
-    data: File,
-    metadata: FileMetadata
+interface StorageFile{
+    key: string,
+    metadata: FileMetadata,
+    url: string
 }
 
-interface FileUpload{
-    file: FileData
-}
-
-interface MultiFileUpload{
-    files: FileUpload[]
-}
-
-export type {FileMetadata, FileData, FileUpload, MultiFileUpload}
+export type {FileMetadata, StorageFile}

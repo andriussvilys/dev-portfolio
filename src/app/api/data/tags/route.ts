@@ -1,21 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MongoInstance } from "../connection";
-import { collections } from "../collections";
 import { TagFormData } from "@/src/lib/definitions/tags";
-import { FileData, FileMetadata } from "@/src/lib/definitions/fileUpload";
+import { FileMetadata } from "@/src/lib/definitions/fileUpload";
+import { getPaging } from "@/src/lib/data/commons/utils";
+import { createItem, queryCollection } from "../commons";
+import { collections } from "@/src/lib/data/commons/definitions";
+
+const parseTagFormData = (formData: FormData): TagFormData => {
+  const name = formData.get("name")?.toString() ?? "";
+  const key = formData.get("key")?.toString() ?? "";
+  const metadata:FileMetadata = formData.get("metadata") ? JSON.parse(formData.get("metadata") as string) : {width: 0, height: 0}
+  const category = formData.get("category")?.toString() ?? "";
+  const body:TagFormData = {name, key, metadata, category}
+  return body
+}
 
 export async function POST(request: Request) {
   try{
     const formData = await request.formData();
-    console.log("data/tags/POST", formData)
-    const db = await MongoInstance.getDb();
-    const collection = db.collection(collections.tags);
-    const name = formData.get("name")?.toString() ?? "";
-    const key = formData.get("key")?.toString() ?? "";
-    const metadata:FileMetadata = formData.get("metadata") ? JSON.parse(formData.get("metadata") as string) : {width: 0, height: 0}
-    const category = formData.get("category")?.toString() ?? "";
-    const body:TagFormData = {name, key, metadata, category}
-    const res = await collection.insertOne(body);
+    const body = parseTagFormData(formData)
+    const res = await createItem({collection: collections.tags, body})
     return NextResponse.json(res, {status: 200});  
   }
   catch(e){
@@ -25,23 +29,6 @@ export async function POST(request: Request) {
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
-  const page = searchParams.get("page")
-  const limit = searchParams.get("limit")
-  try{
-        const query = {}
-        const db = await MongoInstance.getDb();
-        const collection = db.collection(collections.tags);
-        const total = await collection.countDocuments()
-        const cursor = collection.find(query)
-        if(page && limit){
-          const pageInt = parseInt(page)
-          const limitInt = parseInt(limit)
-          cursor.skip((pageInt-1) * limitInt).limit(limitInt)
-        }
-        const res = await cursor.toArray();
-        return NextResponse.json({tags:res, total}, {status: 200});
-    }
-    catch(e){
-        return NextResponse.json({ status: "fail", error: e }, {status: 500});
-    }
+  const paging = getPaging(searchParams)
+  return queryCollection({collection: collections.tags, paging})
 }

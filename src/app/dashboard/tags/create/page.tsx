@@ -1,9 +1,9 @@
-import {getCategories, upload} from "@/src/lib/tags"
 import { Card, Container } from "@mui/material"
 import TagFormCreate from "@/src/components/tags/tagFormCreate"
+import { listCategories } from "@/src/lib/tags"
 
 export default async function Page(){
-    const categories = await getCategories()
+    const categories = await listCategories()
     return(
       <Container sx={{
           height:"100%", 

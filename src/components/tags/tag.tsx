@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { getURL } from '@/src/lib/storage';
 import { Stack, Typography } from '@mui/material';
 import type {Tag} from '@/src/lib/definitions/tags'
 
@@ -12,9 +11,9 @@ const getAlt = (tag: Tag) => {
 
 export default function Tag({tag}: {tag: Tag}) {
     return (
-        <Stack sx={{alignItems:"center"}}>
-            <Image src={tag.url ?? ""} height={100} width={100} alt={getAlt(tag)}/>
-            <Typography>{tag.name}</Typography>
+        <Stack sx={{alignItems:"center", border:"1px solid", p: 1, borderRadius:2}}>
+            <Image src={tag.url ?? ""} height={50} width={50} alt={getAlt(tag)}/>
+            <Typography variant="caption">{tag.name}</Typography>
         </Stack>
     )
 }

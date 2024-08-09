@@ -1,6 +1,6 @@
 "use client"
 
-import { deleteById } from "@/src/lib/tags"
+import { deleteTag } from "@/src/lib/tags"
 import { Button } from "@mui/material";
 import {Delete as DeleteIcon } from "@mui/icons-material"
 
@@ -12,7 +12,7 @@ interface DeleteButtonProps {
 export default function DeleteButton({disabled, _id}: DeleteButtonProps) {
     const onDelete = async () => {
         try{
-            const res = await deleteById(_id); 
+            const res = await deleteTag(_id); 
             location.reload()
         }
         catch(err){
@@ -20,7 +20,7 @@ export default function DeleteButton({disabled, _id}: DeleteButtonProps) {
         }
     }
     return(
-        <Button color="error" startIcon={<DeleteIcon/>} variant="outlined" disabled={disabled} onClick={onDelete}>Delete</Button>
+        <Button color="error" startIcon={<DeleteIcon/>} variant="outlined" disabled={disabled} onClick={() => onDelete()}>Delete</Button>
     )
 }
 

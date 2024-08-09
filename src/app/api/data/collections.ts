@@ -1,9 +1,5 @@
+import { collections } from "@/src/lib/data/commons/definitions";
 import { MongoInstance } from "./connection";
-
-enum collections {
-    tags = "tags",
-    posts = "posts",
-}
 
 const getCollection = async (collectionName: collections) => {
     const db = await MongoInstance.getDb();
@@ -11,4 +7,4 @@ const getCollection = async (collectionName: collections) => {
     return collection
 }
 
-export { collections, getCollection };
+export { getCollection };

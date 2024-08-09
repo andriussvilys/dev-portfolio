@@ -1,14 +1,21 @@
-interface Post extends PostFormData {
-    _id: string
-}
+import { StorageFile } from "./fileUpload"
 
-interface PostFormData {
+interface PostRequest {
     name: string,
     description: string,
     liveSite?: string,
-    github: string
-    media: string[],
-    tags: string[], //_id
+    github?: string,
+    files: StorageFile[],
+    tags: string[]
 }
 
-export type {Post, PostFormData}
+interface Post extends PostRequest {
+    _id: string
+}
+
+interface PostFormInput extends Omit<PostRequest, "files"> {
+    files: Blob[],
+    storageFiles?: StorageFile[]
+}
+
+export type {Post, PostFormInput, PostRequest}

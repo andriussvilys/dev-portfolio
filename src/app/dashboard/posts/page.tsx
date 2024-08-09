@@ -1,17 +1,19 @@
 import ActionButton from "@/src/components/overviewPage/actionButton";
 import OverviewPage from "@/src/components/overviewPage/overviewPage";
-import { Post } from "@/src/lib/definitions/posts";
-import { parseParams } from "@/src/lib/utils";
-import { Box, Stack, Typography } from "@mui/material";
+import type { Post as PostData } from "@/src/lib/definitions/posts";
+import { Box, Button, Stack } from "@mui/material";
 import { revalidatePath } from "next/cache";
-import { listAll } from "@/src/lib/posts"
+import Post from "@/src/components/posts/post";
+import { getPaging } from "@/src/lib/data/commons/utils";
+import { listPosts } from "@/src/lib/posts";
+import { defaultPaging } from "@/src/lib/definitions/pages";
+import DeletePostButton from "@/src/components/posts/deletePostButton";
 
 export default async function PostsPage({searchParams}:{searchParams:URLSearchParams}){
     revalidatePath("/dashboard/posts")
-    const {page, limit} = parseParams(searchParams)
-    const postsData = await listAll({page, limit})
-    const posts:Post[] = postsData.posts.map((post:Post) => {return {...post}})
-    const total = postsData.total
+    const paging = getPaging(searchParams)
+    const postsData = await listPosts(paging ?? defaultPaging)
+    const {items:posts, total} = postsData
     return(
         <OverviewPage 
             searchParams={searchParams} 
@@ -19,12 +21,15 @@ export default async function PostsPage({searchParams}:{searchParams:URLSearchPa
             actionButton={<ActionButton href="/dashboard/posts/create" buttonText="Create new Post"/>}
         >
             <Stack gap={2}>
-                {posts.map((post:Post) => {
+                {posts.map((post:PostData) => {
                     return(
-                        <Box key={crypto.randomUUID()} sx={{border: "1px solid black", p: 2}}>
-                            <Typography>name: {post.name}</Typography>
-                            <Typography>Description: {post.description}</Typography>
-                        </Box>
+                        <Stack key={post._id}>
+                            <Post post={post}/>
+                            <Box gap={2} sx={{display:"flex", p:2, alignSelf:"end"}}>
+                                <DeletePostButton _id={post._id}/>
+                                <Button href={`/dashboard/posts/edit/${post._id}`} variant='contained'>Edit</Button>
+                            </Box>
+                        </Stack>
                     )
                 })}
             </Stack>

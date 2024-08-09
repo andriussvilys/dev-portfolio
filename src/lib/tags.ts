@@ -1,21 +1,20 @@
-import {deleteByKey, upload as storageUpload} from './storage'
+import { collections, ListCollectionRes } from './data/commons/definitions'
+import { createItem, deleteItem, findItem, listCollection, updateItem } from './data/commons/utils'
+import { PagingParams } from './definitions/pages'
+import { Tag } from './definitions/tags'
+import {deleteByKey, getURL, upload as storageUpload} from './storage'
 
-const upload = async (formData: FormData) => {
-
+const createTag = async (formData: FormData) => {
     try{
-        const storageRes = await storageUpload(formData)
+        const file = formData.get("file") as File
+        const storageRes = await storageUpload(file, collections.tags)
             try{
                 formData.append("key", storageRes.key)
-                const dbRes = await fetch('/api/data/tags', {
-                    method: 'POST',
-                    cache: 'no-store',
-                    body: formData,
-                })
-                return await dbRes.json()
+                const dbRes = await createItem({collection: collections.tags, formData})
+                return await dbRes
             }
             catch(e){
-                console.log("rollback s3 upload")
-                deleteByKey(formData.get("key") as string)
+                deleteByKey(storageRes.key)
                 throw e
             }
     }
@@ -24,24 +23,19 @@ const upload = async (formData: FormData) => {
     }
 }
 
-const listAll = async ({page, limit}: {page?:number|null, limit?: number|null}) => {
-    const query = page && limit ? `?page=${page}&limit=${limit}` : ''
-    try{
-        const res = await fetch(`http://localhost:3000/api/data/tags${query}`, {method: 'GET', cache: 'no-store'})
-        return await res.json()
-    }
-    catch(e){
-        throw new Error((e as Error).message)
-    }
+const listTags = async (paging?: PagingParams|undefined):Promise<ListCollectionRes<Tag>> => {
+    const res:ListCollectionRes<Tag> =  await listCollection({collection: collections.tags, paging})
+    const tagsWithUrl = res.items.map(tag => {return {...tag, url: getURL(tag.key)}})
+    return {items: tagsWithUrl, total: res.total}
 }
 
-const deleteById = async (id: string) => {
+const deleteTag = async (id: string) => {
     // delete storage object first; if data delete fails, the record will be visible without image
     //  in the front and user can try again to delete record
     try{
-        const tag = await getById(id) 
+        const tag = await findTag(id) 
         const storageRes = await deleteByKey(tag.key)
-        const dataRes = await fetch(`http://localhost:3000/api/data/tags/${id}`, {method: 'DELETE', cache: 'no-store'})
+        const dataRes = await deleteItem({collection: collections.tags, _id: id})
         return {storageRes, dataRes}
     }
     catch(e){
@@ -49,29 +43,21 @@ const deleteById = async (id: string) => {
     }
 }
 
-const getById = async (id: string) => {
-    try{
-        const res = await fetch(`http://localhost:3000/api/data/tags/${id}`, {method: 'GET', cache: 'no-store'})
-        return await res.json()
-    }
-    catch(e){
-        throw new Error("failed to get from db" + (e as Error).message)
-    }
-
+const findTag = async (id: string) => {
+    return await findItem<Tag>({collection: collections.tags, _id: id})
 }
 
-const patchById = async (formData: FormData, id: string, ) => {
+const updateTag = async (formData: FormData, id: string, ) => {
     try{
-        if(formData.get("file")!= null){
-
+        const file = formData.get("file") as File
+        if(file){
             await deleteByKey(formData.get("key") as string)
-            console.log("deleted old image")	
-            const storageRes = await storageUpload(formData);
-            console.log("uploaded new image:", storageRes.key)
-            formData.append("key",storageRes.key)
+            const storageRes = await storageUpload(file, collections.tags);
+            formData.append("metadata", JSON.stringify(storageRes.metadata))
+            formData.append("key", storageRes.key)
         }
-        const res = await fetch(`http://localhost:3000/api/data/tags/${id}`, {method: 'PATCH', cache: 'no-store', body: formData})
-        return await res.json()
+        const res = await updateItem({collection: collections.tags, _id: id, body: formData})
+        return await res
     }
     catch(e){
         throw new Error ("failed to patch: " + (e as Error).message)
@@ -79,7 +65,7 @@ const patchById = async (formData: FormData, id: string, ) => {
 
 }
 
-const getCategories = async () => {
+const listCategories = async () => {
     try{
         const res = await fetch('http://localhost:3000/api/data/tags/categories', {method: 'GET', cache: 'no-store'})
         return await res.json()
@@ -89,4 +75,4 @@ const getCategories = async () => {
     }
 }
 
-export {upload, listAll, deleteById, getById, patchById, getCategories}
+export {createTag, listTags, deleteTag, findTag, updateTag, listCategories}

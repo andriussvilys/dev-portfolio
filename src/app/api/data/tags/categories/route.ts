@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MongoInstance } from "../../connection";
-import { collections } from "../../collections";
+import { collections } from "@/src/lib/data/commons/definitions";
+import { getCollection } from "../../collections";
 
 export async function GET(request: NextRequest) {
     try{
-          const db = await MongoInstance.getDb();
-          const collection = db.collection(collections.tags);
+          const collection = await getCollection(collections.tags);
           const categories = await collection.distinct('category');
           return NextResponse.json(categories, {status: 200});
       }

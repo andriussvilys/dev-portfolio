@@ -1,6 +1,10 @@
-const createKey = (file:File) => {
+import { collections } from "./data/commons/definitions"
+import { getMetadata } from "./utils"
+
+const createKey = (file:File, collection:string) => {
     const extension = file.type.split('/')[1]
-    const key = crypto.randomUUID() + "." + extension
+    const prefix = collection ? collection + "/" : ''
+    const key = prefix + crypto.randomUUID() + "." + extension
     return key
 }
 
@@ -8,17 +12,23 @@ const getURL = (key: string) => {
     return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_BUCKET_REGION}.amazonaws.com/${key}`
 }
 
-const upload = async (formData: FormData) => {
+const upload = async (file: File, collection: collections) => {
+    const form = new FormData();
+    form.append("file", file)
+    form.append("collection", collection)
     try{
-        const res = await fetch('/api/storage', {
+        const uploadRes = await fetch('/api/storage', {
             method: 'POST',
-            body: formData,
+            body: form,
             cache: 'no-store'
-            })
-        if(res.ok){
-            return await res.json()
+        })
+        if(uploadRes.ok){
+            const metadata = await getMetadata(file)
+            const resJSON = await uploadRes.json()
+            const res = {...resJSON, metadata}
+            return await res
         }
-        throw new Error("failed to upload to storage: " + res.statusText)
+        throw new Error("failed to upload to storage: " + uploadRes.statusText)
     }
     catch(e){
         throw e
@@ -27,7 +37,7 @@ const upload = async (formData: FormData) => {
 
 const deleteByKey = async (key: string) => {
     try{
-        const res = await fetch(`/api/storage/${key}`, {
+        const res = await fetch(`/api/storage/${encodeURIComponent(key)}`, {
             method: 'DELETE',
             cache: 'no-store'
           })
@@ -41,4 +51,35 @@ const deleteByKey = async (key: string) => {
     }
 }
 
-export {getURL, upload, deleteByKey, createKey}
+const replaceMany = async (oldKeys:string[], newFiles: File[], collection:collections) => {
+    try{
+        const uploadPromises = newFiles.map(file => {
+            return upload(file, collection)
+        })
+        const uploadPromisesRes = await Promise.all(uploadPromises)
+
+        const deletePromises = oldKeys.map(key => {
+            return deleteByKey(key)
+        })
+        const deletePromisesRes = await Promise.all(deletePromises)
+
+        return({uploads: uploadPromisesRes, deletes: deletePromisesRes})
+
+    }
+    catch(e){
+        throw e
+    }
+}
+
+const replace = async (oldKey: string, newFile: File, collection:collections) => {
+    try{
+        const uploadRes = await upload(newFile, collection)
+        const deleteRes = await deleteByKey(oldKey)
+        return ({uploaded: uploadRes, deleted: deleteRes})
+    }
+    catch(e){
+        throw e
+    }
+}
+
+export {getURL, upload, deleteByKey, createKey, replace, replaceMany}

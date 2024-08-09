@@ -15,17 +15,20 @@ interface TagFormProps {
 
 export default function TagForm(props: TagFormProps){
     const {tagData, categories} = props
+    
     const {register, handleSubmit, watch, setValue, control} = useForm<TagFormInput>({
         defaultValues: {
             category: tagData?.category ?? "",
         }
     })
 
+    const initialData = tagData ? {key: tagData.key, url:tagData.url!, metadata: tagData.metadata} : undefined
+
     return(
         <Box component="form" onSubmit={handleSubmit(props.onSubmit)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
             <Stack gap={2}>
                 <Box sx={{display:"flex"}} gap={2}>
-                    <FileUploadField register={register} watch={watch} setValue={setValue} src={props.tagData?.url}/>
+                    <FileUploadField initialData={initialData} fieldName="file" setValue={setValue}/>
                     <Divider orientation="vertical"/>
                     <Stack gap={2}>
                         <TextField 

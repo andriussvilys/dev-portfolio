@@ -1,18 +1,18 @@
-import { FileMetadata, FileUpload } from "./fileUpload"
+import { FileMetadata } from "./fileUpload"
 
-interface TagFormData{
-    metadata: FileMetadata,
-    name: string,
-    key: string,
-    url?: string,
-    category?: string
-}
 
 interface TagFormInput{ 
-    metadata: FileMetadata,
-    file: File[],
+    file: File,
     name: string,
     category: string
+}
+
+interface TagFormData{
+    key: string,
+    metadata: FileMetadata,
+    name: string,
+    category?: string,
+    url?: string,
 }
 
 interface Tag extends TagFormData{

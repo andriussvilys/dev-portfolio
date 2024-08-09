@@ -7,16 +7,18 @@ import { Box, List, ListItem } from "@mui/material"
 
 interface TagSelectProps{
     register:UseFormRegister<any>,
-    tags:Tag[]
+    tags:Tag[],
+    selected?: string[],
+    control: any
 }
 
-export default function TagSelect({register, tags}:TagSelectProps){
+export default function TagSelect({register, tags, selected, control}:TagSelectProps){
     return(
         <List sx={{display:"flex"}}>
-            {tags.map(tag => {
+            {tags.map((tag, index) => {
                 return(
                     <ListItem key={tag.key}>
-                        <SelectableTag register={register} tag={tag}/>
+                        <SelectableTag control={control} register={register} tag={tag} fieldName={`tags.${index}`}/>
                     </ListItem>
                 )
             })}
