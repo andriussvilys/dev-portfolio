@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache"
 import DashboardTag from "@/src/components/dashboard/dashboardTag"
 import TagFormEdit from "@/src/components/tags/tagFormEdit"
 import { getURL } from "@/src/lib/storage"
-import { Tag } from "@/src/lib/definitions/tags"
+import { TagRecord } from "@/src/lib/definitions/tags"
 import OverviewPage from "@/src/components/overviewPage/overviewPage"
 import ActionButton from "@/src/components/overviewPage/actionButton"
 import { getPaging } from "@/src/lib/data/commons/utils"
@@ -14,8 +14,8 @@ export default async function Page({searchParams}:{searchParams:URLSearchParams}
     revalidatePath("/dashboard/tags")
     const categories = await listCategories()
     const paging = getPaging(searchParams)
-    const tagsData = await listTags(paging ?? defaultPaging)
-    const tags:Tag[] = tagsData.items.map((tag:Tag) => {return {...tag, url: getURL(tag.key)}})
+    const tagsData = (await listTags(paging ?? defaultPaging))
+    const tags:TagRecord[] = tagsData.items.map((tag:TagRecord) => {return {...tag, file: {...tag.file, url:getURL(tag.file.key)}}})
     const total = tagsData.total
 
     return (
@@ -24,10 +24,10 @@ export default async function Page({searchParams}:{searchParams:URLSearchParams}
             itemCount={total} 
             actionButton={<ActionButton href="/dashboard/tags/create" buttonText="Create new Tag"/>}
         >
-            {tags.map((tag:Tag) => {
+            {tags.map((tag:TagRecord) => {
                 return(
-                    <DashboardTag key={tag.key} tag={tag}>
-                        <TagFormEdit categories={categories} tagData={tag}/>
+                    <DashboardTag key={tag._id} tag={tag}>
+                        <TagFormEdit categories={categories} tag={tag}/>
                     </DashboardTag>
                 )
             })}

@@ -1,15 +1,22 @@
 import { collections, ListCollectionRes } from './data/commons/definitions'
 import { createItem, deleteItem, findItem, listCollection, updateItem } from './data/commons/utils'
+import { StorageFile } from './definitions/fileUpload'
 import { PagingParams } from './definitions/pages'
-import { Tag } from './definitions/tags'
-import {deleteByKey, getURL, upload as storageUpload} from './storage'
+import { TagRecord } from './definitions/tags'
+import {deleteByKey, getURL, replace, upload as storageUpload} from './storage'
 
 const createTag = async (formData: FormData) => {
     try{
         const file = formData.get("file") as File
         const storageRes = await storageUpload(file, collections.tags)
             try{
-                formData.append("key", storageRes.key)
+                const storageFile:StorageFile = {
+                    key: storageRes.key,
+                    url: "",
+                    metadata: storageRes.metadata
+                }
+                formData.delete("file")
+                formData.append("file", JSON.stringify(storageFile))
                 const dbRes = await createItem({collection: collections.tags, formData})
                 return await dbRes
             }
@@ -23,9 +30,9 @@ const createTag = async (formData: FormData) => {
     }
 }
 
-const listTags = async (paging?: PagingParams|undefined):Promise<ListCollectionRes<Tag>> => {
-    const res:ListCollectionRes<Tag> =  await listCollection({collection: collections.tags, paging})
-    const tagsWithUrl = res.items.map(tag => {return {...tag, url: getURL(tag.key)}})
+const listTags = async (paging?: PagingParams|undefined):Promise<ListCollectionRes<TagRecord>> => {
+    const res:ListCollectionRes<TagRecord> =  await listCollection({collection: collections.tags, paging})
+    const tagsWithUrl = res.items.map(tag => {return {...tag, file: {...tag.file, url: getURL(tag.file.key)}}})
     return {items: tagsWithUrl, total: res.total}
 }
 
@@ -34,7 +41,7 @@ const deleteTag = async (id: string) => {
     //  in the front and user can try again to delete record
     try{
         const tag = await findTag(id) 
-        const storageRes = await deleteByKey(tag.key)
+        const storageRes = await deleteByKey(tag.file.key)
         const dataRes = await deleteItem({collection: collections.tags, _id: id})
         return {storageRes, dataRes}
     }
@@ -44,18 +51,24 @@ const deleteTag = async (id: string) => {
 }
 
 const findTag = async (id: string) => {
-    return await findItem<Tag>({collection: collections.tags, _id: id})
+    return await findItem<TagRecord>({collection: collections.tags, _id: id})
 }
 
 const updateTag = async (formData: FormData, id: string, ) => {
     try{
-        const file = formData.get("file") as File
-        if(file){
-            await deleteByKey(formData.get("key") as string)
-            const storageRes = await storageUpload(file, collections.tags);
-            formData.append("metadata", JSON.stringify(storageRes.metadata))
-            formData.append("key", storageRes.key)
+        const file = formData.get("file")
+        if(file instanceof File){
+            const tag = await findTag(id)
+            const storageRes = await replace(tag.file.key, file, collections.tags)
+            const storageFile:StorageFile = {
+                key: storageRes.uploaded.key,
+                url: "",
+                metadata: storageRes.uploaded.metadata
+            }
+            formData.delete("file")
+            formData.append("file", JSON.stringify(storageFile))
         }
+        console.log("updateTag", {formData})
         const res = await updateItem({collection: collections.tags, _id: id, body: formData})
         return await res
     }

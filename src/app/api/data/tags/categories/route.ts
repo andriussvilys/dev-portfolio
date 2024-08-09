@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { MongoInstance } from "../../connection";
 import { collections } from "@/src/lib/data/commons/definitions";
 import { getCollection } from "../../collections";
 

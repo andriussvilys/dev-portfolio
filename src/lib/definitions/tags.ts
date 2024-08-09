@@ -1,5 +1,14 @@
-import { FileMetadata } from "./fileUpload"
+import { FileMetadata, StorageFile } from "./fileUpload"
 
+interface TagInput{
+    file: StorageFile,
+    name: string,
+    category: string,
+}
+
+interface TagRecord extends TagInput{
+    _id: string
+}
 
 interface TagFormInput{ 
     file: File,
@@ -7,16 +16,4 @@ interface TagFormInput{
     category: string
 }
 
-interface TagFormData{
-    key: string,
-    metadata: FileMetadata,
-    name: string,
-    category?: string,
-    url?: string,
-}
-
-interface Tag extends TagFormData{
-    _id: string
-}
-
-export type {Tag, TagFormData, TagFormInput}
+export type {TagRecord, TagInput, TagFormInput}

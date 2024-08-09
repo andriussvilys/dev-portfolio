@@ -6,7 +6,7 @@ import { Button } from "@mui/material";
 export default function DeletePostButton({_id}:{_id: string}){
     const onDelete = async () => {
         try{
-            const res = await deletePost(_id); 
+            await deletePost(_id); 
             location.reload()
         }
         catch(err){

@@ -2,27 +2,26 @@
 
 import { Box, Button, Divider, Stack, TextField } from "@mui/material"
 import DeleteButton from "./deleteButton"
-import { Tag, TagFormInput } from "@/src/lib/definitions/tags"
+import { TagRecord, TagFormInput } from "@/src/lib/definitions/tags"
 import FileUploadField from "../fileUpload/fileUploadField"
 import { useForm} from "react-hook-form"
 import ControlledSelect from "./ControlledSelect"
 
 interface TagFormProps {
     onSubmit: (inputs: TagFormInput) => Promise<any>,
-    tagData?: Tag
+    tag?: TagRecord
     categories: string[]
 }
 
 export default function TagForm(props: TagFormProps){
-    const {tagData, categories} = props
+    const {tag, categories} = props
     
     const {register, handleSubmit, watch, setValue, control} = useForm<TagFormInput>({
         defaultValues: {
-            category: tagData?.category ?? "",
+            category: tag?.category ?? "",
         }
     })
-
-    const initialData = tagData ? {key: tagData.key, url:tagData.url!, metadata: tagData.metadata} : undefined
+    const initialData = tag ? {key: tag.file.key, url:tag.file.url!, metadata: tag.file.metadata} : undefined
 
     return(
         <Box component="form" onSubmit={handleSubmit(props.onSubmit)} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
@@ -36,7 +35,7 @@ export default function TagForm(props: TagFormProps){
                             InputLabelProps={{shrink:true}} 
                             label="name" 
                             variant="outlined"
-                            defaultValue={props.tagData?.name}
+                            defaultValue={props.tag?.name}
                             {...register("name")}
                         />
                         <ControlledSelect 
@@ -48,7 +47,7 @@ export default function TagForm(props: TagFormProps){
                 <Divider/>
                 <Box sx={{alignSelf:"end", display:"flex"}} gap={2}>
                     <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
-                    {tagData?._id ? <DeleteButton disabled={false} _id={tagData._id}/> : null}
+                    {tag?._id ? <DeleteButton disabled={false} _id={tag._id}/> : null}
                 </Box>
             </Stack>
         </Box>

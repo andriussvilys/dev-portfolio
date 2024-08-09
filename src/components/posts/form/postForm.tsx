@@ -6,29 +6,27 @@ import { useState } from "react"
 import FormStepper from "./components/formStepper"
 import { useFieldArray, useForm, UseFormRegister } from "react-hook-form"
 import BasicInfo from "./components/basicInfo"
-import { Tag } from "@/src/lib/definitions/tags"
+import { TagRecord } from "@/src/lib/definitions/tags"
 import TagSelect from "./components/tagSelect"
 import MultiFileUpload from "../../fileUpload/multiFileUpload"
 
 interface PostFormProps {
     onSubmit: (input: PostFormInput) => Promise<any>,
-    tags: Tag[],
+    tags: TagRecord[],
     initialData?: Post
 }
 
 const switchForm = (
         activeStep: number, 
         register: UseFormRegister<PostFormInput>, 
-        tags:Tag[],
+        tags:TagRecord[],
         setValue: any,
         newFiles: any, 
         append: any, 
         remove: any,
-        control: any,
         storageFiles:any,
         removeStorageFile:any,
         watch:any,
-        initialData?: Post,
     ) => {
         switch(activeStep){
             case 0:
@@ -45,7 +43,7 @@ const switchForm = (
                             watch={watch}
                         />
             case 2:
-                return <TagSelect control={control} selected={initialData?.tags} register={register} tags={tags}/>
+                return <TagSelect register={register} tags={tags}/>
             default: return null
         }
 }
@@ -102,11 +100,9 @@ export default function PostForm(props: PostFormProps){
                         fields,
                         appendFile,
                         removeFile,
-                        control,
                         storageFiles,
                         removeStorageFile,
                         watch,
-                        initialData
                     )}
                 </Card>
             <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
