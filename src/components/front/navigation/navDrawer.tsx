@@ -1,3 +1,5 @@
+"use client"
+
 import {Drawer, Toolbar, List} from "@mui/material";
 import { appBarZIndex, drawerWidth } from "./constants";
 import NavListItems from "./navListItems";

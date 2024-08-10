@@ -1,6 +1,6 @@
 import ActionButton from "@/src/components/overviewPage/actionButton";
 import OverviewPage from "@/src/components/overviewPage/overviewPage";
-import type { Post as PostData } from "@/src/lib/definitions/posts";
+import type { PostRecord, PostWithTags } from "@/src/lib/definitions/posts";
 import { Box, Button, Stack } from "@mui/material";
 import { revalidatePath } from "next/cache";
 import Post from "@/src/components/posts/post";
@@ -21,7 +21,7 @@ export default async function PostsPage({searchParams}:{searchParams:URLSearchPa
             actionButton={<ActionButton href="/dashboard/posts/create" buttonText="Create new Post"/>}
         >
             <Stack gap={2}>
-                {posts.map((post:PostData) => {
+                {posts.map((post:PostWithTags) => {
                     return(
                         <Stack key={post._id}>
                             <Post post={post}/>

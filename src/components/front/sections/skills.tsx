@@ -1,12 +1,10 @@
 import { Box, Stack, Typography } from "@mui/material";
 import Section from "./section";
-import { listTags } from "@/src/lib/tags";
 import Tag from "../../tags/tag";
-import type {Tag as TagData} from "@/src/lib/definitions/tags";
+import type {TagRecord} from "@/src/lib/definitions/tags";
 
-export default async function Skills(){
-    const tags = (await listTags()).items
-    const categories:{[key:string]:TagData[]} = {}
+export default function Skills({tags}:{tags:TagRecord[]}){
+    const categories:{[key:string]:TagRecord[]} = {}
     tags?.forEach(tag => {
         if(tag.category){
             const categoryName = tag.category.toString()
@@ -26,7 +24,7 @@ export default async function Skills(){
                 {categoryNames.map(categoryName => {
                     const category = categories[categoryName]
                     return (
-                        <Stack>
+                        <Stack key={categoryName}>
                             <Typography variant="h3">{categoryName}</Typography>
                             <Box sx={{display:"flex"}}>
                                 {category.map(tag => {

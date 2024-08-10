@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, IconButton, List, ListItem, ListItemButton, styled, Toolbar, Typography, AppBarProps as MuiAppBarProps, AppBar} from "@mui/material";
+import { IconButton, List, ListItem, ListItemButton, Toolbar, Typography, AppBar} from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { useState } from "react";
 import { appBarZIndex } from "./constants";

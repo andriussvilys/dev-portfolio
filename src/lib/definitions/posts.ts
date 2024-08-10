@@ -1,4 +1,5 @@
 import { StorageFile } from "./fileUpload"
+import { TagRecord } from "./tags"
 
 interface PostInput {
     name: string,
@@ -18,4 +19,8 @@ interface PostFormInput extends Omit<PostInput, "files"> {
     storageFiles?: StorageFile[]
 }
 
-export type {PostRecord as Post, PostFormInput, PostInput}
+interface PostWithTags extends Omit<PostRecord, "tags">{
+    tags: TagRecord[]
+}
+
+export type {PostRecord, PostFormInput, PostInput, PostWithTags}

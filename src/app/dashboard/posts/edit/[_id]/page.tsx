@@ -1,5 +1,4 @@
 import PostFormEdit from "@/src/components/posts/form/postFormEdit"
-import type {Post} from "@/src/lib/definitions/posts"
 import { findPost } from "@/src/lib/posts"
 import { listTags } from "@/src/lib/tags"
 

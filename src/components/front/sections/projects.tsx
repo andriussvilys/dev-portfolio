@@ -1,15 +1,13 @@
 import { Stack, Typography } from "@mui/material";
 import Section from "./section";
-import { listPosts } from "@/src/lib/posts";
-import { postsLimitPerPage } from "@/src/lib/constants";
 import Post from "../../posts/post";
+import { PostWithTags } from "@/src/lib/definitions/posts";
 
-export default async function Projects(){
-    const posts = (await listPosts({page:1, limit:postsLimitPerPage})).items
+export default function Projects({posts}:{posts:PostWithTags[]}){
     return(
         <Section style={{minHeight:"100vh"}}>
             <Typography variant="h2">Project section</Typography>
-            <Stack>
+            <Stack gap={4}>
                 {posts.map(post => (
                     <Post key={post._id} post={post}/>
                 ))}
