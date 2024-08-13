@@ -14,7 +14,6 @@ export default async function Page() {
   const tags = (await listTags()).items
   return (
     <Suspense>
-
       <Front posts={posts} tags={tags}/>
     </Suspense>
   );

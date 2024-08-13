@@ -38,7 +38,7 @@ const listPosts = async (paging?: PagingParams|undefined):Promise<ListCollection
     const res = await listCollection<PostRecord>({collection: collections.posts, paging})
     const tagPromises = res.items.map(async (post) => {
         try{
-            const postTagPromises = post.tags.map(id => {
+            const postTagPromises = post.tags.filter(id => !!id).map(id => {
                 return findTag(id)
             })
             const tags = await Promise.all(postTagPromises)

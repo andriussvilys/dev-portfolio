@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, Container} from "@mui/material";
+import { Box, Container, CssBaseline, Divider, Toolbar} from "@mui/material";
 import Navigation from "./navigation/navigation";
 import Hero from "./sections/hero";
 import Projects from "./sections/projects";
@@ -10,6 +10,7 @@ import { PostWithTags } from "@/src/lib/definitions/posts";
 import { TagRecord } from "@/src/lib/definitions/tags";
 import { ThemeProvider } from "@emotion/react";
 import theme from "@/src/lib/theming/theme";
+import Contact from "./sections/contact";
 
 interface FrontProps {
     posts: PostWithTags[],
@@ -19,16 +20,25 @@ interface FrontProps {
 export default function Front({posts, tags}:FrontProps){
     return(
         <ThemeProvider theme={theme}>
-                <Box>
-                    <Navigation/>
-                    <Container component="main" maxWidth="lg" sx={{height: "100vh", overflow:"auto"}}>
+            <CssBaseline />
+                <Navigation/>
+                <Container component="main" maxWidth="lg" sx={{
+                        height: "100vh",
+                        display: "flex",
+                        flexDirection: "column",    
+                    }}>
+                    <Toolbar />            
+                    <Container sx={{overflow: "auto", flex:1}}>
                         <Hero />
-                        <Projects posts={posts}/>
-                        <Skills tags={tags}/>
                         <About />
-                        <Box component="footer" sx={{bgcolor:"blue", height:"100px"}}></Box>
+                        <Skills tags={tags}/>
+                        <Projects posts={posts}/>
+                        <Contact />
+                        <Box component="footer" sx={{height:"100px"}}>
+                            <Divider/>
+                        </Box>
                     </Container>
-                </Box>
+                </Container>
         </ThemeProvider>
     )
 }

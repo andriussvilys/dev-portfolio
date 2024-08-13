@@ -1,17 +1,19 @@
-import { Stack, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import Section from "./section";
 import Post from "../../posts/post";
 import { PostWithTags } from "@/src/lib/definitions/posts";
+import { SectionName } from "../constants";
 
 export default function Projects({posts}:{posts:PostWithTags[]}){
     return(
-        <Section style={{minHeight:"100vh"}}>
-            <Typography variant="h2">Project section</Typography>
-            <Stack gap={4}>
+        <Section style={{minHeight:"100vh", gap:4}} headline={SectionName.projects} id={SectionName.projects}>
+            <Box gap={4} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}}>
                 {posts.map(post => (
-                    <Post key={post._id} post={post}/>
+                    <Box key={post._id} >
+                        <Post post={post}/>
+                    </Box>
                 ))}
-            </Stack>
+            </Box>
         </Section>
     )
 }

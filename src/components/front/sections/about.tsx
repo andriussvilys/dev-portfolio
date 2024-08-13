@@ -1,10 +1,9 @@
-import { Typography } from "@mui/material";
+import { sections } from "../constants";
 import Section from "./section";
 
 export default function About(){
     return(
-        <Section style={{height:"100vh"}}>
-            <Typography variant="h2">About section</Typography>
+        <Section headline={sections.about.name} id={sections.about.id}>
         </Section>
     )
 }

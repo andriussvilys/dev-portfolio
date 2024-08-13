@@ -1,7 +1,7 @@
 "use client"
 
 import { ListItem, ListItemButton, Typography } from "@mui/material"
-import { navLinks } from "./constants"
+import { navLinks } from "../constants"
 
 export default function NavListItems({onClick}:{onClick?:()=>void}) {
     return(

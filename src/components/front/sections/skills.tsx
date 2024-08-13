@@ -1,7 +1,8 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Card, Divider, Typography } from "@mui/material";
 import Section from "./section";
 import Tag from "../../tags/tag";
 import type {TagRecord} from "@/src/lib/definitions/tags";
+import { dividerColor, SectionName } from "../constants";
 
 export default function Skills({tags}:{tags:TagRecord[]}){
     const categories:{[key:string]:TagRecord[]} = {}
@@ -18,24 +19,33 @@ export default function Skills({tags}:{tags:TagRecord[]}){
     })
     const categoryNames:string[] = Object.keys(categories)
     return(
-        <Section style={{height:"100vh"}}>
-            <Typography variant="h2">Skills section</Typography>
-            <Stack>
+        <Section 
+            style={{gap:4, justifyContent:"space-between"}}
+            headline={SectionName.skills}
+            id={SectionName.skills}
+        >   
+            <Box sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}} gap={2}>
                 {categoryNames.map(categoryName => {
                     const category = categories[categoryName]
                     return (
-                        <Stack key={categoryName}>
-                            <Typography variant="h3">{categoryName}</Typography>
-                            <Box sx={{display:"flex"}}>
+                        <Card key={categoryName} sx={{
+                            border:"1px solid",
+                            borderColor: dividerColor,
+                        }}>
+                            <Box sx={{pl:2, pr:2}}>
+                                <Typography variant="overline">{categoryName.toUpperCase()}</Typography>
+                            </Box>
+                            <Divider/>
+                            <Box sx={{display:"flex", p:2, justifyContent:"center", alignItems:"center"}} gap={1}>
                                 {category.map(tag => {
                                     return <Tag key={tag._id} tag={tag}/>
                                 })}
                             </Box>
-                        </Stack>
+                        </Card>
                     )
                 }
                 )}
-            </Stack>
+            </Box>
         </Section>
     )
 }
