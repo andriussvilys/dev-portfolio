@@ -1,7 +1,6 @@
-Basic app with protected routes
-OAuth with GoogleProvider (crendetials must be set up in Google dev console and added to local .env)
-Authentication done with google, authorization permits only one user, whose email is saved in local .env. Once google returs user profile, its email is checked against the one save in the .env file
-Middleware used for route protection
+Content Management System with OAuth2.0 (GoogleProvider; crendetials must be set up in Google dev console and added to local .env)
+Authentication done with google, authorization permits only one user, whose email is saved in local .env. Once google returns the user profile, its email is checked against the one save in the .env file
+Nextjs middleware used for route protection
 
 uploading media and table data is done over two separate requests.
 once a file is uploaded to storage, its metadata is generated on the server and appended to storage response. 
