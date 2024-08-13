@@ -14,6 +14,8 @@ export async function POST(request: Request) {
       Bucket,
       Key,
       Body,
+      ContentType: file.type,
+      ContentDisposition: "inline"
     }
     const res = await s3.send(new PutObjectCommand(params));
     if(res.$metadata.httpStatusCode === 200){

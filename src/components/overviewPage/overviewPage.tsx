@@ -1,14 +1,7 @@
-import { revalidatePath } from "next/cache"
 import { Box, Container, Stack } from "@mui/material"
 import Pagination from "@/src/components/pagination"
-import { tagsLimitPerPage } from "@/src/lib/constants"
 import { getPaging } from "@/src/lib/data/commons/utils"
 import { defaultPaging } from "@/src/lib/definitions/pages"
-
-interface TagsPageParams{
-    page: number,
-    limit: number
-}
 
 interface OverviewPageProps {
     searchParams: URLSearchParams,

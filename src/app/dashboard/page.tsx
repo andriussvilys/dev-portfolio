@@ -1,7 +1,9 @@
-export default async function Dashboard() {
+import { Typography } from "@mui/material";
+
+export default function Dashboard() {
     return (
         <section>
-            <p>this is protected content</p>
+            <Typography>this is protected content</Typography>
         </section>
     )
 }

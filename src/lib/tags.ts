@@ -51,7 +51,15 @@ const deleteTag = async (id: string) => {
 }
 
 const findTag = async (id: string) => {
-    return await findItem<TagRecord>({collection: collections.tags, _id: id})
+    try{
+        const tag = await findItem<TagRecord>({collection: collections.tags, _id: id})
+        tag.file.url = getURL(tag.file.key)
+        return tag
+    }
+    catch(e){
+        throw new Error("failed to find tag: " + (e as Error).message)
+    }
+
 }
 
 const updateTag = async (formData: FormData, id: string, ) => {
@@ -68,7 +76,6 @@ const updateTag = async (formData: FormData, id: string, ) => {
             formData.delete("file")
             formData.append("file", JSON.stringify(storageFile))
         }
-        console.log("updateTag", {formData})
         const res = await updateItem({collection: collections.tags, _id: id, body: formData})
         return await res
     }

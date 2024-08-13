@@ -2,8 +2,9 @@ import { collections, ListCollectionRes } from './data/commons/definitions';
 import { createItem, deleteItem, findItem, listCollection, updateItem } from './data/commons/utils';
 import { StorageFile } from './definitions/fileUpload';
 import { PagingParams } from './definitions/pages';
-import { Post, PostFormInput } from './definitions/posts';
+import { PostFormInput, PostRecord, PostWithTags } from './definitions/posts';
 import {deleteByKey, getURL, replaceMany, upload as storageUpload} from './storage'
+import { findTag } from './tags';
 
 const createPost = async (formData: FormData) => {
     try{
@@ -33,16 +34,30 @@ const createPost = async (formData: FormData) => {
     }
 }
 
-const listPosts = async (paging: PagingParams|undefined):Promise<ListCollectionRes<Post>> => {
-    const res = await listCollection<Post>({collection: collections.posts, paging})
-    res.items.forEach(post => {
-        post.files = post.files.map(file => {return {...file, url: getURL(file.key)}}) 
-     });
-     return res
+const listPosts = async (paging?: PagingParams|undefined):Promise<ListCollectionRes<PostWithTags>> => {
+    const res = await listCollection<PostRecord>({collection: collections.posts, paging})
+    const tagPromises = res.items.map(async (post) => {
+        try{
+            const postTagPromises = post.tags.filter(id => !!id).map(id => {
+                return findTag(id)
+            })
+            const tags = await Promise.all(postTagPromises)
+            return {...post, tags}
+        }
+        catch(e){
+            throw e
+        }
+    })
+    const postsWithTags = await Promise.all(tagPromises)
+
+    postsWithTags.forEach(post => {
+        post.files = post.files.map(file => {return {...file, url: getURL(file.key)}})
+    })
+     return {items: postsWithTags, total: res.total}
 }
 
-const findPost = async (_id:string):Promise<Post> => {
-    const post = await findItem<Post>({collection:collections.posts,_id})
+const findPost = async (_id:string):Promise<PostRecord> => {
+    const post = await findItem<PostRecord>({collection:collections.posts,_id})
     post.files = post.files.map(file => {return {...file, url: getURL(file.key)}})
     return post
 }

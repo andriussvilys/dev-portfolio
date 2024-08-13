@@ -1,11 +1,12 @@
 "use client"
 
-import { Box, IconButton, List, ListItem, ListItemButton, styled, Toolbar, Typography, AppBarProps as MuiAppBarProps, AppBar} from "@mui/material";
+import { IconButton, List, ListItem, ListItemButton, Toolbar, Typography, AppBar} from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { useState } from "react";
-import { appBarZIndex } from "./constants";
+import { appBarHeight, appBarZIndex } from "./constants";
 import NavDrawer from "./navDrawer";
 import NavListItems from "./navListItems";
+import { SectionName, sections } from "../constants";
 
 export default function Navigation({children}: {children?: React.ReactNode}) {
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -20,12 +21,14 @@ export default function Navigation({children}: {children?: React.ReactNode}) {
                     justifyContent:"center", 
                     flexDirection:"row",
                     zIndex:appBarZIndex,
+                    backgroundColor: "#fff0",
+                    height:(appBarHeight),
                 p:0, m:0}}
             >
                 <Toolbar sx={{flex:1, maxWidth: "lg", p:0}}>
                     <List sx={{display:"flex", justifyContent:"space-between", width:1, p:0, m:0}}>
                         <ListItem sx={{flex:0, m:0, p:0}}>
-                            <ListItemButton href={"#home"} sx={{ textWrap: "nowrap"}} onClick={()=>setDrawerOpen(false)}>
+                            <ListItemButton href={sections[SectionName.hero].id} sx={{ textWrap: "nowrap"}} onClick={()=>setDrawerOpen(false)}>
                                 <Typography color="white">{logo.toUpperCase()}</Typography>
                             </ListItemButton>
                         </ListItem>

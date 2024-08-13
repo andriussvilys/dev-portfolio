@@ -25,7 +25,6 @@ export default function TagFormEdit ({tag, categories}: TagFormEditProps){
             else{
                 formData.append("file", JSON.stringify(file))
             }
-            console.log("tagFormEdit", {inputs, formData})
             await updateTag(formData, tag._id)
         }
         catch(e){
