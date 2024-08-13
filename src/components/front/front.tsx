@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, Container, CssBaseline, Divider, Toolbar} from "@mui/material";
+import { Box, Container, CssBaseline, Divider, Stack, Toolbar} from "@mui/material";
 import Navigation from "./navigation/navigation";
 import Hero from "./sections/hero";
 import Projects from "./sections/projects";
@@ -22,23 +22,27 @@ export default function Front({posts, tags}:FrontProps){
         <ThemeProvider theme={theme}>
             <CssBaseline />
                 <Navigation/>
-                <Container component="main" maxWidth="lg" sx={{
-                        height: "100vh",
-                        display: "flex",
-                        flexDirection: "column",    
-                    }}>
-                    <Toolbar />            
-                    <Container sx={{overflow: "auto", flex:1}}>
-                        <Hero />
-                        <About />
-                        <Skills tags={tags}/>
-                        <Projects posts={posts}/>
-                        <Contact />
-                        <Box component="footer" sx={{height:"100px"}}>
-                            <Divider/>
-                        </Box>
+                <Stack sx={{height:"100vh"}}>
+                    <Toolbar />          
+                    <Container 
+                        component="main" 
+                        sx={{
+                            flex: 1,
+                            overflow: "auto",
+                            maxWidth:"100vw !important",   
+                        }}>
+                        <Container sx={{maxWidth:"lg", height:"100%"}}>
+                            <Hero />
+                            <About />
+                            <Skills tags={tags}/>
+                            <Projects posts={posts}/>
+                            <Contact />
+                            <Box component="footer" sx={{height:"100px"}}>
+                                <Divider/>
+                            </Box>
+                        </Container>
                     </Container>
-                </Container>
+                </Stack>
         </ThemeProvider>
     )
 }
