@@ -58,7 +58,11 @@ const AppBar = styled(MuiAppBar, {
     }),
   );
 
-export default function Navigation({children}: {children: React.ReactNode}) {
+interface NavigationProps {
+    children: React.ReactNode
+}
+
+export default function Navigation({children}: NavigationProps) {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const router = useRouter()
 

@@ -14,6 +14,7 @@ export default function Pagination(props:PaginationProps) {
     const pathname = usePathname()
     const onPageChange = (page:number) => {
         router.push(`${pathname}?page=${page}&limit=${props.limit}`)
+        router.refresh()
     }
     return(
         <MuiPagination sx={{alignSelf:"center"}} count={Math.ceil(props.itemCount / props.limit)} page={props.page} onChange={(e,page) => onPageChange(page)}/>

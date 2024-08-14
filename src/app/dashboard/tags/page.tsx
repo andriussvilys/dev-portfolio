@@ -15,7 +15,7 @@ export default async function Page({searchParams}:{searchParams:URLSearchParams}
     const categories = await listCategories()
     const paging = getPaging(searchParams)
     const tagsData = (await listTags(paging ?? defaultPaging))
-    const tags:TagRecord[] = tagsData.items.map((tag:TagRecord) => {return {...tag, file: {...tag.file, url:getURL(tag.file.key)}}})
+    const tags = tagsData.items
     const total = tagsData.total
 
     return (

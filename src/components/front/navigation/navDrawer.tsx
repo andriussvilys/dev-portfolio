@@ -3,8 +3,14 @@
 import {Drawer, Toolbar, List} from "@mui/material";
 import { appBarHeight, appBarZIndex, drawerWidth } from "./constants";
 import NavListItems from "./navListItems";
+import { ThemeSwitchProps } from "./themeSwitch";
 
-export default function NavDrawer({isOpen, setOpen}:{isOpen:boolean, setOpen:any}){
+interface NavDrawerProps extends ThemeSwitchProps {
+  isOpen:boolean, 
+  setOpen:any
+}
+
+export default function NavDrawer({isOpen, setOpen, theme, switchTheme}:NavDrawerProps){
 
     return(
           <Drawer
@@ -26,7 +32,7 @@ export default function NavDrawer({isOpen, setOpen}:{isOpen:boolean, setOpen:any
           >
             <Toolbar />
             <List>
-              <NavListItems onClick={() => setOpen(false)}/>
+              <NavListItems onClick={() => setOpen(false)} theme={theme} switchTheme={switchTheme}/>
             </List>
         </Drawer>
     )

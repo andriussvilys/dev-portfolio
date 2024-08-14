@@ -9,8 +9,8 @@ import About from "./sections/about";
 import { PostWithTags } from "@/src/lib/definitions/posts";
 import { TagRecord } from "@/src/lib/definitions/tags";
 import { ThemeProvider } from "@emotion/react";
-import theme from "@/src/lib/theming/theme";
 import Contact from "./sections/contact";
+import { useTheme } from "@/src/lib/theming/theme";
 
 interface FrontProps {
     posts: PostWithTags[],
@@ -18,10 +18,11 @@ interface FrontProps {
 }
 
 export default function Front({posts, tags}:FrontProps){
+    const {theme, switchTheme} = useTheme()
     return(
         <ThemeProvider theme={theme}>
             <CssBaseline />
-                <Navigation/>
+                <Navigation theme={theme} switchTheme={switchTheme}/>
                 <Stack sx={{height:"100vh"}}>
                     <Toolbar />          
                     <Container 

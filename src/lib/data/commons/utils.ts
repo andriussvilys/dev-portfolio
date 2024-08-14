@@ -33,7 +33,7 @@ async function listCollection<T>(params:ListCollectionReq):Promise<ListCollectio
     try{
         const res = await fetch(`http://localhost:3000/api/data/${collection}${pagingQuery}`, {
             method: 'GET', 
-            cache: 'no-cache'
+            cache: 'no-cache',
         })
         if(!res.ok){
             throw new Error(`${res.status}: ${res.statusText}`)

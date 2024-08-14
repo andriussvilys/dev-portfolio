@@ -1,4 +1,4 @@
-const overviewPageLimit = 3
+const overviewPageLimit = 6
 
 const defaultPaging:PagingParams = {
     page: 1,
