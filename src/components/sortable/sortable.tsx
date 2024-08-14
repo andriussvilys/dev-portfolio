@@ -15,10 +15,8 @@ import {
   horizontalListSortingStrategy,
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import {SortableItem} from './sortableItem';
-import { Item } from './item';
 import { Box } from '@mui/material';
 import { TagRecord } from '@/src/lib/definitions/tags';
 import Tag from '../tags/tag';

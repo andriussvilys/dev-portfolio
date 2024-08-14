@@ -4,7 +4,6 @@ import {CSS} from '@dnd-kit/utilities';
 
 export function SortableItem({id, children}:{id:string, children:React.ReactNode}) {
   const {
-    active,
     attributes,
     listeners,
     setNodeRef,
