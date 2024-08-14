@@ -2,7 +2,7 @@ const overviewPageLimit = 6
 
 const defaultPaging:PagingParams = {
     page: 1,
-    limit: overviewPageLimit
+    limit: 0
 }
 
 // taken from https://nextjs.org/docs/app/api-reference/file-conventions/page
