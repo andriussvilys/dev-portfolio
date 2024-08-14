@@ -2,12 +2,12 @@ import { listCategories, listTags } from "@/src/lib/tags"
 import { revalidatePath } from "next/cache"
 import DashboardTag from "@/src/components/dashboard/dashboardTag"
 import TagFormEdit from "@/src/components/tags/tagFormEdit"
-import { getURL } from "@/src/lib/storage"
 import { TagRecord } from "@/src/lib/definitions/tags"
 import OverviewPage from "@/src/components/overviewPage/overviewPage"
 import ActionButton from "@/src/components/overviewPage/actionButton"
 import { getPaging } from "@/src/lib/data/commons/utils"
 import { defaultPaging } from "@/src/lib/definitions/pages"
+import { Button } from "@mui/material"
 
 export default async function Page({searchParams}:{searchParams:URLSearchParams}) {
 
@@ -31,6 +31,7 @@ export default async function Page({searchParams}:{searchParams:URLSearchParams}
                     </DashboardTag>
                 )
             })}
+            <Button href="/dashboard/tags/sort">Sort Tags</Button>
         </OverviewPage>
     )
 }
