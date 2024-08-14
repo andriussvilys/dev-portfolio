@@ -1,4 +1,4 @@
-import { FileMetadata, StorageFile } from "./fileUpload"
+import { StorageFile } from "./fileUpload"
 
 interface TagInput{
     file: StorageFile,

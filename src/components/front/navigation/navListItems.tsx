@@ -1,9 +1,16 @@
 "use client"
 
-import { ListItem, ListItemButton, Typography } from "@mui/material"
+import { ListItem, ListItemButton, Theme, Typography } from "@mui/material"
 import { navLinks } from "../constants"
+import ThemeSwitch from "./themeSwitch"
 
-export default function NavListItems({onClick}:{onClick?:()=>void}) {
+interface NavListItemsProps {
+    onClick?: ()=>void,
+    theme: Theme,
+    switchTheme: ()=>void
+}
+
+export default function NavListItems({theme, switchTheme, onClick}:NavListItemsProps) {
     return(
         <>
             {navLinks.map(item => {
@@ -17,6 +24,7 @@ export default function NavListItems({onClick}:{onClick?:()=>void}) {
                     </ListItem>
                 )
             })}
+            <ThemeSwitch theme={theme} switchTheme={switchTheme} />
         </>
     )
 }
