@@ -1,5 +1,5 @@
 "use client"
-import { createTag } from "@/src/lib/tags";
+import { createTag, processInput } from "@/src/lib/tags";
 import TagForm from "./tagForm";
 import { TagFormInput } from "@/src/lib/definitions/tags";
 
@@ -10,11 +10,13 @@ interface TagFormCreateProps{
 export default function TagFormCreate({categories}:TagFormCreateProps){
     const handleSubmit = async (inputs: TagFormInput) => {
         try{
-            const formData = new FormData()
-            formData.append("name", inputs.name)
-            formData.append("category", inputs.category)
-            formData.append("file", inputs.file)
-            await createTag(formData)
+            // const formData = new FormData()
+            // formData.append("name", inputs.name)
+            // formData.append("category", inputs.category)
+            // formData.append("file", inputs.file)
+            const formData = processInput(inputs)
+            console.log(formData)
+            // await createTag(formData)
         }
         catch(e){
             throw e

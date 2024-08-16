@@ -23,12 +23,13 @@ export async function PUT(request: Request, {params}:{params:Params}) {
         const name = formData.get("name") as string
         const category = formData.get("category") as string
         const file = JSON.parse(formData.get("file") as string)
+        const categoryIndex = JSON.parse(formData.get("categoryIndex") as string)
 
         if(name && category && file){
             const body:UpdateItemReq<TagInput> = {
                 collection: collections.tags,
                 _id,
-                body: {name, category, file}
+                body: {name, category, file, categoryIndex}
             }
             const res = await updateItem(body);
             if(!res){

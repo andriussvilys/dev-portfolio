@@ -4,6 +4,7 @@ interface TagInput{
     file: StorageFile,
     name: string,
     category: string,
+    categoryIndex: number
 }
 
 interface TagRecord extends TagInput{
@@ -11,9 +12,10 @@ interface TagRecord extends TagInput{
 }
 
 interface TagFormInput{ 
-    file: File,
+    file: File | StorageFile,
     name: string,
-    category: string
+    category: string,
+    categoryIndex: number
 }
 
 export type {TagRecord, TagInput, TagFormInput}

@@ -9,7 +9,8 @@ const parseTagFormData = (formData: FormData): TagInput => {
   const name = formData.get("name")?.toString() ?? "";
   const category = formData.get("category")?.toString() ?? "";
   const file = JSON.parse(formData.get("file") as string)
-  const body:TagInput = {name, category, file}
+  const categoryIndex = JSON.parse(formData.get("categoryIndex") as string)
+  const body:TagInput = {name, category, file, categoryIndex}
   return body
 }
 

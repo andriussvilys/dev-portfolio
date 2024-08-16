@@ -2,10 +2,10 @@
 
 import { processInput, updatePost } from "@/src/lib/posts"
 import PostForm, { PostFormProps } from "./postForm"
-import { Post, PostFormInput } from "@/src/lib/definitions/posts"
+import { PostRecord, PostFormInput } from "@/src/lib/definitions/posts"
 
 interface PostFormEditProps extends Omit<PostFormProps, "onSubmit">{
-    initialData: Post
+    initialData: PostRecord
 }
 
 export default function PostFormEdit({tags, initialData}:PostFormEditProps){

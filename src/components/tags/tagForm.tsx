@@ -22,15 +22,23 @@ export default function TagForm(props: TagFormProps){
     const {register, handleSubmit, setValue, control} = useForm<TagFormInput>({
         defaultValues: {
             category: tag?.category ?? "",
+            categoryIndex: Number.MAX_SAFE_INTEGER
         }
     })
     const initialData = tag ? {key: tag.file.key, url:tag.file.url!, metadata: tag.file.metadata} : undefined
 
     const loadingSubmit = async (inputs: TagFormInput) => {
-        setLoading(true)
-        await props.onSubmit(inputs)
-        location.reload()
-        setLoading(false)
+        try{
+            setLoading(true)
+            await props.onSubmit(inputs)
+            location.reload()
+        }
+        catch(e){
+            throw e
+        }
+        finally{
+            setLoading(false)
+        }
     }
 
     return(

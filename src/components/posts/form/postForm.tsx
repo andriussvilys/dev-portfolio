@@ -1,6 +1,6 @@
 "use client"
 
-import { Post, PostFormInput } from "@/src/lib/definitions/posts"
+import { PostRecord, PostFormInput } from "@/src/lib/definitions/posts"
 import { Box, Button, Card } from "@mui/material"
 import { useState } from "react"
 import FormStepper from "./components/formStepper"
@@ -14,7 +14,7 @@ import LoadingBackdrop from "../../loading/backdrop/loadingBackdrop"
 interface PostFormProps {
     onSubmit: (input: PostFormInput) => Promise<any>,
     tags: TagRecord[],
-    initialData?: Post
+    initialData?: PostRecord
 }
 
 const switchForm = (
@@ -75,10 +75,17 @@ export default function PostForm(props: PostFormProps){
     const steps = ["Basic Info", "Media", "Tags"]
 
     const loadingSubmit = async (inputs: PostFormInput) => {
-        setLoading(true)
-        await props.onSubmit(inputs)
-        location.reload()
-        setLoading(false)
+        try{
+            setLoading(true)
+            await props.onSubmit(inputs)
+            location.reload()
+        }
+        catch(e){
+            throw e
+        }
+        finally{
+            setLoading(false)
+        }
     }
 
     return(
