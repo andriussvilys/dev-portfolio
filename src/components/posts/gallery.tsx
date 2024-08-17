@@ -10,19 +10,19 @@ import { appBarZIndex } from '../front/navigation/constants'
 
 interface GalleryProps {
     images: {file: StorageFile, alt: string}[]
-    size: {width:number, height:number}
+    defaultSize: {width:number, height:number}
 }
 
-const defaultGallerySize = {width: 400, height: 400}
+const defaultGallerySize = {width: 300*(16/9), height: 300*(9/16)}
 
-export default function Gallery({images, size}: GalleryProps){
+export default function Gallery({images, defaultSize}: GalleryProps){
     const [open, setOpen] = useState(false)
-    const {width, height} = size
+    const {width, height} = defaultSize ?? defaultGallerySize
     const thumbnail = images[0]
     const handleClick = () => {
         setOpen(prev => !prev)
     }
-    const thumbnailSize = getFixedSize(thumbnail.file.metadata, defaultGallerySize)
+    const thumbnailSize = getFixedSize(thumbnail.file.metadata, {width, height})
     return(
         <>
         <Backdrop
@@ -75,14 +75,16 @@ export default function Gallery({images, size}: GalleryProps){
                 </Stack>
             </Card>
         </Backdrop>
-        <Button sx={{p:0, m:0}} onClick={()=>handleClick()}>
-            <Image  
-                src={thumbnail.file.url} 
-                alt={thumbnail.alt}
-                width={thumbnailSize.width}
-                height={thumbnailSize.height}
-            />
-        </Button>
+        <Box sx={{display:"flex", justifyContent:"center"}}>
+            <Button sx={{p:0, m:0}} onClick={()=>handleClick()}>
+                <Image  
+                    src={thumbnail.file.url} 
+                    alt={thumbnail.alt}
+                    width={thumbnailSize.width}
+                    height={thumbnailSize.height}
+                />
+            </Button>
+        </Box>
         </>
     )
 }

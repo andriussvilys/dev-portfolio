@@ -1,8 +1,11 @@
-import { Box, Card, Divider, Typography } from "@mui/material";
+"use client"
+
+import { Box, Card, Divider, Typography, useTheme } from "@mui/material";
 import Section from "./section";
 import Tag from "../../tags/tag";
 import {categories, category, type TagRecord} from "@/src/lib/definitions/tags";
-import { dividerColor, SectionName } from "../constants";
+import { SectionName } from "../constants";
+import { FullscreenExit } from "@mui/icons-material";
 
 const createCategoriesList = (tags:TagRecord[]) => {
     const categoriesMap:{[key:string]:TagRecord[]} = {}
@@ -19,20 +22,8 @@ const createCategoriesList = (tags:TagRecord[]) => {
 }
 
 export default function Skills({tags}:{tags:TagRecord[]}){
-    // const categoriesMap:{[key:string]:TagRecord[]} = {}
-    // tags?.forEach(tag => {
-    //     if(tag.category){
-    //         const categoryName = tag.category.toString()
-    //         if(categoriesMap[categoryName]){
-    //             categoriesMap[categoryName].push(tag)
-    //         }
-    //         else{
-    //             categoriesMap[categoryName] = [tag]
-    //         }
-    //     }
-    // })
-    // const categoryNames:string[] = Object.keys(categories)
     const categoriesMap = createCategoriesList(tags)
+    const theme = useTheme()
 
     return(
         <Section 
@@ -44,15 +35,23 @@ export default function Skills({tags}:{tags:TagRecord[]}){
                 {categories.map(categoryName => {
                     const category = categoriesMap[categoryName]
                     return (
-                        <Card key={categoryName} sx={{
-                            border:"1px solid",
-                            borderColor: dividerColor,
-                        }}>
+                        <Card 
+                            key={categoryName} 
+                            sx={{
+                                border:"1px solid",
+                                borderColor: theme.palette.divider,
+                                display:"flex",
+                                flexDirection:"column",
+                                [theme.breakpoints.down("md")]:{
+                                    flex: "1 auto",
+                                }
+                            }}
+                        >
                             <Box sx={{pl:2, pr:2}}>
                                 <Typography variant="overline">{categoryName.toUpperCase()}</Typography>
                             </Box>
                             <Divider/>
-                            <Box sx={{display:"flex", p:2, justifyContent:"center", alignItems:"center"}} gap={1}>
+                            <Box sx={{display:"flex", flex:1, p:2, justifyContent:"center", alignItems:"center"}} gap={1}>
                                 {category.map(tag => {
                                     return <Tag key={tag._id} tag={tag}/>
                                 })}

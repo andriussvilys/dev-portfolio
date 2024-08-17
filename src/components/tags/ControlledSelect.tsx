@@ -19,7 +19,7 @@ export default function ControlledSelect({control, defautValue}:ControlledSelect
                 formState,
             }) => (
                 <Autocomplete
-                    freeSolo
+                    // freeSolo
                     options={categories}
                     onChange={(e, values) => onChange(values)}
                     value={value}

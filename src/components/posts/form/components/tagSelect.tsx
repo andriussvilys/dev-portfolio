@@ -12,7 +12,7 @@ interface TagSelectProps{
 
 export default function TagSelect({register, tags}:TagSelectProps){
     return(
-        <List sx={{display:"flex"}}>
+        <List>
             {tags.map((tag, index) => {
                 return(
                     <ListItem key={tag._id}>

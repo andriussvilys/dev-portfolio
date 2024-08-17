@@ -1,7 +1,8 @@
-import { dividerColor } from '@/src/components/front/constants';
-import { PaletteMode } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import { createTheme, Theme, ThemeOptions } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
+
+const dividerColor = "rgba(180, 248, 176, 0.16)"
 
 const darkTheme:ThemeOptions = {
     palette:{
@@ -24,7 +25,11 @@ const lightTheme:ThemeOptions = {
             dark: '#00af37',
             contrastText: '#000',
         },
-        divider: dividerColor
+        background: {
+            default: '#f5f5f5',
+            paper: '#fafafa',
+        },
+        divider: grey[500]
 }}
 
 const useTheme = () => {

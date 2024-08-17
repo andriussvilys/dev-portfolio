@@ -3,10 +3,7 @@
 import Image from 'next/image';
 import { Box, Tooltip } from '@mui/material';
 import { TagRecord } from '@/src/lib/definitions/tags';
-import { FileMetadata } from '@/src/lib/definitions/fileUpload';
-import theme from '@/src/lib/theming/theme';
 import { getFixedSize } from '@/src/lib/utils';
-import { Grade } from '@mui/icons-material';
 
 const getAlt = (tag: TagRecord) => {
     if(!tag){
@@ -27,8 +24,6 @@ export default function Tag({tag}: {tag: TagRecord}) {
                 justifyContent:"center",
                 alignItems:"center",
                 boxSizing:"content-box",
-                width:`${defaultSize.width}px`,
-                height:`${defaultSize.height}px`,
             }} borderRadius={1}>
                 <Image src={tag.file.url ?? ""} height={height} width={width} alt={getAlt(tag)}/>
             </Box>

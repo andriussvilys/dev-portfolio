@@ -22,14 +22,13 @@ const getFixedSize = (size: FileMetadata, defaultSize:{width:number, height:numb
     if(width === 0 || height === 0){
         return {width: defaultWidth, height: defaultHeight}
     }
-    if(width > height){
-        const ratio = defaultWidth / width
-        return {width: defaultWidth, height: height * ratio}
-    }
-    else{
-        const ratio = defaultHeight / height
-        return {height: defaultHeight, width: width * ratio}
-    }
+    const targetArea = defaultWidth*defaultHeight;
+    const originalArea = width * height;
+    const scaleFactor = Math.sqrt(targetArea / originalArea);
+    const scaledWidth = width * scaleFactor;
+    const scaledHeight = height * scaleFactor;
+  
+    return { width: scaledWidth, height: scaledHeight };
 }
 
 export {getMetadata, getFixedSize}

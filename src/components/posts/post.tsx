@@ -1,23 +1,31 @@
-import { Box, Button, Card, Divider, Stack, Typography } from "@mui/material"
+"use client"
+
+import { Box, Button, Card, Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
 import type {PostWithTags} from "../../lib/definitions/posts"
 import Tag from "../tags/tag"
 import Gallery from "./gallery"
-import { dividerColor } from "../front/constants"
 
 export default function Post({post}:{post:PostWithTags}){
     const images = post.files.map(file => {
         return {file, alt: file.key}
     })
+    const theme = useTheme()
+    const isMdDown = useMediaQuery(theme.breakpoints.down('md'));
+    const mdDownSize = 240
+    const mdUpSize = 300 
+    const defaultSize = isMdDown ? 
+                            {width:mdDownSize*(16/9), height:mdDownSize*(9/16)} : 
+                            {width:mdUpSize*(16/9), height:mdUpSize*(9/16)}
     return(
         <Card 
             sx={{
                 border:"1px solid",
-                borderColor: dividerColor,
+                borderColor: theme.palette.divider,
             }}
         >
             <Stack sx={{display:"flex"}}>
                 <Box sx={{p:1}}>
-                    <Gallery images={images} size={{width:200, height:200}} />
+                    <Gallery images={images} defaultSize={defaultSize} />
                 </Box>
                 <Stack gap={1}>
                     <Stack gap={2} sx={{p:2}}>
