@@ -1,9 +1,7 @@
-import Sortable from "@/src/components/sortable/sortable";
-import SortTags from "@/src/components/tags/SortTags";
-import Tag from "@/src/components/tags/tag";
+import SortTags from "@/src/components/tags/sortTags";
 import { defaultPaging } from "@/src/lib/definitions/pages";
-import { TagFormInput, TagRecord } from "@/src/lib/definitions/tags";
-import { listTags, processInput, updateTag } from "@/src/lib/tags";
+import { TagRecord } from "@/src/lib/definitions/tags";
+import { listTags } from "@/src/lib/tags";
 import { Box, Container, Stack, Typography } from "@mui/material";
 
 export default async function SortTagsPage() {
@@ -24,7 +22,6 @@ export default async function SortTagsPage() {
     })
     const categoryNames:string[] = Object.keys(categories)
 
-
     return (
         <Container sx={{height:"100%", overflow:"auto"}}>
             {
@@ -34,12 +31,10 @@ export default async function SortTagsPage() {
                             <Typography variant="h6">{categoryName}</Typography>
                             <Box sx={{display:"flex"}} gap={1}>
                                 <SortTags 
-                                    categoryName={categoryName} 
-                                    categories={categories} 
+                                    items={categories[categoryName]}
                                 />
                             </Box>
                         </Stack>
-                        
                     )
                 })
             }

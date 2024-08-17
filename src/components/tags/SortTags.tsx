@@ -6,11 +6,11 @@ import { processInput, updateTag } from "@/src/lib/tags";
 import Tag from "./tag";
 
 interface SortTagsProps {
-    categoryName: string
-    categories: {[key:string]:TagRecord[]}
+    items: TagRecord[]
 }
 
-export default function SortTags({categoryName, categories}:SortTagsProps) {
+export default function SortTags({items}:SortTagsProps) {
+    
     const handleSubmit = async (items:TagRecord[]) => {
         const indexed:TagRecord[] = items.map((item, index) => {
             return {...item, categoryIndex: index}
@@ -27,9 +27,10 @@ export default function SortTags({categoryName, categories}:SortTagsProps) {
         })
         await Promise.all(updatePromises)
     }
+
     return(
         <Sortable 
-            items={categories[categoryName]}
+            items={items}
             Component={Tag}
             handleSubmit={handleSubmit}
         />
