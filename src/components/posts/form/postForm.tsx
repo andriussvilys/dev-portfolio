@@ -44,26 +44,34 @@ const switchForm = (
                             watch={watch}
                         />
             case 2:
-                return <TagSelect register={register} tags={tags}/>
+                return <TagSelect register={register} tags={tags} watch={watch}/>
             default: return null
         }
+}
+
+const sortTags = (tags:TagRecord[], checkedIds:string[]) => {
+    const checkedTags = tags.filter(tag => checkedIds.includes(tag._id))
+    const uncheckedTags = tags.filter(tag => !checkedIds.includes(tag._id))
+    return [...checkedTags, ...uncheckedTags]
 }
 
 export default function PostForm(props: PostFormProps){
     const {initialData} = props
     const [loading, setLoading] = useState(false)
+    const sortedTags = sortTags(props.tags, initialData?.tags || [])
+    const sortedTagIds = initialData?.tags.filter((id:string) => !!id) || []
     const {register, handleSubmit, setValue, control, watch, formState:{dirtyFields}} = useForm<PostFormInput>({
         defaultValues: {
             name: initialData?.name || "",
             description: initialData?.description || "",
             liveSite: initialData?.liveSite || "",
             github: initialData?.github || "",
-            tags: initialData?.tags || [],
+            tags: sortedTagIds,
             files: [{}],
             storageFiles: initialData?.files || []
         }
     })
-    const { fields, append:appendFile, remove:removeFile } = useFieldArray({
+    const { fields:newFiles, append:appendFile, remove:removeFile } = useFieldArray({
         control,
         name: "files"
     });
@@ -75,18 +83,17 @@ export default function PostForm(props: PostFormProps){
     const steps = ["Basic Info", "Media", "Tags"]
 
     const loadingSubmit = async (inputs: PostFormInput) => {
-        console.log(inputs)
-        // try{
-        //     setLoading(true)
-        //     await props.onSubmit(inputs)
-        //     location.reload()
-        // }
-        // catch(e){
-        //     throw e
-        // }
-        // finally{
-        //     setLoading(false)
-        // }
+        try{
+            setLoading(true)
+            await props.onSubmit(inputs)
+            location.reload()
+        }
+        catch(e){
+            throw e
+        }
+        finally{
+            setLoading(false)
+        }
     }
 
     return(
@@ -114,9 +121,9 @@ export default function PostForm(props: PostFormProps){
                         switchForm(
                             activeStep,
                             register,
-                            props.tags,
+                            sortedTags,
                             setValue,
-                            fields,
+                            newFiles,
                             appendFile,
                             removeFile,
                             storageFiles,

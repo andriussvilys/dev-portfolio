@@ -13,7 +13,7 @@ interface SelectableTagProps{
 
 export default function SelectableTag({tag, register, fieldName}:SelectableTagProps){
     return(
-        <Box sx={{display:"flex", alignItems:"center"}}>
+        <Box sx={{display:"flex", alignItems:"center", justifyContent:"space-between", flex:1}}>
             <Tag tag={tag} />
             <input type="checkbox" {...register(fieldName)} value={tag._id} />
         </Box>
