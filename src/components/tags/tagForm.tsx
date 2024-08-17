@@ -22,7 +22,7 @@ export default function TagForm(props: TagFormProps){
     const {register, handleSubmit, setValue, control} = useForm<TagFormInput>({
         defaultValues: {
             category: tag?.category ?? "",
-            categoryIndex: Number.MAX_SAFE_INTEGER
+            categoryIndex: tag?.categoryIndex ?? Number.MAX_SAFE_INTEGER
         }
     })
     const initialData = tag ? {key: tag.file.key, url:tag.file.url!, metadata: tag.file.metadata} : undefined
@@ -59,8 +59,7 @@ export default function TagForm(props: TagFormProps){
                             {...register("name")}
                         />
                         <ControlledSelect 
-                            control={control} 
-                            options={categories}
+                            control={control}
                         />
                     </Stack>
                 </Box>

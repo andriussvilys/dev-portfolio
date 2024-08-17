@@ -24,7 +24,9 @@ export default function NavListItems({theme, switchTheme, onClick}:NavListItemsP
                     </ListItem>
                 )
             })}
-            <ThemeSwitch theme={theme} switchTheme={switchTheme} />
+            <ListItem>
+                <ThemeSwitch theme={theme} switchTheme={switchTheme} />
+            </ListItem>
         </>
     )
 }
