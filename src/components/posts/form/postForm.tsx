@@ -68,7 +68,8 @@ export default function PostForm(props: PostFormProps){
             github: initialData?.github || "",
             tags: sortedTagIds,
             files: [{}],
-            storageFiles: initialData?.files || []
+            storageFiles: initialData?.files || [],
+            order: initialData?.order || 0
         }
     })
     const { fields:newFiles, append:appendFile, remove:removeFile } = useFieldArray({
@@ -86,7 +87,7 @@ export default function PostForm(props: PostFormProps){
         try{
             setLoading(true)
             await props.onSubmit(inputs)
-            location.reload()
+            // location.reload()
         }
         catch(e){
             throw e

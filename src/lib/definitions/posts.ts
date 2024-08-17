@@ -8,6 +8,7 @@ interface PostInput {
     github?: string,
     files: StorageFile[],
     tags: string[]
+    order: number
 }
 
 interface PostRecord extends PostInput {

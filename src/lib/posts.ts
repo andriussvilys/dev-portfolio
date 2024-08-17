@@ -10,7 +10,6 @@ const createPost = async (formData: FormData) => {
     try{
         const files = formData.getAll("file")
         const uploadPromises = files.map((file:any, index:number) => {
-          const fileFormData = new FormData()
           return storageUpload(file, collections.posts)
         });
         const storageRes = await Promise.all(uploadPromises);
@@ -87,6 +86,7 @@ const updatePost = async (formData: FormData, id: string, ) => {
         postsFormData.append("liveSite", formData.get("liveSite") as string)
         postsFormData.append("github", formData.get("github") as string)
         postsFormData.append("tags", formData.get("tags") as string)
+        postsFormData.append("order", formData.get("order") as string)
         // 1) delete removed files
         const storageFiles = formData.getAll("storageFile");
         const storageKeys:string[] = storageFiles.map((file) => (JSON.parse(file as string) as StorageFile).key);
@@ -124,6 +124,7 @@ const processInput = (inputs: PostFormInput):FormData => {
     formData.append("liveSite", liveSite ?? "")
     formData.append("github", github ?? "")
     formData.append("tags", tags)
+    formData.append("order", inputs.order.toString())
 
     storageFiles?.forEach(file => {
         formData.append("storageFile", JSON.stringify(file))
