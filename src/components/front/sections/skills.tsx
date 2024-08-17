@@ -53,7 +53,7 @@ export default function Skills({tags}:{tags:TagRecord[]}){
                             <Divider/>
                             <Box sx={{display:"flex", flex:1, p:2, justifyContent:"center", alignItems:"center"}} gap={1}>
                                 {category.map(tag => {
-                                    return <Tag key={tag._id} tag={tag}/>
+                                    return <Tag key={tag._id} data={tag}/>
                                 })}
                             </Box>
                         </Card>

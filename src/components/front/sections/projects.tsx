@@ -10,7 +10,7 @@ export default function Projects({posts}:{posts:PostWithTags[]}){
             <Box gap={4} sx={{display:"flex", flexWrap:"wrap", justifyContent:"center"}}>
                 {posts.map(post => (
                     <Box key={post._id} >
-                        <Post post={post}/>
+                        <Post data={post}/>
                     </Box>
                 ))}
             </Box>

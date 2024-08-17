@@ -24,7 +24,7 @@ export default async function PostsPage({searchParams}:{searchParams:URLSearchPa
                 {posts.map((post:PostWithTags) => {
                     return(
                         <Stack key={post._id}>
-                            <Post post={post}/>
+                            <Post data={post}/>
                             <Box gap={2} sx={{display:"flex", p:2, alignSelf:"end"}}>
                                 <DeletePostButton _id={post._id}/>
                                 <Button href={`/dashboard/posts/edit/${post._id}`} variant='contained'>Edit</Button>

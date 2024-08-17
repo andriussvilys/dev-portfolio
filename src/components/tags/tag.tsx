@@ -14,10 +14,11 @@ const getAlt = (tag: TagRecord) => {
 
 const defaultSize = {width: 38, height: 38};
 
-export default function Tag({tag}: {tag: TagRecord}) {
-    const {width, height} = getFixedSize(tag.file.metadata, defaultSize)
+export default function Tag({data}: {data: TagRecord}) {
+    const {file, name} = data
+    const {width, height} = getFixedSize(file.metadata, defaultSize)
     return (
-        <Tooltip title={tag.name}>
+        <Tooltip title={name}>
             <Box sx={{
                 overflow:"hidden", 
                 display:"flex", 
@@ -25,7 +26,7 @@ export default function Tag({tag}: {tag: TagRecord}) {
                 alignItems:"center",
                 boxSizing:"content-box",
             }} borderRadius={1}>
-                <Image src={tag.file.url ?? ""} height={height} width={width} alt={getAlt(tag)}/>
+                <Image src={file.url ?? ""} height={height} width={width} alt={getAlt(data)}/>
             </Box>
         </Tooltip>
     )

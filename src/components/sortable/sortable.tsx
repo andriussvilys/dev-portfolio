@@ -19,16 +19,22 @@ import {
 import {SortableItem} from './sortableItem';
 import { Box, Button } from '@mui/material';
 import { TagFormInput, TagRecord } from '@/src/lib/definitions/tags';
-import Tag from '../tags/tag';
 import { processInput, updateTag } from '@/src/lib/tags';
 import LoadingBackdrop from '../loading/backdrop/loadingBackdrop';
 import Toast, { ToastProps } from '../loading/toast/toast';
 
-interface SortableProps {
-    items: TagRecord[],
+interface HasId {
+  _id: string;
 }
 
-export default function Sortble(props:SortableProps) {
+interface SortableProps<T extends HasId> {
+    items: T[],
+    Component: React.FC<{data:T}>,
+    handleSubmit: (items:T[]) => Promise<any>
+}
+
+export default function Sortable<T extends HasId>(props:SortableProps<T>) {
+  const {Component} = props;
   const [loading, setLoading] = useState(false);
   const [toastStatus, setToastStatus] = useState<ToastProps>({message:"", open:false});
   const [activeId, setActiveId] = useState(null);
@@ -60,22 +66,10 @@ export default function Sortble(props:SortableProps) {
     setActiveId(null);
   }
 
-  const handleSubmit = async () => {
+  const onSubmit = async () => {
     try{
-      const indexed:TagRecord[] = items.map((item, index) => {
-          return {...item, categoryIndex: index}
-      })
-      const updatePromises = indexed.map(item => {
-        const input: TagFormInput = {
-          name: item.name,
-          category: item.category,
-          categoryIndex: item.categoryIndex,
-          file: item.file 
-        }
-        const formData = processInput(input)
-        return updateTag(formData, item._id)
-      })
-      await Promise.all(updatePromises)
+      setLoading(true)
+      await props.handleSubmit(items)
       setToastStatus({message:"Successfully saved", open:true})
     }
     catch(e){
@@ -112,7 +106,7 @@ export default function Sortble(props:SortableProps) {
                       p:"2px",
                       opacity: activeId === tag._id ? 0.2 : 1
                     }}>
-                      <Tag tag={tag}/>
+                      <Component data={tag}/>
                   </Box>
               </SortableItem>
           )})}
@@ -124,12 +118,12 @@ export default function Sortble(props:SortableProps) {
               p:"2px",
               bgcolor:"white"
             }}>
-            {props.items.find(item => item._id === activeId) ? <Tag tag={props.items.find(item => item._id === activeId)!}/> : null}
+            {props.items.find(item => item._id === activeId) ? <Component data={props.items.find(item => item._id === activeId)!}/> : null}
           </Box>
               : null
           }
         </DragOverlay>
-        <Button onClick={()=>handleSubmit()}>Save</Button>
+        <Button onClick={()=>onSubmit()}>Save</Button>
       </DndContext>
     </>
   );

@@ -5,7 +5,8 @@ import type {PostWithTags} from "../../lib/definitions/posts"
 import Tag from "../tags/tag"
 import Gallery from "./gallery"
 
-export default function Post({post}:{post:PostWithTags}){
+export default function Post({data}:{data:PostWithTags}){
+    const post = data
     const images = post.files.map(file => {
         return {file, alt: file.key}
     })
@@ -43,7 +44,7 @@ export default function Post({post}:{post:PostWithTags}){
                             <Box sx={{display:"flex", justifyContent:"start", flexWrap:"wrap", p:2}} gap={1}>
                                 {post.tags.map(tag => {
                                     if(tag._id){
-                                        return <Tag key={tag._id} tag={tag}/>
+                                        return <Tag key={tag._id} data={tag}/>
                                     }
                                 })}
                             </Box>
