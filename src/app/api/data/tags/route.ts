@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { TagInput } from "@/src/lib/definitions/tags";
-import { FileMetadata } from "@/src/lib/definitions/fileUpload";
 import { getPaging } from "@/src/lib/data/commons/utils";
 import { createItem, queryCollection } from "../commons";
 import { collections } from "@/src/lib/data/commons/definitions";

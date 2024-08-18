@@ -1,11 +1,10 @@
 import SortPosts from "@/src/components/posts/sort/sortPosts";
 import { defaultPaging } from "@/src/lib/definitions/pages";
 import { listPosts } from "@/src/lib/posts";
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Container, Stack } from "@mui/material";
 
 export default async function SortPostsPage() {
-    const postsData = (await listPosts(defaultPaging))
-    const posts = postsData.items
+    const posts = (await listPosts(defaultPaging)).items
 
     return (
         <Container sx={{height:"100%", overflow:"auto"}}>

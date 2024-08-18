@@ -52,7 +52,8 @@ const listPosts = async (paging?: PagingParams|undefined):Promise<ListCollection
     postsWithTags.forEach(post => {
         post.files = post.files.map(file => {return {...file, url: getURL(file.key)}})
     })
-     return {items: postsWithTags, total: res.total}
+    const orderedPosts = postsWithTags.sort((a, b) => a.order - b.order)
+     return {items: orderedPosts, total: res.total}
 }
 
 const findPost = async (_id:string):Promise<PostRecord> => {
@@ -116,7 +117,7 @@ const processInput = (inputs: PostFormInput):FormData => {
     inputs.files = inputs.files.filter(fileData => {
         return fileData instanceof File
     })
-    const tags = !!inputs.tags ? JSON.stringify(inputs.tags) : JSON.stringify([])
+    const tags = !!inputs.tags ? JSON.stringify(inputs.tags.filter(id => !!id)) : JSON.stringify([])
     const {name, description, liveSite, github, storageFiles, files} = inputs
     const formData = new FormData()
     formData.append("name", name)
