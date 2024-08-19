@@ -14,7 +14,6 @@ export default function TagFormEdit ({tag, categories}: TagFormEditProps){
     const handleSubmit = async (inputs: TagFormInput) => {
         try{
             const formData = processInput(inputs)
-            console.log(formData)
             await updateTag(formData, tag._id)
         }
         catch(e){

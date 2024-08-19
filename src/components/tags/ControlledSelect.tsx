@@ -14,12 +14,9 @@ export default function ControlledSelect({control, defautValue}:ControlledSelect
             name="category"
             defaultValue={defautValue}
             render={({
-                field: { onChange, value, name },
-                fieldState: { invalid, isTouched, isDirty, error },
-                formState,
+                field: { onChange, value, name }
             }) => (
                 <Autocomplete
-                    // freeSolo
                     options={categories}
                     onChange={(e, values) => onChange(values)}
                     value={value}

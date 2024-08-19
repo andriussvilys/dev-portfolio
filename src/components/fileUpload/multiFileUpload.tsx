@@ -1,19 +1,18 @@
-import { UseFieldArrayRemove } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import FileUploadField from "./fileUploadField";
-import type { FileUploadProps } from "./fileUploadField";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { StorageFile } from "@/src/lib/definitions/fileUpload";
 
-interface MultiFileUploadProps extends FileUploadProps{
-    newFiles: any, 
-    append: any, 
-    remove: UseFieldArrayRemove,
-    storageFiles:any,
-    removeStorageFile:any,
-    watch:any
-}
-
-export default function MultiFileUpload({setValue, newFiles, append, remove, storageFiles, removeStorageFile, watch}: MultiFileUploadProps){
+export default function MultiFileUpload(){
+    const {control, watch} = useFormContext()
+    const { fields:newFiles, remove:removeNewFile, append } = useFieldArray({
+        control,
+        name: "files"
+    });
+    const { fields:storageFiles, remove:removeStorageFile } = useFieldArray({
+        control,
+        name: "storageFiles"
+    });
     const watchedNewFiles = watch("files")
     return (
         <Stack gap={2} sx={{width:1, height:1, overflow:"hidden"}}>
@@ -31,15 +30,15 @@ export default function MultiFileUpload({setValue, newFiles, append, remove, sto
                                     <Typography>index: {index}</Typography>                                 
                                     <FileUploadField
                                         initialData={watchedNewFiles[index]}
-                                        setValue={setValue}
-                                        fieldName={`files.${index}`}
+                                        rootFieldName={"files"}
+                                        fieldIndex={index}
                                         append={append}
                                     />
                                     <Button 
                                         disabled={newFiles.length-1 === index}
                                         variant="contained"
                                         color="error"
-                                        onClick={() => remove(index)}
+                                        onClick={() => removeNewFile(index)}
                                     >
                                         Remove
                                     </Button>
@@ -64,8 +63,9 @@ export default function MultiFileUpload({setValue, newFiles, append, remove, sto
                                     <Typography>index: {index}</Typography>                                 
                                     <FileUploadField
                                         initialData={initialData}
-                                        setValue={setValue}
-                                        fieldName={`storageFiles.${index}`}
+                                        rootFieldName={"storageFiles"}
+                                        fieldIndex={index}
+                                        disabled={true}
                                     />
                                     <Button 
                                         variant="contained"

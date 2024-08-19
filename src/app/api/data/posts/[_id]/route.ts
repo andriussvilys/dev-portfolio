@@ -26,8 +26,6 @@ export async function PUT(request: Request, {params}:{params:Params}) {
         _id,
         body: parsePostFormData(formData)
     }
-
-    console.log(body.body);
   
     try{
         const res = await updateItem(body);

@@ -1,17 +1,17 @@
 "use client"
 
 import { TagRecord } from "@/src/lib/definitions/tags";
-import { UseFormRegister } from "react-hook-form";
+import { useFormContext, UseFormRegister } from "react-hook-form";
 import { Box } from "@mui/material";
 import Tag from "../../../tags/tag";
 
 interface SelectableTagProps{
     tag: TagRecord,
-    register: UseFormRegister<any>
     fieldName: string,
 }
 
-export default function SelectableTag({tag, register, fieldName}:SelectableTagProps){
+export default function SelectableTag({tag, fieldName}:SelectableTagProps){
+    const {register} = useFormContext()
     return(
         <Box sx={{display:"flex", alignItems:"center", justifyContent:"space-between", flex:1}}>
             <Tag data={tag} />

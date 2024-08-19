@@ -25,7 +25,6 @@ export default function SortPosts({items}:SortPostsProps) {
                 files:[]
             }
             const formData = processInput(formInput)
-            console.log(formInput)
             return updatePost(formData, item._id)
           })
           await Promise.all(updatePromises)
