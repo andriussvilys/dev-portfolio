@@ -1,9 +1,8 @@
 import React from 'react';
 import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
-import { Box, Button } from '@mui/material';
-import {DragIndicator as DragIndicatorIcon} from '@mui/icons-material';
-import { grey } from '@mui/material/colors';
+import {Box} from '@mui/material';
+import DragHandle from './dragHandle';
 
 export function SortableItem({id, children}:{id:string, children:React.ReactNode}) {
   const {
@@ -31,12 +30,7 @@ export function SortableItem({id, children}:{id:string, children:React.ReactNode
       style={style}
     >
         {children}
-        <Button sx={{cursor:"grab", p:0, m:0, justifyContent:"end"}}>
-          <DragIndicatorIcon
-            sx={{color:grey[600]}}
-            {...listeners}
-          />
-        </Button>
+        <DragHandle listeners={listeners}/>
     </Box>
   );
 }

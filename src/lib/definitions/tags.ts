@@ -1,3 +1,4 @@
+import { HasId } from "./commons"
 import { StorageFile } from "./fileUpload"
 
 enum category {
@@ -17,9 +18,7 @@ interface TagInput{
     categoryIndex: number
 }
 
-interface TagRecord extends TagInput{
-    _id: string
-}
+interface TagRecord extends TagInput, HasId{}
 
 interface TagFormInput{ 
     file: File | StorageFile,

@@ -1,24 +1,21 @@
 "use client"
 import { Alert, Snackbar } from "@mui/material";
-import { useState } from "react";
 
-interface ToastProps {
+interface ToastData{
     message: string,
-    open: boolean
+    open: boolean,
+}
+interface ToastProps extends ToastData{
+    toggleOpen: (open:boolean) => void
 }
 
-export type {ToastProps}
+export type {ToastData, ToastProps}
 
-export default function Toast(props:ToastProps){
-    const {message} = props
-    const [open, setOpen] = useState(props.open);
-    const handleClose = () => {
-        setOpen(false)
-    }
+export default function Toast({message, open, toggleOpen}:ToastProps){
     return(
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Snackbar open={open} autoHideDuration={5000} onClose={()=>toggleOpen(false)}>
             <Alert
-                onClose={handleClose}
+                onClose={()=>toggleOpen(false)}
                 severity="success"
                 variant="filled"
                 sx={{ width: '100%' }}
