@@ -17,7 +17,6 @@ export default function MultiFileUpload(){
     const watchedNewFiles = watch("files")
     const lastNewFilesIndex = newFiles.length-1
     const lastNewFilesField = newFiles[lastNewFilesIndex]
-    console.log({newFiles, lastNewFile: newFiles[lastNewFilesIndex], rest: newFiles.slice(0, lastNewFilesIndex)})
     return (
         <Stack gap={2}>
             <Box>

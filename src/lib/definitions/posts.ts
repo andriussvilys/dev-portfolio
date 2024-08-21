@@ -19,11 +19,6 @@ interface PostFormInput extends Omit<PostInput, "files"> {
     files: Blob[],
     storageFiles?: StorageFile[]
 }
-// interface PostFormInput extends Omit<PostInput, "files" | "tags"> {
-//     tags: {id: string}[],
-//     files: Blob[],
-//     storageFiles?: StorageFile[]
-// }
 
 interface PostWithTags extends Omit<PostRecord, "tags">{
     tags: TagRecord[]

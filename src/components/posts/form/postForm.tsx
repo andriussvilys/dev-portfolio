@@ -32,32 +32,22 @@ const switchForm = (
         }
 }
 
-const sortTags = (tags:TagRecord[], checkedIds:string[]) => {
-    const checkedTags = tags.filter(tag => checkedIds.includes(tag._id))
-    const uncheckedTags = tags.filter(tag => !checkedIds.includes(tag._id))
-    return [...checkedTags, ...uncheckedTags]
-}
-
 export default function PostForm(props: PostFormProps){
     const {initialData} = props
     const [loading, setLoading] = useState(false)
-    const sortedTags = sortTags(props.tags, initialData?.tags || [])
-    // const sortedTagIds:string[] = initialData?.tags.filter((id:string) => !!id) || []
-    const sortedTagIds:(string|undefined)[] = props.tags.map((tag) => initialData?.tags.includes(tag._id) ? tag._id : undefined) || []
     const formMethods = useForm<PostFormInput>({
         defaultValues: {
             name: initialData?.name || "",
             description: initialData?.description || "",
             liveSite: initialData?.liveSite || "",
             github: initialData?.github || "",
-            tags: sortedTagIds,
+            tags: initialData?.tags || [],
             files: [{}],
             storageFiles: initialData?.files || [],
             order: initialData?.order || 0,
         }
     })
     const {handleSubmit, watch} = formMethods
-    const watchedTags = watch("tags")
 
     const [activeStep, setActiveStep] = useState(0);
     const steps = ["Basic Info", "Media", "Tags"]

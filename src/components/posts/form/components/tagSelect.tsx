@@ -1,9 +1,11 @@
 "use client"
 
-import SelectableTag from "./selectableTag"
+import Sortable from "@/src/components/sortable/sortable"
+import SelectableTag, { SelectableTagData } from "./selectableTag"
 import { TagRecord } from "@/src/lib/definitions/tags"
 import { Box, List, ListItem, Stack, Typography, useTheme } from "@mui/material"
 import { useFormContext } from "react-hook-form"
+import { verticalListSortingStrategy } from "@dnd-kit/sortable"
 
 interface TagSelectProps{
     tags:TagRecord[],
@@ -11,32 +13,28 @@ interface TagSelectProps{
 
 export default function TagSelect({tags}:TagSelectProps){
     const theme = useTheme()
-    const {watch} = useFormContext()
+    const {watch, setValue} = useFormContext()
     const selectedValues = watch("tags")
-    const indexedTags = tags.map((tag,index) => ({...tag, index}))
-    const selected = indexedTags.filter((tag) => selectedValues.includes(tag._id))
-    const unselected = indexedTags.filter((tag) => !selectedValues.includes(tag._id))
+    const indexedTags:SelectableTagData[] = tags.map((tag,index) => ({...tag, formField: {root:"tags", index}}))
+    const selected:SelectableTagData[] = selectedValues.map((id:string) => indexedTags.find(tag => tag._id === id))
+    const unselected:SelectableTagData[] = indexedTags.filter((tag) => !selected.includes(tag))
+
+    const rearrangeCallback = (items:SelectableTagData[]) => {
+        setValue("tags", items.map(tag => tag._id))
+    }
+
     return(
         <Box 
             sx={{display:"flex", flex:1}} gap={4}
         >
-            <Stack 
-                // sx={{flex:0}}
-            >
+            <Stack>
                 <Typography variant="h6">Selected Tags</Typography>
-                <List>
-                    {selected.map((tag) => {
-                        return(
-                            <ListItem sx={{
-                                flex:1,
-                                border: "1px solid",
-                                borderColor: theme.palette.divider
-                                }} key={tag._id}>
-                                <SelectableTag tag={tag} fieldName={`tags.${tag.index}`}/>
-                            </ListItem>
-                        )
-                    })}
-                </List>
+                <Sortable 
+                    items={selected}
+                    Component={SelectableTag}
+                    rearrangeCallback={rearrangeCallback}
+                    strategy={verticalListSortingStrategy}
+                />
             </Stack>
             <Stack sx={{flex:1}}>
                 <Typography variant="h6">Unselected Tags</Typography>
@@ -53,8 +51,9 @@ export default function TagSelect({tags}:TagSelectProps){
                                 flex:1,
                                 border: "1px solid",
                                 borderColor: theme.palette.divider
-                                }} key={tag._id}>
-                                <SelectableTag tag={tag} fieldName={`tags.${tag.index}`}/>
+                                }} key={tag._id}
+                            >
+                                <SelectableTag data={tag}/>
                             </ListItem>
                         )
                     })}
