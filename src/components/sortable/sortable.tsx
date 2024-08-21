@@ -18,10 +18,11 @@ import {
 } from '@dnd-kit/sortable';
 import {SortableItem} from './sortableItem';
 import { Box, Button } from '@mui/material';
-import { TagFormInput, TagRecord } from '@/src/lib/definitions/tags';
-import { processInput, updateTag } from '@/src/lib/tags';
 import LoadingBackdrop from '../loading/backdrop/loadingBackdrop';
 import Toast, { ToastProps } from '../loading/toast/toast';
+import {DragIndicator as DragIndicatorIcon} from '@mui/icons-material';
+import { grey } from '@mui/material/colors';
+
 
 interface HasId {
   _id: string;
@@ -62,7 +63,6 @@ export default function Sortable<T extends HasId>(props:SortableProps<T>) {
         return arrayMove(items, oldIndex, newIndex);
       });
     }
-    
     setActiveId(null);
   }
 
@@ -91,36 +91,41 @@ export default function Sortable<T extends HasId>(props:SortableProps<T>) {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <SortableContext 
-          items={items.map(item => item._id)}
-          strategy={horizontalListSortingStrategy}
-        >
-          {items.map(tag => {
-            return (
-              <SortableItem 
-                key={tag._id} 
-                id={tag._id}
-                >
-                  <Box sx={{ 
-                      border:"1px solid",
-                      p:"2px",
-                      opacity: activeId === tag._id ? 0.2 : 1
-                    }}>
-                      <Component data={tag}/>
-                  </Box>
-              </SortableItem>
-          )})}
-        </SortableContext>
+        <Box sx={{display:"flex", overflow:"auto", p:2, pl:0}} gap={1}>
+          <SortableContext 
+            items={items.map(item => item._id)}
+            strategy={horizontalListSortingStrategy}
+          >
+            {items.map(tag => {
+              return (
+                <SortableItem 
+                  key={tag._id} 
+                  id={tag._id}
+                  >
+                    <Box sx={{ 
+                      }}>
+                        <Component data={tag}/>
+                    </Box>
+                </SortableItem>
+            )})}
+          </SortableContext>
+        </Box>
         <DragOverlay>
-          {activeId ? 
+          {activeId && props.items.find(item => item._id === activeId) ? 
           <Box sx={{
-              border:"1px solid",
-              p:"2px",
-              bgcolor:"white"
-            }}>
-            {props.items.find(item => item._id === activeId) ? <Component data={props.items.find(item => item._id === activeId)!}/> : null}
+              display:"flex", 
+              justifyContent:"space-between", 
+              bgcolor:"white",
+              boxShadow: 3,
+              border: "1px solid",
+              padding: "4px",
+              }}>
+            <Component data={props.items.find(item => item._id === activeId)!}/>
+            <Button sx={{cursor:"grab", p:0, m:0, justifyContent:"end"}}>
+              <DragIndicatorIcon sx={{color:grey[800]}}/>
+            </Button>
           </Box>
-              : null
+          : null
           }
         </DragOverlay>
         <Button onClick={()=>onSubmit()}>Save</Button>

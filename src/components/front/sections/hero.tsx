@@ -7,7 +7,6 @@ export default function Hero(){
     const {theme} = useTheme()
     return(
         <Section style={{height: "100%"}} id={SectionName.hero}>
-            <Toolbar />
             <Box sx={{display:"flex", justifyContent:"center", alignItems:"center", height:"100%"}}>
                 <Stack>
                     <Typography variant="h3">Welcome to my portfolio</Typography>

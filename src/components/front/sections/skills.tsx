@@ -5,7 +5,6 @@ import Section from "./section";
 import Tag from "../../tags/tag";
 import {categories, category, type TagRecord} from "@/src/lib/definitions/tags";
 import { SectionName } from "../constants";
-import { FullscreenExit } from "@mui/icons-material";
 
 const createCategoriesList = (tags:TagRecord[]) => {
     const categoriesMap:{[key:string]:TagRecord[]} = {}
@@ -44,7 +43,8 @@ export default function Skills({tags}:{tags:TagRecord[]}){
                                 flexDirection:"column",
                                 [theme.breakpoints.down("md")]:{
                                     flex: "1 auto",
-                                }
+                                },
+                                boxShadow:3
                             }}
                         >
                             <Box sx={{pl:2, pr:2}}>

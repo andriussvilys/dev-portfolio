@@ -42,7 +42,8 @@ export default function PostForm(props: PostFormProps){
     const {initialData} = props
     const [loading, setLoading] = useState(false)
     const sortedTags = sortTags(props.tags, initialData?.tags || [])
-    const sortedTagIds:string[] = initialData?.tags.filter((id:string) => !!id) || []
+    // const sortedTagIds:string[] = initialData?.tags.filter((id:string) => !!id) || []
+    const sortedTagIds:(string|undefined)[] = props.tags.map((tag) => initialData?.tags.includes(tag._id) ? tag._id : undefined) || []
     const formMethods = useForm<PostFormInput>({
         defaultValues: {
             name: initialData?.name || "",
@@ -55,7 +56,8 @@ export default function PostForm(props: PostFormProps){
             order: initialData?.order || 0,
         }
     })
-    const {handleSubmit} = formMethods
+    const {handleSubmit, watch} = formMethods
+    const watchedTags = watch("tags")
 
     const [activeStep, setActiveStep] = useState(0);
     const steps = ["Basic Info", "Media", "Tags"]
@@ -99,7 +101,7 @@ export default function PostForm(props: PostFormProps){
                             {
                             switchForm(
                                 activeStep,
-                                sortedTags
+                                props.tags
                             )}
                         </Card>
                     <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
