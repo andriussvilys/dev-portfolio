@@ -51,8 +51,6 @@ export default function SortTags(props:SortTagsProps) {
         setTags(items)
     }
 
-    console.log({toastStatus})
-
     return(
         <>
             <LoadingBackdrop open={loading}/>
@@ -61,22 +59,25 @@ export default function SortTags(props:SortTagsProps) {
                 open={toastStatus.open}
                 toggleOpen={()=>setToastStatus(prev => {return {message: prev.message, open:!prev.open}})}
             />
-            <Button onClick={()=>{
-                setToastStatus(prev => {return {message: "Toast toggled", open:!prev.open}})
-            }}>Toggle Toast</Button>
-            <Stack sx={{flex:1}}>
+            <Stack sx={{width:1}}>
                 <Box sx={{
                     flex:1,
                     display:"flex", 
                     justifyContent:"space-between", 
-                    alignItems:"center"
+                    alignItems:"center",
+                    gap:2,
+                    mb:1
                 }}>
-                    <Sortable 
-                        items={tags}
-                        Component={Tag}
-                        rearrangeCallback={rearrangeCallback}
-                    />
-                    <Button onClick={()=>{handleSubmit(tags)}}>Submit</Button>
+                    <Box sx={{flex:1, overflow:"auto"}}>
+                        <Box sx={{m:2, ml:0}}>
+                            <Sortable 
+                                items={tags}
+                                Component={Tag}
+                                rearrangeCallback={rearrangeCallback}
+                            />
+                        </Box>
+                    </Box>
+                    <Button variant="contained" onClick={()=>{handleSubmit(tags)}}>Submit</Button>
                 </Box>
                 <Divider/>
             </Stack>

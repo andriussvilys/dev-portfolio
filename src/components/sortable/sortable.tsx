@@ -15,6 +15,7 @@ import {
   horizontalListSortingStrategy,
   SortableContext,
   sortableKeyboardCoordinates,
+  SortingStrategy,
 } from '@dnd-kit/sortable';
 import {SortableItem} from './sortableItem';
 import {Box} from '@mui/material';
@@ -24,12 +25,13 @@ import { HasId } from '@/src/lib/definitions/commons';
 interface SortableProps<T extends HasId> {
     items: T[],
     Component: React.FC<{data:T}>,
-    rearrangeCallback: (items:T[]) => void    
+    rearrangeCallback: (items:T[]) => void,
+    strategy?: SortingStrategy 
 }
 
 export default function Sortable<T extends HasId>(props:SortableProps<T>) {
   const [activeId, setActiveId] = useState(null);
-  const {items, Component, rearrangeCallback} = props;
+  const {items, Component, rearrangeCallback, strategy=horizontalListSortingStrategy} = props;
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -62,19 +64,23 @@ export default function Sortable<T extends HasId>(props:SortableProps<T>) {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <Box sx={{display:"flex", overflow:"auto", p:2, pl:0}} gap={1}>
           <SortableContext 
             items={items.map(item => item._id)}
-            strategy={horizontalListSortingStrategy}
+            strategy={strategy}
           >
-            {items.map(data => {
-              return (
-                <SortableItem key={data._id} id={data._id} >
-                  <Component data={data}/>
-                </SortableItem>
-            )})}
+            <Box sx={{
+              display:"flex",
+              flexDirection: (strategy === horizontalListSortingStrategy) ? "row" : "column",
+              gap: 1,
+            }}>
+              {items.map(data => {
+                return (
+                  <SortableItem key={data._id} id={data._id} >
+                    <Component data={data}/>
+                  </SortableItem>
+              )})}
+            </Box>
           </SortableContext>
-        </Box>
         <DragOverlay>
           {activeId && props.items.find(item => item._id === activeId) ? 
             <Box sx={{
