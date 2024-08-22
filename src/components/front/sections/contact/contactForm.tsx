@@ -73,7 +73,6 @@ export default function ContactForm() {
                     label="message" 
                     variant="outlined" 
                     InputLabelProps={{shrink:true}} 
-                    sx={{minWidth:"60ch"}} 
                     multiline rows={4} 
                     type="textArea"
                     {...register("message", {

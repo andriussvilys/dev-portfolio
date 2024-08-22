@@ -11,6 +11,7 @@ import { TagRecord } from "@/src/lib/definitions/tags";
 import { ThemeProvider } from "@emotion/react";
 import { useTheme } from "@/src/lib/theming/theme";
 import Contact from "./sections/contact/contact";
+import { appBarHeight } from "./navigation/constants";
 
 interface FrontProps {
     posts: PostWithTags[],
@@ -23,24 +24,33 @@ export default function Front({posts, tags}:FrontProps){
         <ThemeProvider theme={theme}>
             <CssBaseline />
                 <Navigation theme={theme} switchTheme={switchTheme}/>
-                <Stack sx={{height:"100vh"}}>
-                    <Toolbar />          
+                <Stack sx={{height:"100vh", alignItems:"center"}}>
+                    <Toolbar />       
                     <Container 
                         component="main" 
                         sx={{
                             flex: 1,
                             overflow: "auto",
-                            maxWidth:"100vw !important",   
+                            maxWidth:"100vw !important",
+                            p:2, m:0,
+                            display:"flex",
+                            justifyContent:"center",
                         }}>
-                        <Container sx={{maxWidth:"lg", height:"100%"}}>
+                        <Container sx={{maxWidth:"lg", height:"100%", p:0, m:0}}>
                             <Hero />
                             <About />
                             <Skills tags={tags}/>
                             <Projects posts={posts}/>
-                            <Contact />
-                            <Box component="footer" sx={{height:"100px"}}>
-                                <Divider/>
-                            </Box>
+                            <Stack 
+                                sx={{
+                                    minHeight:`calc(100vh - ${appBarHeight})`,
+                                }}
+                            >
+                                <Contact />
+                                <Box component="footer" sx={{height:"100px"}}>
+                                    <Divider/>
+                                </Box>
+                            </Stack>
                         </Container>
                     </Container>
                 </Stack>
