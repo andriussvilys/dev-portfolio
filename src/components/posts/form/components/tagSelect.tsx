@@ -28,7 +28,7 @@ export default function TagSelect({tags}:TagSelectProps){
             sx={{display:"flex", flex:1}} gap={4}
         >
             <Stack>
-                <Typography variant="h6">Selected Tags</Typography>
+                <Typography variant="h6">Sort Tags</Typography>
                 <Sortable 
                     items={selected}
                     Component={SelectableTag}
@@ -37,13 +37,14 @@ export default function TagSelect({tags}:TagSelectProps){
                 />
             </Stack>
             <Stack sx={{flex:1}}>
-                <Typography variant="h6">Unselected Tags</Typography>
+                <Typography variant="h6">Select tags</Typography>
                 <List sx={{
                     width:"100%",
                     display:"grid",
                     gridTemplateColumns:"repeat(auto-fit, 150px)",
                     gridAutoRows:"min-content",
-                    gap:0,   
+                    gap:0,
+                    p:0
                 }}>
                     {unselected.map((tag) => {
                         return(

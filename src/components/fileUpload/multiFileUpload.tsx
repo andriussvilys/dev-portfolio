@@ -1,6 +1,5 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
-import FileUploadField from "./fileUploadField";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { StorageFile } from "@/src/lib/definitions/fileUpload";
 import MultiFielUploadField from "./multiFielUploadField";
 
