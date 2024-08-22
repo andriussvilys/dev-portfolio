@@ -10,7 +10,6 @@ const createPost = async (formData: FormData) => {
     try{
         const files = formData.getAll("file")
         const uploadPromises = files.map((file:any, index:number) => {
-          const fileFormData = new FormData()
           return storageUpload(file, collections.posts)
         });
         const storageRes = await Promise.all(uploadPromises);
@@ -53,7 +52,8 @@ const listPosts = async (paging?: PagingParams|undefined):Promise<ListCollection
     postsWithTags.forEach(post => {
         post.files = post.files.map(file => {return {...file, url: getURL(file.key)}})
     })
-     return {items: postsWithTags, total: res.total}
+    const orderedPosts = postsWithTags.sort((a, b) => a.order - b.order)
+     return {items: orderedPosts, total: res.total}
 }
 
 const findPost = async (_id:string):Promise<PostRecord> => {
@@ -87,6 +87,7 @@ const updatePost = async (formData: FormData, id: string, ) => {
         postsFormData.append("liveSite", formData.get("liveSite") as string)
         postsFormData.append("github", formData.get("github") as string)
         postsFormData.append("tags", formData.get("tags") as string)
+        postsFormData.append("order", formData.get("order") as string)
         // 1) delete removed files
         const storageFiles = formData.getAll("storageFile");
         const storageKeys:string[] = storageFiles.map((file) => (JSON.parse(file as string) as StorageFile).key);
@@ -116,7 +117,7 @@ const processInput = (inputs: PostFormInput):FormData => {
     inputs.files = inputs.files.filter(fileData => {
         return fileData instanceof File
     })
-    const tags = !!inputs.tags ? JSON.stringify(inputs.tags) : JSON.stringify([])
+    const tags = !!inputs.tags ? JSON.stringify(inputs.tags.filter(id => !!id)) : JSON.stringify([])
     const {name, description, liveSite, github, storageFiles, files} = inputs
     const formData = new FormData()
     formData.append("name", name)
@@ -124,6 +125,7 @@ const processInput = (inputs: PostFormInput):FormData => {
     formData.append("liveSite", liveSite ?? "")
     formData.append("github", github ?? "")
     formData.append("tags", tags)
+    formData.append("order", inputs.order.toString())
 
     storageFiles?.forEach(file => {
         formData.append("storageFile", JSON.stringify(file))

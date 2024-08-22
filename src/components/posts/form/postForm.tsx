@@ -1,10 +1,10 @@
 "use client"
 
-import { Post, PostFormInput } from "@/src/lib/definitions/posts"
+import { PostRecord, PostFormInput } from "@/src/lib/definitions/posts"
 import { Box, Button, Card } from "@mui/material"
 import { useState } from "react"
 import FormStepper from "./components/formStepper"
-import { useFieldArray, useForm, UseFormRegister } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import BasicInfo from "./components/basicInfo"
 import { TagRecord } from "@/src/lib/definitions/tags"
 import TagSelect from "./components/tagSelect"
@@ -14,37 +14,20 @@ import LoadingBackdrop from "../../loading/backdrop/loadingBackdrop"
 interface PostFormProps {
     onSubmit: (input: PostFormInput) => Promise<any>,
     tags: TagRecord[],
-    initialData?: Post
+    initialData?: PostRecord
 }
 
 const switchForm = (
         activeStep: number, 
-        register: UseFormRegister<PostFormInput>, 
-        tags:TagRecord[],
-        setValue: any,
-        newFiles: any, 
-        append: any, 
-        remove: any,
-        storageFiles:any,
-        removeStorageFile:any,
-        watch:any,
+        tags:TagRecord[]
     ) => {
         switch(activeStep){
             case 0:
-                return <BasicInfo register={register}/>
+                return <BasicInfo/>
             case 1:
-                return <MultiFileUpload 
-                            setValue={setValue} 
-                            fieldName={"files"} 
-                            newFiles={newFiles} 
-                            append={append} 
-                            remove={remove}
-                            storageFiles={storageFiles}
-                            removeStorageFile={removeStorageFile}
-                            watch={watch}
-                        />
+                return <MultiFileUpload/>
             case 2:
-                return <TagSelect register={register} tags={tags}/>
+                return <TagSelect tags={tags}/>
             default: return null
         }
 }
@@ -52,7 +35,7 @@ const switchForm = (
 export default function PostForm(props: PostFormProps){
     const {initialData} = props
     const [loading, setLoading] = useState(false)
-    const {register, handleSubmit, setValue, control, watch, formState:{dirtyFields}} = useForm<PostFormInput>({
+    const formMethods = useForm<PostFormInput>({
         defaultValues: {
             name: initialData?.name || "",
             description: initialData?.description || "",
@@ -60,65 +43,63 @@ export default function PostForm(props: PostFormProps){
             github: initialData?.github || "",
             tags: initialData?.tags || [],
             files: [{}],
-            storageFiles: initialData?.files || []
+            storageFiles: initialData?.files || [],
+            order: initialData?.order || 0,
         }
     })
-    const { fields, append:appendFile, remove:removeFile } = useFieldArray({
-        control,
-        name: "files"
-    });
-    const { fields:storageFiles, remove:removeStorageFile } = useFieldArray({
-        control,
-        name: "storageFiles"
-    });
+    const {handleSubmit, watch} = formMethods
+
     const [activeStep, setActiveStep] = useState(0);
     const steps = ["Basic Info", "Media", "Tags"]
 
     const loadingSubmit = async (inputs: PostFormInput) => {
-        setLoading(true)
-        await props.onSubmit(inputs)
-        location.reload()
-        setLoading(false)
+        console.log(inputs)
+        // try{
+        //     setLoading(true)
+        //     await props.onSubmit(inputs)
+        //     location.reload()
+        // }
+        // catch(e){
+        //     throw e
+        // }
+        // finally{
+        //     setLoading(false)
+        // }
     }
 
     return(
         <>
             <LoadingBackdrop open={loading}/>
-            <Box 
-                component="form" 
-                onSubmit={handleSubmit(loadingSubmit)} 
-                sx={{
-                    height:"100%", 
-                    width:"100%", 
-                    display:"flex", 
-                    flexWrap:"wrap", 
-                    justifyContent:"center",
-                    overflow:"hidden"
-                }} gap={2}
-            >
-                <FormStepper 
-                    steps={steps} 
-                    activeStep={activeStep} 
-                    setActiveStep={setActiveStep}
+            <FormProvider {...formMethods}>
+                <Box 
+                    component="form" 
+                    onSubmit={handleSubmit(loadingSubmit)} 
+                    sx={{
+                        height:"100%", 
+                        width:"100%", 
+                        display:"flex", 
+                        flexWrap:"wrap", 
+                        justifyContent:"center",
+                        overflow:"hidden"
+                    }} gap={2}
                 >
-                    <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto"}}>
-                        {
-                        switchForm(
-                            activeStep,
-                            register,
-                            props.tags,
-                            setValue,
-                            fields,
-                            appendFile,
-                            removeFile,
-                            storageFiles,
-                            removeStorageFile,
-                            watch,
-                        )}
-                    </Card>
-                <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
-                </FormStepper>
-            </Box>
+                    <FormStepper 
+                        steps={steps} 
+                        activeStep={activeStep} 
+                        setActiveStep={setActiveStep}
+                    >
+                        <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto"}}>
+                            {
+                            switchForm(
+                                activeStep,
+                                props.tags
+                            )}
+                        </Card>
+                    <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
+                    </FormStepper>
+                </Box>
+            </FormProvider>
+
         </>
     )
 }

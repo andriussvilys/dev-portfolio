@@ -15,19 +15,23 @@ import {
   horizontalListSortingStrategy,
   SortableContext,
   sortableKeyboardCoordinates,
+  SortingStrategy,
 } from '@dnd-kit/sortable';
 import {SortableItem} from './sortableItem';
-import { Box } from '@mui/material';
-import { TagRecord } from '@/src/lib/definitions/tags';
-import Tag from '../tags/tag';
+import {Box} from '@mui/material';
+import DragHandle from './dragHandle';
+import { HasId } from '@/src/lib/definitions/commons';
 
-interface SortableProps {
-    items: TagRecord[],
+interface SortableProps<T extends HasId> {
+    items: T[],
+    Component: React.FC<{data:T}>,
+    rearrangeCallback: (items:T[]) => void,
+    strategy?: SortingStrategy 
 }
 
-export default function Sortble(props:SortableProps) {
+export default function Sortable<T extends HasId>(props:SortableProps<T>) {
   const [activeId, setActiveId] = useState(null);
-  const [items, setItems] = useState(props.items);
+  const {items, Component, rearrangeCallback, strategy=horizontalListSortingStrategy} = props;
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -37,7 +41,6 @@ export default function Sortble(props:SortableProps) {
 
   const handleDragStart = (event:any) => {
     const {active} = event;
-    
     setActiveId(active.id);
   }
   
@@ -45,56 +48,56 @@ export default function Sortble(props:SortableProps) {
     const {active, over} = event;
     
     if (active.id !== over.id) {
-      setItems((items) => {
-        const ids = items.map(item => item._id);
-        const oldIndex = ids.indexOf(active.id);
-        const newIndex = ids.indexOf(over.id);
-        return arrayMove(items, oldIndex, newIndex);
-      });
+      const ids = items.map(item => item._id);
+      const oldIndex = ids.indexOf(active.id);
+      const newIndex = ids.indexOf(over.id);
+      rearrangeCallback(arrayMove(items, oldIndex, newIndex))
     }
-    
     setActiveId(null);
   }
 
   return (
-    <DndContext 
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext 
-        items={items.map(item => item._id)}
-        strategy={horizontalListSortingStrategy}
+    <>
+      <DndContext 
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
       >
-        {items.map(tag => {
-          return (
-            <SortableItem 
-              key={tag._id} 
-              id={tag._id}
-              >
-                <Box sx={{ 
-                    border:"1px solid",
-                    p:"2px",
-                    opacity: activeId === tag._id ? 0.2 : 1
-                  }}>
-                    <Tag tag={tag}/>
-                </Box>
-            </SortableItem>
-        )})}
-      </SortableContext>
-      <DragOverlay>
-        {activeId ? 
-        <Box sx={{
-            border:"1px solid",
-            p:"2px",
-            bgcolor:"white"
-          }}>
-          {props.items.find(item => item._id === activeId) ? <Tag tag={props.items.find(item => item._id === activeId)!}/> : null}
-        </Box>
+          <SortableContext 
+            items={items.map(item => item._id)}
+            strategy={strategy}
+          >
+            <Box sx={{
+              display:"flex",
+              flexDirection: (strategy === horizontalListSortingStrategy) ? "row" : "column",
+              gap: 1,
+            }}>
+              {items.map(data => {
+                return (
+                  <SortableItem key={data._id} id={data._id} >
+                    <Component data={data}/>
+                  </SortableItem>
+              )})}
+            </Box>
+          </SortableContext>
+        <DragOverlay>
+          {activeId && props.items.find(item => item._id === activeId) ? 
+            <Box sx={{
+                display:"flex", 
+                justifyContent:"space-between", 
+                bgcolor:"white",
+                boxShadow: 3,
+                border: "1px solid",
+                padding: "4px",
+              }}>
+              <Component data={props.items.find(item => item._id === activeId)!}/>
+              <DragHandle/>
+            </Box>
             : null
-        }
-      </DragOverlay>
-    </DndContext>
+          }
+        </DragOverlay>
+      </DndContext>
+    </>
   );
 }

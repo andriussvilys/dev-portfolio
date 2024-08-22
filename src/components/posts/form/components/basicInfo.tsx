@@ -1,12 +1,13 @@
 import { PostFormInput } from "@/src/lib/definitions/posts";
 import { Stack, TextField } from "@mui/material";
-import { UseFormRegister } from "react-hook-form";
+import { useForm, useFormContext, UseFormRegister } from "react-hook-form";
 
 interface BasicInfoProps {
     register: UseFormRegister<PostFormInput>
 }
 
-export default function BasicInfo({register}: BasicInfoProps) {
+export default function BasicInfo() {
+    const {register} = useFormContext()
     return(
         <Stack gap={2} sx={{justifyContent:"center", flexWrap:"wrap"}}>
             <TextField 

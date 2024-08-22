@@ -9,7 +9,7 @@ export default function Section({children, style, headline, id}:{children?: Reac
             sx={{ 
                 flex:1, 
                 display:"flex", 
-                justifyContent:"center",
+                justifyContent:"start",
                 alignItems:"center",
                 pt:4,
                 pb:4,

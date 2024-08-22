@@ -1,5 +1,3 @@
-const dividerColor = "rgba(180, 248, 176, 0.16)"
-
 enum SectionName {
     hero = "hero",
     projects = "projects",
@@ -28,4 +26,4 @@ const navLinks:Section[] = [
     {name: SectionName.contact, id: `#${SectionName.contact}`}, 
 ]
 
-export { dividerColor, sections, navLinks, SectionName }
+export { sections, navLinks, SectionName }

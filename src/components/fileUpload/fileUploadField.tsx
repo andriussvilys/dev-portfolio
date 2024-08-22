@@ -1,21 +1,25 @@
 "use client"
 
-import { Button, FormControl, InputAdornment, InputBase, InputLabel, OutlinedInput, Stack, TextField } from "@mui/material"
+import {Stack, TextField } from "@mui/material"
 import FilePreview from "./filePreview"
-import { UseFieldArrayAppend, UseFormSetValue } from "react-hook-form"
+import { FieldValues, UseFieldArrayAppend, useFormContext } from "react-hook-form"
 import { forwardRef, useEffect, useRef, useState } from "react"
 import { StorageFile } from "@/src/lib/definitions/fileUpload"
 
 interface FileUploadProps{
-    fieldName: string,
-    setValue: UseFormSetValue<any>,
+    rootFieldName: string,
+    fieldIndex?: number,
     initialData?: StorageFile,
-    append?: UseFieldArrayAppend<any>,
+    append?: UseFieldArrayAppend<FieldValues, string>,
+    disabled?:boolean
 }
 const FileUploadField = forwardRef<HTMLDivElement, FileUploadProps>((props, ref) => {
-        const {setValue, fieldName, initialData, append} = props
-        const [imageSrc, setImageSrc] = useState<string>("")
-        const [file, setFile] = useState<StorageFile | File | undefined>(initialData)
+
+        const {rootFieldName, fieldIndex, initialData, append, disabled=false} = props
+        const fieldName = fieldIndex !== undefined ? `${rootFieldName}.${fieldIndex}` : rootFieldName
+        const {setValue, watch, register} = useFormContext()
+
+        const [imageSrc, setImageSrc] = useState<string>(initialData?.url || "")
 
         const isFileValid = (file: StorageFile | File | undefined):boolean => {
             const valid =  file instanceof File || !!file?.url 
@@ -35,16 +39,18 @@ const FileUploadField = forwardRef<HTMLDivElement, FileUploadProps>((props, ref)
             }
         }
 
+        const fieldValue = watch(fieldName)
+
         useEffect(() => {
-            if(isFileValid(file)){
-                setValue(fieldName, file)
-                changeSrc(file)
+            if(isFileValid(fieldValue)){
+                changeSrc(fieldValue)
                 if(!dirty.current && !!append){
                     append({})
                     dirty.current = true
                 }
             }
-        }, [file])
+        }, [fieldValue])
+
 
         return(
             <Stack component="div" gap={2} ref={ref}>
@@ -54,13 +60,15 @@ const FileUploadField = forwardRef<HTMLDivElement, FileUploadProps>((props, ref)
                     InputLabelProps={{shrink:true}} 
                     label="select file" 
                     type="file"
+                    {...register}
                     onChange={e => {
                         const file: File | StorageFile | undefined = (e.target as HTMLInputElement).files?.[0]
                         if(!!file){
-                            setFile(file)
+                            setValue(fieldName, file)
                         }
                     }}
                     sx={{maxWidth:"30ch"}}
+                    disabled={disabled}
                 />
             </Stack>
         )

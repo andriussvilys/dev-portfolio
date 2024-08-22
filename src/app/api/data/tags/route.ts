@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { TagInput } from "@/src/lib/definitions/tags";
-import { FileMetadata } from "@/src/lib/definitions/fileUpload";
 import { getPaging } from "@/src/lib/data/commons/utils";
 import { createItem, queryCollection } from "../commons";
 import { collections } from "@/src/lib/data/commons/definitions";
@@ -9,7 +8,8 @@ const parseTagFormData = (formData: FormData): TagInput => {
   const name = formData.get("name")?.toString() ?? "";
   const category = formData.get("category")?.toString() ?? "";
   const file = JSON.parse(formData.get("file") as string)
-  const body:TagInput = {name, category, file}
+  const categoryIndex = JSON.parse(formData.get("categoryIndex") as string)
+  const body:TagInput = {name, category, file, categoryIndex}
   return body
 }
 

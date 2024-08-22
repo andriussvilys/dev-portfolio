@@ -3,6 +3,7 @@ import { deleteItem, findItem, updateItem } from "../../commons";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { NextResponse } from "next/server";
 import { PostInput } from "@/src/lib/definitions/posts";
+import { parsePostFormData } from "../route";
 
 export async function GET(request: Request, {params}:{params:Params}) {
     const _id = params._id;
@@ -23,17 +24,7 @@ export async function PUT(request: Request, {params}:{params:Params}) {
     const body:UpdateItemReq<PostInput> = {
         collection: collections.posts,
         _id,
-        body: {
-            name: formData.get("name")?.toString() ?? "",
-            description: formData.get("description")?.toString() ?? "",
-            liveSite: formData.get("liveSite")?.toString() ?? "",
-            github: formData.get("github")?.toString() ?? "",
-            files: formData.get("storageFile") ? formData.getAll("storageFile").map(entry => {
-                const {key, metadata} = JSON.parse(entry as string)
-                return {key, metadata, url:""}
-              }) : [],
-            tags: parsedTags
-        }
+        body: parsePostFormData(formData)
     }
   
     try{

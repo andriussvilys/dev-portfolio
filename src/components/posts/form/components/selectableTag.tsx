@@ -1,21 +1,43 @@
 "use client"
 
 import { TagRecord } from "@/src/lib/definitions/tags";
-import { UseFormRegister } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { Box } from "@mui/material";
 import Tag from "../../../tags/tag";
 
+type SelectableTagData = TagRecord & {formField:{root:string, index:number}}
+
 interface SelectableTagProps{
-    tag: TagRecord,
-    register: UseFormRegister<any>
-    fieldName: string,
+    data: SelectableTagData
 }
 
-export default function SelectableTag({tag, register, fieldName}:SelectableTagProps){
+export default function SelectableTag({data}:SelectableTagProps){
+    const {register, getValues, setValue} = useFormContext()
+    const {root, index} = data.formField
+    const fieldName = `${root}.${index}`
+    const values = getValues(root)
     return(
-        <Box sx={{display:"flex", alignItems:"center"}}>
-            <Tag tag={tag} />
-            <input type="checkbox" {...register(fieldName)} value={tag._id} />
+        <Box sx={{display:"flex", alignItems:"center", justifyContent:"space-between", flex:1}}>
+            <Tag data={data} />
+            <input 
+                type="checkbox" 
+                // {...register(fieldName)}
+                onChange={(e) => {
+                    const checked = e.target.checked
+                    if(checked){
+                        const update = [...values, data._id]
+                        setValue(root, update)
+                    }
+                    else{
+                        const update = values.filter((id:string) => id !== data._id)
+                        setValue(root, update)
+                    }
+                }}
+                value={data._id}
+                checked={values.includes(data._id)}
+            />
         </Box>
     )
 }
+
+export type {SelectableTagData}

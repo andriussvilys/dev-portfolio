@@ -7,7 +7,8 @@ interface PostInput {
     liveSite?: string,
     github?: string,
     files: StorageFile[],
-    tags: string[]
+    tags: string[],
+    order: number,
 }
 
 interface PostRecord extends PostInput {

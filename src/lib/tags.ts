@@ -2,7 +2,7 @@ import { collections, ListCollectionRes } from './data/commons/definitions'
 import { createItem, deleteItem, findItem, listCollection, updateItem } from './data/commons/utils'
 import { StorageFile } from './definitions/fileUpload'
 import { PagingParams } from './definitions/pages'
-import { TagRecord } from './definitions/tags'
+import { TagFormInput, TagRecord } from './definitions/tags'
 import {deleteByKey, getURL, replace, upload as storageUpload} from './storage'
 
 const createTag = async (formData: FormData) => {
@@ -33,7 +33,8 @@ const createTag = async (formData: FormData) => {
 const listTags = async (paging?: PagingParams|undefined):Promise<ListCollectionRes<TagRecord>> => {
     const res:ListCollectionRes<TagRecord> =  await listCollection({collection: collections.tags, paging})
     const tagsWithUrl = res.items.map(tag => {return {...tag, file: {...tag.file, url: getURL(tag.file.key)}}})
-    return {items: tagsWithUrl, total: res.total}
+    const sortedTags = tagsWithUrl.sort((a, b) => a.categoryIndex - b.categoryIndex)
+    return {items: sortedTags, total: res.total}
 }
 
 const deleteTag = async (id: string) => {
@@ -82,7 +83,6 @@ const updateTag = async (formData: FormData, id: string, ) => {
     catch(e){
         throw new Error ("failed to patch: " + (e as Error).message)
     }
-
 }
 
 const listCategories = async () => {
@@ -95,4 +95,26 @@ const listCategories = async () => {
     }
 }
 
-export {createTag, listTags, deleteTag, findTag, updateTag, listCategories}
+const processInput = (inputs: TagFormInput):FormData => {
+    const formData = new FormData()
+
+    const name = inputs.name
+    formData.append("name", name)
+
+    const category = inputs.category
+    formData.append("category", category)
+
+    const file = inputs.file ?? null
+    if(file){
+        if(file instanceof File){
+            formData.append("file", file)
+        }
+        else{
+            formData.append("file", JSON.stringify(file))
+        }
+    }
+    formData.append("categoryIndex", inputs.categoryIndex.toString())
+    return formData
+}
+
+export {createTag, listTags, deleteTag, findTag, updateTag, listCategories, processInput}

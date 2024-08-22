@@ -3,10 +3,7 @@
 import Image from 'next/image';
 import { Box, Tooltip } from '@mui/material';
 import { TagRecord } from '@/src/lib/definitions/tags';
-import { FileMetadata } from '@/src/lib/definitions/fileUpload';
-import theme from '@/src/lib/theming/theme';
 import { getFixedSize } from '@/src/lib/utils';
-import { Grade } from '@mui/icons-material';
 
 const getAlt = (tag: TagRecord) => {
     if(!tag){
@@ -17,20 +14,19 @@ const getAlt = (tag: TagRecord) => {
 
 const defaultSize = {width: 38, height: 38};
 
-export default function Tag({tag}: {tag: TagRecord}) {
-    const {width, height} = getFixedSize(tag.file.metadata, defaultSize)
+export default function Tag({data}: {data: TagRecord}) {
+    const {file, name} = data
+    const {width, height} = getFixedSize(file.metadata, defaultSize)
     return (
-        <Tooltip title={tag.name}>
+        <Tooltip title={name}>
             <Box sx={{
                 overflow:"hidden", 
                 display:"flex", 
                 justifyContent:"center",
                 alignItems:"center",
                 boxSizing:"content-box",
-                width:`${defaultSize.width}px`,
-                height:`${defaultSize.height}px`,
             }} borderRadius={1}>
-                <Image src={tag.file.url ?? ""} height={height} width={width} alt={getAlt(tag)}/>
+                <Image src={file.url ?? ""} height={height} width={width} alt={getAlt(data)}/>
             </Box>
         </Tooltip>
     )
