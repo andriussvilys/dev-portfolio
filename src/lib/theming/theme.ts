@@ -61,7 +61,7 @@ const lightTheme:ThemeOptions = {
             default: '#f5f5f5',
             paper: '#fafafa',
         },
-        divider: grey[300]
+        divider: grey[400]
     },
     shadows:[
         "none",

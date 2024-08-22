@@ -53,18 +53,17 @@ export default function PostForm(props: PostFormProps){
     const steps = ["Basic Info", "Media", "Tags"]
 
     const loadingSubmit = async (inputs: PostFormInput) => {
-        console.log(inputs)
-        // try{
-        //     setLoading(true)
-        //     await props.onSubmit(inputs)
-        //     location.reload()
-        // }
-        // catch(e){
-        //     throw e
-        // }
-        // finally{
-        //     setLoading(false)
-        // }
+        try{
+            setLoading(true)
+            await props.onSubmit(inputs)
+            location.reload()
+        }
+        catch(e){
+            throw e
+        }
+        finally{
+            setLoading(false)
+        }
     }
 
     return(
