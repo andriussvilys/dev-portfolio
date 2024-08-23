@@ -5,7 +5,6 @@ import { Button, Stack, TextField, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import messages from './errorMessages'
-import emailjs from '@emailjs/browser';
 import LoadingBackdrop from '@/src/components/loading/backdrop/loadingBackdrop';
 import Toast, { ToastData } from '@/src/components/loading/toast/toast';
 import { sendEmail } from '@/src/lib/contact';
