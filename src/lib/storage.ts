@@ -21,7 +21,7 @@ const upload = async (file: File, collection: collections) => {
         const uploadRes = await fetch('/api/storage', {
             method: 'POST',
             body: form,
-            cache: 'no-store'
+            cache: 'no-cache'
         })
         if(uploadRes.ok){
             const metadata = await getMetadata(file)
@@ -40,7 +40,7 @@ const deleteByKey = async (key: string) => {
     try{
         const res = await fetch(`/api/storage/${encodeURIComponent(key)}`, {
             method: 'DELETE',
-            cache: 'no-store'
+            cache: 'no-cache'
           })
         if(res.ok){
             return await res.json()

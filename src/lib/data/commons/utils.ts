@@ -50,7 +50,7 @@ async function findItem<T>(params: {collection: collections, _id: string}):Promi
     try{
         const res = await fetch(`http://localhost:3000/api/data/${collection}/${_id}`, {
             method: 'GET', 
-            cache: 'no-store'
+            cache: 'no-cache'
         })
         if(!res.ok){
             throw new Error(`${res.status}: ${res.statusText}`)
@@ -67,7 +67,7 @@ async function updateItem(params: {collection: collections, _id: string, body: F
     try{
         const res = await fetch(`http://localhost:3000/api/data/${collection}/${_id}`, {
             method: 'PUT',
-            cache: 'no-store',
+            cache: 'no-cache',
             body: body,
         })
         if(!res.ok){
@@ -85,7 +85,7 @@ async function deleteItem(params: {collection: collections, _id: string}){
     try{
         const res = await fetch(`http://localhost:3000/api/data/${collection}/${_id}`, {
             method: 'DELETE',
-            cache: 'no-store',
+            cache: 'no-cache',
         })
         if(!res.ok){
             throw new Error ("DB failure: " + res.statusText)
@@ -101,7 +101,7 @@ const createItem = async (params: {collection:collections, formData: FormData}) 
     try{
         const res = await fetch(`/api/data/${params.collection}`, {
             method: 'POST',
-            cache: 'no-store',
+            cache: 'no-cache',
             body: params.formData,
         })
         if(!res.ok){

@@ -87,7 +87,12 @@ const updateTag = async (formData: FormData, id: string, ) => {
 
 const listCategories = async () => {
     try{
-        const res = await fetch('http://localhost:3000/api/data/tags/categories', {method: 'GET', cache: 'no-store'})
+        const res = await fetch(
+            'http://localhost:3000/api/data/tags/categories', 
+            {
+                method: 'GET', 
+                cache: 'no-cache'
+            })
         return await res.json()
     }
     catch(e){

@@ -17,7 +17,7 @@ export default function SortTags(props:SortTagsProps) {
     
     const [tags, setTags] = useState(props.items)
     const [loading, setLoading] = useState(false);
-    const [toastStatus, setToastStatus] = useState<ToastData>({message:"", open:false});
+    const [toastStatus, setToastStatus] = useState<ToastData>({message:"", open:false, severity:"info"});
 
     const handleSubmit = async (items:TagRecord[]) => {
         setLoading(true)
@@ -36,10 +36,10 @@ export default function SortTags(props:SortTagsProps) {
               return updateTag(formData, item._id)
             })
             await Promise.all(updatePromises)
-            setToastStatus({message: "Tags updated", open:true})
+            setToastStatus({message: "Tags updated", open:true, severity:"success"})
         }
         catch(e){
-            setToastStatus({message: (e as Error).message, open:true})
+            setToastStatus({message: (e as Error).message, open:true, severity:"error"})
             throw e
         }
         finally{
@@ -57,7 +57,8 @@ export default function SortTags(props:SortTagsProps) {
             <Toast 
                 message={toastStatus.message} 
                 open={toastStatus.open}
-                toggleOpen={()=>setToastStatus(prev => {return {message: prev.message, open:!prev.open}})}
+                severity={toastStatus.severity}
+                toggleOpen={()=>setToastStatus(prev => {return {...prev, open:!prev.open}})}
             />
             <Stack sx={{width:1}}>
                 <Box sx={{
