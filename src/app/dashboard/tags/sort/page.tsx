@@ -1,4 +1,4 @@
-import SortTags from "@/src/components/tags/sortTags";
+import SortTags from "@/src/components/tags/SortTags";
 import { defaultPaging } from "@/src/lib/definitions/pages";
 import { TagRecord } from "@/src/lib/definitions/tags";
 import { listTags } from "@/src/lib/tags";
