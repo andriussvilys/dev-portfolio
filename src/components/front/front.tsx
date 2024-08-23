@@ -26,6 +26,9 @@ export default function Front({posts, tags}:FrontProps){
         <ThemeProvider theme={theme}>
             <CssBaseline />
                 <Navigation theme={theme} switchTheme={switchTheme}/>
+                <Box sx={{position:"relative", left:"50vw", top:"50vh"}}>
+                    <HeroBackground width={size} height={size} theme={theme}/>       
+                </Box>
                 <Stack sx={{height:"100vh", alignItems:"center"}}>
                     <Toolbar />
                     <Container 
@@ -33,6 +36,7 @@ export default function Front({posts, tags}:FrontProps){
                         sx={{
                             flex: 1,
                             overflow: "auto",
+                            overflowX:"hidden",
                             maxWidth:"100vw !important",
                             p:2, m:0,
                             display:"flex",
@@ -49,8 +53,11 @@ export default function Front({posts, tags}:FrontProps){
                                 }}
                             >
                                 <Contact />
-                                <Box component="footer" sx={{height:"100px"}}>
-                                    <Divider/>
+                                <Box component="footer" sx={{
+                                    height:"100px",
+                                    width:"100%",	
+                                    }}>
+                                    {/* <Divider/> */}
                                 </Box>
                             </Stack>
                         </Container>

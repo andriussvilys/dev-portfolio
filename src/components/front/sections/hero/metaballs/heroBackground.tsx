@@ -83,11 +83,9 @@ export default function HeroBackground(props:HeroBackgroundProps) {
     return (
         <div 
             style={{
-                position:"absolute", 
-                // top:0, 
-                // left:0,
+                position:"absolute",
                 top:-height*0.4,
-                left:-width*0.2,
+                left:-width*0.1,
                 filter: "blur(50px)",
                 opacity: 0.6,
                 mixBlendMode: mode === "light" ? "difference" : "normal",

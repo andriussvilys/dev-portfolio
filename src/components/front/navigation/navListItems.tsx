@@ -15,7 +15,7 @@ export default function NavListItems({theme, switchTheme, onClick}:NavListItemsP
         <>
             {navLinks.map(item => {
                 return (
-                    <ListItem key={crypto.randomUUID()}>
+                    <ListItem key={crypto.randomUUID()} sx={{}}>
                         <ListItemButton href={item.id} onClick={()=>{if(onClick)onClick()}}>
                                 <Typography>
                                     {item.name.toUpperCase()}

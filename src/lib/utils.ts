@@ -27,6 +27,10 @@ const getFixedSize = (size: FileMetadata, defaultSize:{width:number, height:numb
     const scaleFactor = Math.sqrt(targetArea / originalArea);
     const scaledWidth = width * scaleFactor;
     const scaledHeight = height * scaleFactor;
+    if(scaledHeight > defaultHeight){
+        const ratio = defaultHeight / scaledHeight
+        return {width: scaledWidth * ratio, height: scaledHeight * ratio}
+    }
   
     return { width: scaledWidth, height: scaledHeight };
 }

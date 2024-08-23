@@ -18,8 +18,6 @@ export async function POST(req: NextRequest, res:NextResponse){
       },
     });
 
-    console.log(`name, email, message: ${name}, ${email}, ${message}`)  ;
-
     try {
       await transporter.sendMail({
         // from: email,
@@ -32,7 +30,6 @@ export async function POST(req: NextRequest, res:NextResponse){
       return NextResponse.json({ success: true }, {status:200});
     } 
     catch(e){
-        console.error(e);
         return NextResponse.json({ status: "fail", error: e }, {status: 500});
     }
 }

@@ -25,11 +25,12 @@ export default function NavDrawer({isOpen, setOpen, theme, switchTheme}:NavDrawe
             sx={{
               display: { xs: 'block', md: 'none' },
               '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-              zIndex:appBarZIndex+1,
+              zIndex:appBarZIndex-1,
               position:"absolute",
               top:appBarHeight,
             }}
           >
+            <Toolbar />
             <Toolbar />
             <List>
               <NavListItems onClick={() => setOpen(false)} theme={theme} switchTheme={switchTheme}/>
