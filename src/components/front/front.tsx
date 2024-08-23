@@ -2,7 +2,6 @@
 
 import { Box, Container, CssBaseline, Divider, Stack, Toolbar} from "@mui/material";
 import Navigation from "./navigation/navigation";
-import Hero from "./sections/hero";
 import Projects from "./sections/projects";
 import Skills from "./sections/skills";
 import About from "./sections/about";
@@ -12,6 +11,8 @@ import { ThemeProvider } from "@emotion/react";
 import { useTheme } from "@/src/lib/theming/theme";
 import Contact from "./sections/contact/contact";
 import { appBarHeight } from "./navigation/constants";
+import Hero from "./sections/hero/hero";
+import HeroBackground from "./sections/hero/metaballs/heroBackground";
 
 interface FrontProps {
     posts: PostWithTags[],
@@ -20,12 +21,13 @@ interface FrontProps {
 
 export default function Front({posts, tags}:FrontProps){
     const {theme, switchTheme} = useTheme()
+    const size = 400
     return(
         <ThemeProvider theme={theme}>
             <CssBaseline />
                 <Navigation theme={theme} switchTheme={switchTheme}/>
                 <Stack sx={{height:"100vh", alignItems:"center"}}>
-                    <Toolbar />       
+                    <Toolbar />
                     <Container 
                         component="main" 
                         sx={{
