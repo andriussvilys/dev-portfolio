@@ -11,26 +11,28 @@ export default function Contact(){
             id={SectionName.contact}
             style={{gap:4}}
         >
-            <Card sx={{
-                border:"1px solid",
-                borderColor: theme.palette.divider,
-                boxShadow:4,
-                justifyContent:"center",
-                width:"60ch",
-                maxWidth:"60ch",
-                [theme.breakpoints.down("md")]:{
-                    minWidth:"35ch",
-                    width:1,
-                },
-                }}>
-                <Stack sx={{p:2}} gap={2}>
-                    <Box sx={{display:"flex", alignItems:"center"}}>
-                        <Typography variant="h4" align="left">📎</Typography>
-                        <Typography variant="overline" align="left">Drop me a message</Typography>
-                    </Box>
-                    <ContactForm/>
-                </Stack>
-            </Card>
+            <Stack sx={{flex:1, justifyContent:"center"}}>
+                <Card sx={{
+                    border:"1px solid",
+                    borderColor: theme.palette.divider,
+                    boxShadow:4,
+                    justifyContent:"center",
+                    width:"60ch",
+                    maxWidth:"60ch",
+                    [theme.breakpoints.down("md")]:{
+                        minWidth:"35ch",
+                        width:1,
+                    },
+                    }}>
+                    <Stack sx={{p:2}} gap={2}>
+                        <Box sx={{display:"flex", alignItems:"center"}}>
+                            <Typography variant="h4" align="left">📎</Typography>
+                            <Typography variant="overline" align="left">Drop me a message</Typography>
+                        </Box>
+                        <ContactForm/>
+                    </Stack>
+                </Card>
+            </Stack>
         </Section>
     )
 }

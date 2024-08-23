@@ -2,6 +2,7 @@
 
 import { IconButton, List, ListItem, ListItemButton, Toolbar, Typography, AppBar, Theme} from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
+import {Close as CloseIcon} from '@mui/icons-material';
 import { useState } from "react";
 import { appBarHeight, appBarZIndex } from "./constants";
 import NavDrawer from "./navDrawer";
@@ -24,9 +25,11 @@ export default function Navigation({theme, switchTheme}: NavigationProps) {
                     justifyContent:"center", 
                     flexDirection:"row",
                     zIndex:appBarZIndex,
-                    backgroundColor: "#fff0",
                     height:(appBarHeight),
-                p:0, m:0}}
+                    p:0, m:0,
+                    bgcolor: (theme.palette.mode === "light") ? "background.paper" : "background.default",
+                    borderBottom: (theme.palette.mode === "light") ? "1px solid" : null,
+                }}
             >
                 <Toolbar sx={{flex:1, maxWidth: "lg", p:0}}>
                     <List sx={{display:"flex", justifyContent:"space-between", width:1, p:0, m:0}}>
@@ -47,7 +50,7 @@ export default function Navigation({theme, switchTheme}: NavigationProps) {
                                 aria-label="open drawer"
                                 onClick={() => setDrawerOpen(!drawerOpen)}
                             >
-                                <MenuIcon />
+                                {drawerOpen ? <CloseIcon/> : <MenuIcon />}
                             </IconButton>
                         </ListItem>
                     </List>
