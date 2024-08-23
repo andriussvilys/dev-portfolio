@@ -3,7 +3,7 @@ import { deleteItem, findItem, updateItem } from "../../commons";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { NextResponse } from "next/server";
 import { PostInput } from "@/src/lib/definitions/posts";
-import { parsePostFormData } from "../route";
+import { parsePostFormData } from "@/src/lib/posts";
 
 export async function GET(request: Request, {params}:{params:Params}) {
     const _id = params._id;
@@ -19,7 +19,6 @@ export async function PUT(request: Request, {params}:{params:Params}) {
 
     const _id = params._id;
     const formData = await request.formData();
-    const parsedTags = formData.get("tags") ? JSON.parse(formData.get("tags") as string) : []
 
     const body:UpdateItemReq<PostInput> = {
         collection: collections.posts,

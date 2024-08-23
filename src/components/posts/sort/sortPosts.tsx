@@ -16,7 +16,7 @@ interface SortPostsProps {
 export default function SortPosts(props:SortPostsProps) {
     const [posts, setPosts] = useState(props.items)
     const [loading, setLoading] = useState(false);
-    const [toastStatus, setToastStatus] = useState<ToastData>({message:"", open:false});
+    const [toastStatus, setToastStatus] = useState<ToastData>({message:"", open:false, severity:"info"});
     
     const handleSubmit = async (items:PostWithTags[]) => {
         setLoading(true)
@@ -38,10 +38,10 @@ export default function SortPosts(props:SortPostsProps) {
                 return updatePost(formData, item._id)
               })
               await Promise.all(updatePromises)
-              setToastStatus({message: "Posts rearranged", open:true})
+              setToastStatus({message: "Posts rearranged", open:true, severity:"success"})
         }
         catch(e){
-            setToastStatus({message: (e as Error).message, open:true})
+            setToastStatus({message: (e as Error).message, open:true, severity:"error"})
             throw e
         }
         finally{
@@ -63,7 +63,8 @@ export default function SortPosts(props:SortPostsProps) {
             <Toast 
                 message={toastStatus.message} 
                 open={toastStatus.open}
-                toggleOpen={()=>setToastStatus(prev => {return {message: prev.message, open:!prev.open}})}
+                severity={toastStatus.severity}
+                toggleOpen={()=>setToastStatus(prev => {return {...prev, open:!prev.open}})}
             />        
             <Stack 
                 sx={{

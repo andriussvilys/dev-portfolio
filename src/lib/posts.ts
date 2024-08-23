@@ -2,7 +2,7 @@ import { collections, ListCollectionRes } from './data/commons/definitions';
 import { createItem, deleteItem, findItem, listCollection, updateItem } from './data/commons/utils';
 import { StorageFile } from './definitions/fileUpload';
 import { PagingParams } from './definitions/pages';
-import { PostFormInput, PostRecord, PostWithTags } from './definitions/posts';
+import { PostFormInput, PostInput, PostRecord, PostWithTags } from './definitions/posts';
 import {deleteByKey, getURL, replaceMany, upload as storageUpload} from './storage'
 import { findTag } from './tags';
 
@@ -138,4 +138,22 @@ const processInput = (inputs: PostFormInput):FormData => {
     return formData
 }
 
-export {createPost, listPosts, findPost, deletePost, updatePost, processInput}
+const parsePostFormData = (formData: FormData): PostInput => {
+    const files = formData.get("storageFile") ? formData.getAll("storageFile").map(entry => {
+      const {key, metadata} = JSON.parse(entry as string)
+      return {key, metadata, url:""}
+    }) : []
+    const tags = formData.get("tags") ? JSON.parse(formData.get("tags") as string) : []
+    const order = formData.get("order") ? parseInt(formData.get("order") as string) : 0
+      return {
+          name: formData.get("name")?.toString() ?? "",
+          description: formData.get("description")?.toString() ?? "",
+          liveSite: formData.get("liveSite")?.toString() ?? "",
+          github: formData.get("github")?.toString() ?? "",
+          order,
+          files,
+          tags,
+      }
+  }
+
+export {createPost, listPosts, findPost, deletePost, updatePost, processInput, parsePostFormData}
