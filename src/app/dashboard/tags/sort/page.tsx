@@ -1,12 +1,12 @@
+import { listTags } from "@/src/app/api/data/tags/utils";
 import SortTags from "@/src/components/tags/SortTags";
 import { defaultPaging } from "@/src/lib/definitions/pages";
 import { TagRecord } from "@/src/lib/definitions/tags";
-import { listTags } from "@/src/lib/tags";
 import { Box, Container, Stack, Typography } from "@mui/material";
 
 export default async function SortTagsPage() {
-    const tagsData = (await listTags(defaultPaging))
-    const tags = tagsData.items
+    const tagsQuery = (await listTags({paging:defaultPaging}))
+    const tags:TagRecord[] = (await tagsQuery.json()).items
 
     const categories:{[key:string]:TagRecord[]} = {}
     tags?.forEach(tag => {

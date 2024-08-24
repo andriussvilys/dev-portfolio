@@ -1,9 +1,10 @@
 import { Card, Container } from "@mui/material"
 import TagFormCreate from "@/src/components/tags/tagFormCreate"
-import { listCategories } from "@/src/lib/tags"
+import { listCategories } from "@/src/app/api/data/tags/utils"
 
 export default async function Page(){
-    const categories = await listCategories()
+    const categoriesQuery = await listCategories()
+    const categories = await categoriesQuery.json()
     return(
       <Container sx={{
           height:"100%", 

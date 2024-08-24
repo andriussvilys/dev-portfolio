@@ -54,11 +54,11 @@ const uploadFile = async (file: File, collection: string):Promise<UploadFileResp
         }
       } 
     catch (e) {
-        return NextResponse.json({ status: "fail", error: (e as Error).message }) as UploadFileErrorResponse;
+        return NextResponse.json({ status: "fail", error: (e as Error).message }, {status:500}) as UploadFileErrorResponse;
     }
 }
 
-const deleteFile = async (Key: string) => {
+const deleteFile = async (Key: string):Promise<NextResponse> => {
     const command:DeleteObjectCommandInput = {
       Bucket,
       Key

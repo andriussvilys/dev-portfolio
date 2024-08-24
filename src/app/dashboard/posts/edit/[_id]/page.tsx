@@ -1,11 +1,16 @@
+import { findPost } from "@/src/app/api/data/posts/utils"
+import { listTags } from "@/src/app/api/data/tags/utils"
 import PostFormEdit from "@/src/components/posts/form/postFormEdit"
-import { findPost } from "@/src/lib/posts"
-import { listTags } from "@/src/lib/tags"
 
 export default async function EditPostPage({params}:{params:{_id:string}}){
     const {_id} = params
-    const post = await findPost(_id)
-    const tags = (await listTags()).items;
+
+    const postQuery = await findPost(_id)
+    const post = (await postQuery.json())
+
+    const tagsQuery = await listTags({})
+    const tags = (await tagsQuery.json()).items
+    
     return(
         <PostFormEdit initialData={post} tags={tags}/>
     )

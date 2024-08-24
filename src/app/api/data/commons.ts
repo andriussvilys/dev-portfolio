@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server"
-import { collections, CreateItemReq, CreateItemType, ListCollectionReq, ListCollectionRes, UpdateItemReq } from "@/src/lib/data/commons/definitions"
+import { collections, CreateItemReq, CreateItemType, ListCollectionItemType, ListCollectionReq, UpdateItemReq } from "@/src/lib/data/commons/definitions"
 import { ObjectId } from "mongodb"
 import { getCollection } from "./collections"
 
-const queryCollection = async (params: ListCollectionReq):Promise<NextResponse> => {
+type ErrorResponse = NextResponse<{ status: "fail", error: any }>
+type QueryCollectionSuccessResponse<T> = NextResponse<{items:T[], total:number}>
+type QueryCollectionResponse<T> = QueryCollectionSuccessResponse<T> | ErrorResponse
+const queryCollection = async <T>(params: ListCollectionReq):Promise<QueryCollectionResponse<T>> => {
     const {paging} = params
     try{
         const query = params.query ?? {}
@@ -15,10 +18,10 @@ const queryCollection = async (params: ListCollectionReq):Promise<NextResponse> 
             cursor.skip((page-1) * limit).limit(limit)
         }
         const res = await cursor.toArray();
-        return NextResponse.json({items:res, total}, {status: 200});
+        return NextResponse.json({items:res, total}, {status: 200}) as QueryCollectionSuccessResponse<T>;
     }
     catch(e){
-        return NextResponse.json({ status: "fail", error: e }, {status: 500});
+        return NextResponse.json({ status: "fail", error: e }, {status: 500}) as ErrorResponse;
     }
 }
 
@@ -72,3 +75,4 @@ const deleteItem = async (params: {collection: collections, _id: string}):Promis
 }
 
 export {queryCollection, findItem, createItem, updateItem, deleteItem}
+export type {ErrorResponse, QueryCollectionResponse, QueryCollectionSuccessResponse}

@@ -1,5 +1,5 @@
 import { collections, ListCollectionRes } from "@/src/lib/data/commons/definitions"
-import { createItem, deleteItem, findItem, queryCollection, updateItem } from "../commons"
+import { createItem, deleteItem, ErrorResponse, findItem, queryCollection, updateItem } from "../commons"
 import { PostInput, PostRecord, PostWithTags } from "@/src/lib/definitions/posts"
 import { ObjectId } from "mongodb"
 import { TagRecord } from "@/src/lib/definitions/tags"
@@ -28,11 +28,10 @@ const parsePostFormData = (formData: FormData): PostInput => {
 }
 
 type ListPostsSuccessResponse = NextResponse<ListCollectionRes<PostWithTags>>
-type ErrorResponse = NextResponse<{ status: "fail", error: any }>
 type ListPostsResponse = ListPostsSuccessResponse | ErrorResponse
 const listPosts = async ({paging}:{paging?: PagingParams}):Promise<ListPostsResponse> => {
     try{
-        const postsQuery = await queryCollection({collection:collections.posts, paging})
+        const postsQuery = await queryCollection<PostRecord>({collection:collections.posts, paging})
         const postsData = await postsQuery.json()
         const posts:PostRecord[] = postsData.items
         const total = postsData.total
@@ -58,6 +57,17 @@ const listPosts = async ({paging}:{paging?: PagingParams}):Promise<ListPostsResp
     }
     catch(e){
         return NextResponse.json({ status: "fail", error: e }, {status: 500}) as ErrorResponse
+    }
+}
+
+const findPost = async (_id: string):Promise<NextResponse> => {
+    try{
+        const postQuery = await findItem({collection: collections.posts, _id})
+        const post:PostRecord = await postQuery.json()
+        return NextResponse.json(post, {status: 200})
+    }
+    catch(e){
+        return NextResponse.json({ status: "fail", error: e }, {status: 500})
     }
 }
 
@@ -172,4 +182,4 @@ const updatePost = async (formData: FormData, _id: string) => {
     }
 }
 
-export {parsePostFormData, listPosts, createPost, deletePost, updatePost}
+export {parsePostFormData, listPosts, findPost, createPost, deletePost, updatePost}

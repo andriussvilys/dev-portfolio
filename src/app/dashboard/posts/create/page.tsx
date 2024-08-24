@@ -1,9 +1,10 @@
+import { listTags } from "@/src/app/api/data/tags/utils";
 import PostFormCreate from "@/src/components/posts/form/postFormCreate";
-import { listTags } from "@/src/lib/tags";
 import { Container } from "@mui/material";
 
 export default async function CreatePost(){
-    const tags = (await listTags()).items
+    const tagsQuery = await listTags({})
+    const tags = (await tagsQuery.json()).items
     return(
         <Container sx={{
             height:"100%", 
