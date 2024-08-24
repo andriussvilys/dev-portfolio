@@ -73,4 +73,4 @@ const deleteFile = async (Key: string) => {
     }
 }
 
-export { uploadFile, deleteFile };
+export { uploadFile, deleteFile, getURL };

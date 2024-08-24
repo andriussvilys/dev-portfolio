@@ -1,16 +1,16 @@
 import { collections, ListCollectionRes } from "@/src/lib/data/commons/definitions"
-import { createItem, deleteItem, findItem, queryCollection } from "../commons"
+import { createItem, deleteItem, findItem, queryCollection, updateItem } from "../commons"
 import { PostInput, PostRecord, PostWithTags } from "@/src/lib/definitions/posts"
 import { ObjectId } from "mongodb"
 import { TagRecord } from "@/src/lib/definitions/tags"
 import { PagingParams } from "@/src/lib/definitions/pages"
 import { NextResponse } from "next/server"
-import { deleteFile, uploadFile } from "../../storage/utils"
+import { deleteFile, getURL, uploadFile } from "../../storage/utils"
+import { StorageFile } from "@/src/lib/definitions/fileUpload"
 
 const parsePostFormData = (formData: FormData): PostInput => {
     const files = formData.get("storageFile") ? formData.getAll("storageFile").map(entry => {
-        const {key, metadata, url} = JSON.parse(entry as string)
-        return {key, metadata, url}
+        return JSON.parse(entry as string)
     }) : []
 
     const tags = formData.get("tags") ? JSON.parse(formData.get("tags") as string) : []
@@ -100,16 +100,16 @@ const createPost = async (formData: FormData) => {
             const keys = storageRes.map(res => res.key)
             const deletePromises = keys.map(key => deleteFile(key))
             await Promise.all(deletePromises)
-            throw e
+            return NextResponse.json({ status: "fail", error: e }, {status: 500})
         }
     }
     catch(e){
-        throw e
+        return NextResponse.json({ status: "fail", error: e }, {status: 500})
     }
 }
 
 const deletePost = async (_id: string) => {
-    // delete storage objects first; if table data delete fails, 
+    // delete storage objects first; if file delete fails, 
     // the record will be visible without image
     // in the front and user can try again to delete record
     const collection = collections.posts
@@ -128,4 +128,46 @@ const deletePost = async (_id: string) => {
     }
 }
 
-export {parsePostFormData, listPosts, createPost, deletePost}
+const updatePost = async (formData: FormData, _id: string) => {
+    try{
+        const files:File[] = formData.getAll("file") as File[]
+
+        // 1) delete removed files
+        const postQuery = await findItem({collection: collections.posts, _id})
+        const postData:PostRecord = await postQuery.json()
+        const storageFiles = formData.getAll("storageFile");
+        const storageKeys:string[] = storageFiles.map((file) => (JSON.parse(file as string) as StorageFile).key);
+        const previousKeys = postData.files.map(file => file.key)
+        const filesToDelete = previousKeys.filter(key => {
+            return !storageKeys.includes(key)
+        })
+        const deletePromises = filesToDelete.map(key => deleteFile(key))
+        await Promise.all(deletePromises)
+
+        // 2) upload new files
+        const storageRes = await uploadPostMedia(files)
+        storageRes.forEach((res) => {
+            const storageFile = JSON.stringify(res)
+            formData.append("storageFile", storageFile)
+        })
+
+        // 3) update post table data
+        try{
+            const parsedFormData = parsePostFormData(formData)
+            console.log("parsedFormData", parsedFormData)
+            const res = await updateItem({collection: collections.posts, _id, body: parsedFormData})
+            return res
+        }
+        catch(e){
+            const keys = storageRes.map(res => res.key)
+            const deletePromises = keys.map(key => deleteFile(key))
+            await Promise.all(deletePromises)
+            return NextResponse.json({ status: "fail", error: e }, {status: 500})
+        }
+    }
+    catch(e){
+        return NextResponse.json({ status: "fail", error: e }, {status: 500})
+    }
+}
+
+export {parsePostFormData, listPosts, createPost, deletePost, updatePost}
