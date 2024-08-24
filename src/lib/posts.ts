@@ -4,61 +4,15 @@ import { StorageFile } from './definitions/fileUpload';
 import { PagingParams } from './definitions/pages';
 import { PostFormInput, PostInput, PostRecord, PostWithTags } from './definitions/posts';
 import {deleteByKey, getURL, replaceMany, upload as storageUpload} from './storage'
-import { findTag } from './tags';
 
 const createPost = async (formData: FormData) => {
-    try{
-        const files = formData.getAll("file")
-        const uploadPromises = files.map((file:any, index:number) => {
-          return storageUpload(file, collections.posts)
-        });
-        const storageRes = await Promise.all(uploadPromises);
-        storageRes.forEach((res) => {
-            const {key, metadata} = res
-            const fileData = JSON.stringify({key, metadata})
-            formData.append("storageFile", fileData)
-        })
-        try{
-            const dbRes = await createItem({collection: collections.posts, formData})
-            return await dbRes
-        }
-        catch(e){
-            const deletePromises = storageRes.map(res => deleteByKey(res.key))
-            await Promise.all(deletePromises)
-            throw e
-        }
-    }
-    catch(e){
-        throw e
-    }
+    const res = await createItem({collection: collections.posts, formData})
+    return res
 }
 
 const listPosts = async (paging?: PagingParams|undefined):Promise<ListCollectionRes<PostWithTags>> => {
-    const res = await listCollection<PostRecord>({collection: collections.posts, paging})
-    const tagPromises = res.items.map(async (post) => {
-        try{
-            const postTagPromises = post.tags.filter(id => !!id).map(async (id) => {
-                try{
-                    const tag = await findTag(id)
-                    return tag
-                }
-                catch(e){
-                    return null
-                }
-            })
-            const tags = (await Promise.all(postTagPromises)).filter(tag => !!tag)
-            return {...post, tags}
-        }
-        catch(e){
-            throw e
-        }
-    })
-    const postsWithTags = await Promise.all(tagPromises)
-    postsWithTags.forEach(post => {
-        post.files = post.files.map(file => {return {...file, url: getURL(file.key)}})
-    })
-    const orderedPosts = postsWithTags.sort((a, b) => a.order - b.order)
-     return {items: orderedPosts, total: res.total}
+    const res = await listCollection<PostWithTags>({collection: collections.posts, paging})
+    return res
 }
 
 const findPost = async (_id:string):Promise<PostRecord> => {
@@ -85,37 +39,37 @@ const deletePost = async (id: string) => {
 }
 
 const updatePost = async (formData: FormData, id: string, ) => {
-    try{
-        const postsFormData = new FormData()
-        postsFormData.append("name", formData.get("name") as string)
-        postsFormData.append("description", formData.get("description") as string)
-        postsFormData.append("liveSite", formData.get("liveSite") as string)
-        postsFormData.append("github", formData.get("github") as string)
-        postsFormData.append("tags", formData.get("tags") as string)
-        postsFormData.append("order", formData.get("order") as string)
-        // 1) delete removed files
-        const storageFiles = formData.getAll("storageFile");
-        const storageKeys:string[] = storageFiles.map((file) => (JSON.parse(file as string) as StorageFile).key);
-        const previousKeys = (await findPost(id)).files.map(file => file.key)
-        const filesToDelete = previousKeys.filter(key => {
-            return !storageKeys.includes(key)
-        })
-        const newFiles = formData.getAll("file") as File[];
+    // try{
+    //     const postsFormData = new FormData()
+    //     postsFormData.append("name", formData.get("name") as string)
+    //     postsFormData.append("description", formData.get("description") as string)
+    //     postsFormData.append("liveSite", formData.get("liveSite") as string)
+    //     postsFormData.append("github", formData.get("github") as string)
+    //     postsFormData.append("tags", formData.get("tags") as string)
+    //     postsFormData.append("order", formData.get("order") as string)
+    //     // 1) delete removed files
+    //     const storageFiles = formData.getAll("storageFile");
+    //     const storageKeys:string[] = storageFiles.map((file) => (JSON.parse(file as string) as StorageFile).key);
+    //     const previousKeys = (await findPost(id)).files.map(file => file.key)
+    //     const filesToDelete = previousKeys.filter(key => {
+    //         return !storageKeys.includes(key)
+    //     })
+    //     const newFiles = formData.getAll("file") as File[];
 
-        const replaceManyRes = await replaceMany(filesToDelete, newFiles, collections.posts)
-        replaceManyRes.uploads.forEach(upload => {
-            const {key, metadata} = upload
-            const fileData = JSON.stringify({key, metadata})
-            postsFormData.append("storageFile", fileData)
-        })
-        storageFiles.forEach(file => postsFormData.append("storageFile", file))
+    //     const replaceManyRes = await replaceMany(filesToDelete, newFiles, collections.posts)
+    //     replaceManyRes.uploads.forEach(upload => {
+    //         const {key, metadata} = upload
+    //         const fileData = JSON.stringify({key, metadata})
+    //         postsFormData.append("storageFile", fileData)
+    //     })
+    //     storageFiles.forEach(file => postsFormData.append("storageFile", file))
 
-        const res = await updateItem({collection: collections.posts, _id: id, body: postsFormData})
-        return await res
-    }
-    catch(e){
-        throw new Error ("failed to patch: " + (e as Error).message)
-    }
+    //     const res = await updateItem({collection: collections.posts, _id: id, body: postsFormData})
+    //     return await res
+    // }
+    // catch(e){
+    //     throw new Error ("failed to patch: " + (e as Error).message)
+    // }
 }
 
 const processInput = (inputs: PostFormInput):FormData => {

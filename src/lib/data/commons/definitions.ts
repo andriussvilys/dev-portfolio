@@ -9,7 +9,8 @@ enum collections {
 
 interface ListCollectionReq{
     collection:collections,
-    paging?: PagingParams
+    paging?: PagingParams,
+    query?: {[key:string]: any}
 }
 
 interface ListCollectionRes<CollectionType>{

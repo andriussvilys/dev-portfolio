@@ -1,5 +1,4 @@
 import { collections } from "./data/commons/definitions"
-import { getMetadata } from "./utils"
 
 const createKey = (file:File, collection:string) => {
     const extension = file.type.split('/')[1]
@@ -14,26 +13,26 @@ const getURL = (key: string) => {
 }
 
 const upload = async (file: File, collection: collections) => {
-    const form = new FormData();
-    form.append("file", file)
-    form.append("collection", collection)
-    try{
-        const uploadRes = await fetch('/api/storage', {
-            method: 'POST',
-            body: form,
-            cache: 'no-cache'
-        })
-        if(uploadRes.ok){
-            const metadata = await getMetadata(file)
-            const resJSON = await uploadRes.json()
-            const res = {...resJSON, metadata}
-            return await res
-        }
-        throw new Error("failed to upload to storage: " + uploadRes.statusText)
-    }
-    catch(e){
-        throw e
-    }
+    // const form = new FormData();
+    // form.append("file", file)
+    // form.append("collection", collection)
+    // try{
+    //     const uploadRes = await fetch('/api/storage', {
+    //         method: 'POST',
+    //         body: form,
+    //         cache: 'no-cache'
+    //     })
+    //     if(uploadRes.ok){
+    //         const metadata = await getMetadata(file)
+    //         const resJSON = await uploadRes.json()
+    //         const res = {...resJSON, metadata}
+    //         return await res
+    //     }
+    //     throw new Error("failed to upload to storage: " + uploadRes.statusText)
+    // }
+    // catch(e){
+    //     throw e
+    // }
 }
 
 const deleteByKey = async (key: string) => {
