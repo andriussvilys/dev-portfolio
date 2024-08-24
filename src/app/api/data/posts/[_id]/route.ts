@@ -1,9 +1,9 @@
 import { collections, UpdateItemReq } from "@/src/lib/data/commons/definitions";
-import { deleteItem, findItem, updateItem } from "../../commons";
+import { findItem, updateItem } from "../../commons";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { NextResponse } from "next/server";
 import { PostInput } from "@/src/lib/definitions/posts";
-import { parsePostFormData } from "@/src/lib/posts";
+import { deletePost, parsePostFormData } from "../utils";
 
 export async function GET(request: Request, {params}:{params:Params}) {
     const _id = params._id;
@@ -12,7 +12,7 @@ export async function GET(request: Request, {params}:{params:Params}) {
 
 export async function DELETE(request: Request, {params}:{params:Params}) {
     const _id = params._id;
-    return await deleteItem({collection: collections.posts, _id});
+    return await deletePost(_id);
 }
 
 export async function PUT(request: Request, {params}:{params:Params}) {

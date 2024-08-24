@@ -21,10 +21,13 @@ const getMetadata = async (file: File): Promise<FileMetadata> => {
   catch(e){
     throw e
   }
-  
 };
 
-type UploadFileSuccessResponse = NextResponse<{ key: string; metadata: any }>;
+const getURL = (key: string) => {
+  return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_S3_BUCKET_REGION}.amazonaws.com/${key}`
+}
+
+type UploadFileSuccessResponse = NextResponse<{ key: string; metadata: FileMetadata, url:string }>;
 type UploadFileErrorResponse = NextResponse<{ status: "fail"; error: string }>;
 
 type UploadFileResponse = UploadFileSuccessResponse | UploadFileErrorResponse;
@@ -43,7 +46,8 @@ const uploadFile = async (file: File, collection: string):Promise<UploadFileResp
         const res = await s3.send(new PutObjectCommand(params));
         if(res.$metadata.httpStatusCode === 200){
             const metadata = await getMetadata(file)
-            return NextResponse.json({...res, key: Key, metadata}, {status: 200});
+            const url = getURL(Key);
+            return NextResponse.json({...res, key: Key, metadata, url}, {status: 200});
         }
         else{
           return NextResponse.json({ status: "fail", error: "failed to upload to storage" }, {status: 500}) as UploadFileErrorResponse;

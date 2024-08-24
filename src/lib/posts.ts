@@ -1,9 +1,8 @@
+import { deleteFile } from '../app/api/storage/utils';
 import { collections, ListCollectionRes } from './data/commons/definitions';
-import { createItem, deleteItem, findItem, listCollection, updateItem } from './data/commons/utils';
-import { StorageFile } from './definitions/fileUpload';
+import { createItem, deleteItem, findItem, listCollection } from './data/commons/utils';
 import { PagingParams } from './definitions/pages';
 import { PostFormInput, PostInput, PostRecord, PostWithTags } from './definitions/posts';
-import {deleteByKey, getURL, replaceMany, upload as storageUpload} from './storage'
 
 const createPost = async (formData: FormData) => {
     const res = await createItem({collection: collections.posts, formData})
@@ -16,26 +15,14 @@ const listPosts = async (paging?: PagingParams|undefined):Promise<ListCollection
 }
 
 const findPost = async (_id:string):Promise<PostRecord> => {
-    const post = await findItem<PostRecord>({collection:collections.posts,_id})
-    post.files = post.files.map(file => {return {...file, url: getURL(file.key)}})
+    const collection = collections.posts
+    const post = await findItem<PostRecord>({collection, _id})
     return post
 }
 
 const deletePost = async (id: string) => {
-    // delete storage object first; if data delete fails, the record will be visible without image
-    //  in the front and user can try again to delete record
-    try{
-        const post = await findPost(id)
-        const deleteObjectPromises = post.files.map((file:any) => {
-            return deleteByKey(file.key)
-          });
-        const storageRes = await Promise.all(deleteObjectPromises);
-        const dataRes = await deleteItem({collection: collections.posts, _id: id})
-        return {storageRes, dataRes}
-    }
-    catch(e){
-        throw new Error("failed to delete data: " + (e as Error).message)
-    }
+    const collection = collections.posts
+    return await deleteItem({collection, _id: id})
 }
 
 const updatePost = async (formData: FormData, id: string, ) => {
@@ -97,22 +84,4 @@ const processInput = (inputs: PostFormInput):FormData => {
     return formData
 }
 
-const parsePostFormData = (formData: FormData): PostInput => {
-    const files = formData.get("storageFile") ? formData.getAll("storageFile").map(entry => {
-      const {key, metadata} = JSON.parse(entry as string)
-      return {key, metadata, url:""}
-    }) : []
-    const tags = formData.get("tags") ? JSON.parse(formData.get("tags") as string) : []
-    const order = formData.get("order") ? parseInt(formData.get("order") as string) : 0
-      return {
-          name: formData.get("name")?.toString() ?? "",
-          description: formData.get("description")?.toString() ?? "",
-          liveSite: formData.get("liveSite")?.toString() ?? "",
-          github: formData.get("github")?.toString() ?? "",
-          order,
-          files,
-          tags,
-      }
-  }
-
-export {createPost, listPosts, findPost, deletePost, updatePost, processInput, parsePostFormData}
+export {createPost, listPosts, findPost, deletePost, updatePost, processInput}

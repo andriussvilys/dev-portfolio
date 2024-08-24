@@ -1,13 +1,31 @@
 import { collections, ListCollectionRes } from "@/src/lib/data/commons/definitions"
-import { createItem, queryCollection } from "../commons"
-import { PostRecord, PostWithTags } from "@/src/lib/definitions/posts"
+import { createItem, deleteItem, findItem, queryCollection } from "../commons"
+import { PostInput, PostRecord, PostWithTags } from "@/src/lib/definitions/posts"
 import { ObjectId } from "mongodb"
 import { TagRecord } from "@/src/lib/definitions/tags"
 import { PagingParams } from "@/src/lib/definitions/pages"
 import { NextResponse } from "next/server"
-import { getURL } from "@/src/lib/storage"
 import { deleteFile, uploadFile } from "../../storage/utils"
-import { parsePostFormData } from "@/src/lib/posts"
+
+const parsePostFormData = (formData: FormData): PostInput => {
+    const files = formData.get("storageFile") ? formData.getAll("storageFile").map(entry => {
+        const {key, metadata, url} = JSON.parse(entry as string)
+        return {key, metadata, url}
+    }) : []
+
+    const tags = formData.get("tags") ? JSON.parse(formData.get("tags") as string) : []
+    const order = formData.get("order") ? parseInt(formData.get("order") as string) : 0
+
+    return {
+        name: formData.get("name")?.toString() ?? "",
+        description: formData.get("description")?.toString() ?? "",
+        liveSite: formData.get("liveSite")?.toString() ?? "",
+        github: formData.get("github")?.toString() ?? "",
+        order,
+        files,
+        tags,
+    }
+}
 
 const listPosts = async ({paging}:{paging?: PagingParams}):Promise<NextResponse<ListCollectionRes<PostWithTags>>> => {
     try{
@@ -31,8 +49,7 @@ const listPosts = async ({paging}:{paging?: PagingParams}):Promise<NextResponse<
 
         const postsWithTags:PostWithTags[] = posts.map(post => {
             const postTags = post.tags.map(tagId => tags.find(tag => tag._id === tagId)).filter(tag => !!tag)
-            const files = post.files.map(file => {return {...file, url: getURL(file.key)}})
-            return {...post, tags: postTags, files}
+            return {...post, tags: postTags, files:post.files}
         })
         return NextResponse.json({items:postsWithTags, total}, {status: 200});
     }
@@ -58,7 +75,7 @@ const uploadPostMedia = async (files: File[]) => {
             throw new Error(errorString)
         }
         const storageData = await Promise.all(storageRes.map(res => res.json()))
-        const storageFiles = storageData.map(res => {return {key:res.key, metadata:res.metadata}})
+        const storageFiles = storageData.map(res => {return {key: res.key, metadata: res.metadata, url:res.url}})
         return storageFiles
     }
     catch(e){
@@ -71,9 +88,8 @@ const createPost = async (formData: FormData) => {
         const files:File[] = formData.getAll("file") as File[]
         const storageRes = await uploadPostMedia(files)
         storageRes.forEach((res) => {
-            const {key, metadata} = res
-            const fileData = JSON.stringify({key, metadata})
-            formData.append("storageFile", fileData)
+            const storageFile = JSON.stringify(res)
+            formData.append("storageFile", storageFile)
         })
         try{
             const parsedFormData = parsePostFormData(formData)
@@ -92,4 +108,24 @@ const createPost = async (formData: FormData) => {
     }
 }
 
-export {listPosts, createPost}
+const deletePost = async (_id: string) => {
+    // delete storage objects first; if table data delete fails, 
+    // the record will be visible without image
+    // in the front and user can try again to delete record
+    const collection = collections.posts
+    try{
+        const postQuery = await findItem({collection, _id})
+        const post:PostRecord = await postQuery.json()
+        const deleteObjectPromises = post.files.map((file:any) => {
+            return deleteFile(file.key)
+          });
+        const storageRes = await Promise.all(deleteObjectPromises);
+        const dataRes = await deleteItem({collection, _id})
+        return NextResponse.json({storageRes, dataRes}, {status: 200})
+    }
+    catch(e){
+        return NextResponse.json({ status: "fail", error: e }, {status: 500})
+    }
+}
+
+export {parsePostFormData, listPosts, createPost, deletePost}
