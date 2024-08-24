@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb"
 import { TagRecord } from "@/src/lib/definitions/tags"
 import { PagingParams } from "@/src/lib/definitions/pages"
 import { NextResponse } from "next/server"
-import { deleteFile, getURL, uploadFile } from "../../storage/utils"
+import { deleteFile, uploadFile } from "../../storage/utils"
 import { StorageFile } from "@/src/lib/definitions/fileUpload"
 
 const parsePostFormData = (formData: FormData): PostInput => {
@@ -27,7 +27,10 @@ const parsePostFormData = (formData: FormData): PostInput => {
     }
 }
 
-const listPosts = async ({paging}:{paging?: PagingParams}):Promise<NextResponse<ListCollectionRes<PostWithTags>>> => {
+type ListPostsSuccessResponse = NextResponse<ListCollectionRes<PostWithTags>>
+type ErrorResponse = NextResponse<{ status: "fail", error: any }>
+type ListPostsResponse = ListPostsSuccessResponse | ErrorResponse
+const listPosts = async ({paging}:{paging?: PagingParams}):Promise<ListPostsResponse> => {
     try{
         const postsQuery = await queryCollection({collection:collections.posts, paging})
         const postsData = await postsQuery.json()
@@ -54,7 +57,7 @@ const listPosts = async ({paging}:{paging?: PagingParams}):Promise<NextResponse<
         return NextResponse.json({items:postsWithTags, total}, {status: 200});
     }
     catch(e){
-        throw e
+        return NextResponse.json({ status: "fail", error: e }, {status: 500}) as ErrorResponse
     }
 }
 
@@ -159,7 +162,7 @@ const updatePost = async (formData: FormData, _id: string) => {
             return res
         }
         catch(e){
-            const keys = storageRes.map(res => res.key)
+            const keys = storageRes?.map(res => res.key)
             const deletePromises = keys.map(key => deleteFile(key))
             await Promise.all(deletePromises)
             return NextResponse.json({ status: "fail", error: e }, {status: 500})
