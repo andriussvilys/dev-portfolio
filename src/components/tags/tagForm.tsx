@@ -17,6 +17,7 @@ interface TagFormProps {
 
 export default function TagForm(props: TagFormProps){
     const {tag, categories} = props
+
     const {backdrop, toast} = useLoading()
     const {loading, setLoading} = backdrop
     const {toastStatus, setToastStatus, closeToast} = toast
@@ -25,7 +26,7 @@ export default function TagForm(props: TagFormProps){
         defaultValues: {
             file: tag?.file || {key:"", url:"", metadata:{}},
             name: tag?.name ?? "",
-            category: tag?.category ?? "",
+            category: tag?.category ?? categories[0],
             categoryIndex: tag?.categoryIndex ?? Number.MAX_SAFE_INTEGER
         }
     })

@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import Front from "../components/front/front";
-import { listPosts } from "../lib/posts";
-import { listTags } from "../lib/tags";
 import { Suspense } from "react";
+import { listPosts } from "./api/data/posts/utils";
+import { listTags } from "./api/data/tags/utils";
 
 export const metadata: Metadata = {
   title: 'Andrius Svilys | Software developer',
@@ -10,8 +10,11 @@ export const metadata: Metadata = {
 }
 
 export default async function Page() {
-  const posts = (await listPosts()).items
-  const tags = (await listTags()).items
+  const postsQuery = await listPosts({})
+  const posts = (await postsQuery.json()).items
+
+  const tagsQuery = (await listTags({}))
+  const tags =  (await tagsQuery.json()).items
   return (
     <Suspense>
       <Front posts={posts} tags={tags}/>

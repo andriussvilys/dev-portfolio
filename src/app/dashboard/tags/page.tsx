@@ -1,4 +1,3 @@
-import { listCategories, listTags } from "@/src/lib/tags"
 import { revalidatePath } from "next/cache"
 import DashboardTag from "@/src/components/dashboard/dashboardTag"
 import TagFormEdit from "@/src/components/tags/tagFormEdit"
@@ -8,13 +7,18 @@ import ActionButton from "@/src/components/overviewPage/actionButton"
 import { getPaging } from "@/src/lib/data/commons/utils"
 import { defaultPaging } from "@/src/lib/definitions/pages"
 import { Button } from "@mui/material"
+import { listCategories, listTags } from "../../api/data/tags/utils"
 
 export default async function Page({searchParams}:{searchParams:URLSearchParams}) {
 
     revalidatePath("/dashboard/tags")
-    const categories = await listCategories()
+    const categoriesQuery = await listCategories()
+    const categories = await categoriesQuery.json()
+
     const paging = getPaging(searchParams)
-    const tagsData = (await listTags(paging ?? defaultPaging))
+    
+    const tagsQuery = (await listTags({paging: paging ?? defaultPaging}))
+    const tagsData = await tagsQuery.json()
     const tags = tagsData.items
     const total = tagsData.total
 

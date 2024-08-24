@@ -1,121 +1,29 @@
 import { collections, ListCollectionRes } from './data/commons/definitions';
 import { createItem, deleteItem, findItem, listCollection, updateItem } from './data/commons/utils';
-import { StorageFile } from './definitions/fileUpload';
 import { PagingParams } from './definitions/pages';
-import { PostFormInput, PostInput, PostRecord, PostWithTags } from './definitions/posts';
-import {deleteByKey, getURL, replaceMany, upload as storageUpload} from './storage'
-import { findTag } from './tags';
+import { PostFormInput, PostRecord, PostWithTags } from './definitions/posts';
 
 const createPost = async (formData: FormData) => {
-    try{
-        const files = formData.getAll("file")
-        const uploadPromises = files.map((file:any, index:number) => {
-          return storageUpload(file, collections.posts)
-        });
-        const storageRes = await Promise.all(uploadPromises);
-        storageRes.forEach((res) => {
-            const {key, metadata} = res
-            const fileData = JSON.stringify({key, metadata})
-            formData.append("storageFile", fileData)
-        })
-        try{
-            const dbRes = await createItem({collection: collections.posts, formData})
-            return await dbRes
-        }
-        catch(e){
-            const deletePromises = storageRes.map(res => deleteByKey(res.key))
-            await Promise.all(deletePromises)
-            throw e
-        }
-    }
-    catch(e){
-        throw e
-    }
+    return await createItem({collection: collections.posts, formData})
 }
 
 const listPosts = async (paging?: PagingParams|undefined):Promise<ListCollectionRes<PostWithTags>> => {
-    const res = await listCollection<PostRecord>({collection: collections.posts, paging})
-    const tagPromises = res.items.map(async (post) => {
-        try{
-            const postTagPromises = post.tags.filter(id => !!id).map(async (id) => {
-                try{
-                    const tag = await findTag(id)
-                    return tag
-                }
-                catch(e){
-                    return null
-                }
-            })
-            const tags = (await Promise.all(postTagPromises)).filter(tag => !!tag)
-            return {...post, tags}
-        }
-        catch(e){
-            throw e
-        }
-    })
-    const postsWithTags = await Promise.all(tagPromises)
-    postsWithTags.forEach(post => {
-        post.files = post.files.map(file => {return {...file, url: getURL(file.key)}})
-    })
-    const orderedPosts = postsWithTags.sort((a, b) => a.order - b.order)
-     return {items: orderedPosts, total: res.total}
+    return await listCollection<PostWithTags>({collection: collections.posts, paging})
 }
 
 const findPost = async (_id:string):Promise<PostRecord> => {
-    const post = await findItem<PostRecord>({collection:collections.posts,_id})
-    post.files = post.files.map(file => {return {...file, url: getURL(file.key)}})
-    return post
+    const collection = collections.posts
+    return await findItem<PostRecord>({collection, _id})
 }
 
-const deletePost = async (id: string) => {
-    // delete storage object first; if data delete fails, the record will be visible without image
-    //  in the front and user can try again to delete record
-    try{
-        const post = await findPost(id)
-        const deleteObjectPromises = post.files.map((file:any) => {
-            return deleteByKey(file.key)
-          });
-        const storageRes = await Promise.all(deleteObjectPromises);
-        const dataRes = await deleteItem({collection: collections.posts, _id: id})
-        return {storageRes, dataRes}
-    }
-    catch(e){
-        throw new Error("failed to delete data: " + (e as Error).message)
-    }
+const deletePost = async (_id: string) => {
+    const collection = collections.posts
+    return await deleteItem({collection, _id})
 }
 
-const updatePost = async (formData: FormData, id: string, ) => {
-    try{
-        const postsFormData = new FormData()
-        postsFormData.append("name", formData.get("name") as string)
-        postsFormData.append("description", formData.get("description") as string)
-        postsFormData.append("liveSite", formData.get("liveSite") as string)
-        postsFormData.append("github", formData.get("github") as string)
-        postsFormData.append("tags", formData.get("tags") as string)
-        postsFormData.append("order", formData.get("order") as string)
-        // 1) delete removed files
-        const storageFiles = formData.getAll("storageFile");
-        const storageKeys:string[] = storageFiles.map((file) => (JSON.parse(file as string) as StorageFile).key);
-        const previousKeys = (await findPost(id)).files.map(file => file.key)
-        const filesToDelete = previousKeys.filter(key => {
-            return !storageKeys.includes(key)
-        })
-        const newFiles = formData.getAll("file") as File[];
-
-        const replaceManyRes = await replaceMany(filesToDelete, newFiles, collections.posts)
-        replaceManyRes.uploads.forEach(upload => {
-            const {key, metadata} = upload
-            const fileData = JSON.stringify({key, metadata})
-            postsFormData.append("storageFile", fileData)
-        })
-        storageFiles.forEach(file => postsFormData.append("storageFile", file))
-
-        const res = await updateItem({collection: collections.posts, _id: id, body: postsFormData})
-        return await res
-    }
-    catch(e){
-        throw new Error ("failed to patch: " + (e as Error).message)
-    }
+const updatePost = async (formData: FormData, _id: string, ) => {
+    const collection = collections.posts
+    return await updateItem({collection, body:formData, _id})
 }
 
 const processInput = (inputs: PostFormInput):FormData => {
@@ -143,22 +51,4 @@ const processInput = (inputs: PostFormInput):FormData => {
     return formData
 }
 
-const parsePostFormData = (formData: FormData): PostInput => {
-    const files = formData.get("storageFile") ? formData.getAll("storageFile").map(entry => {
-      const {key, metadata} = JSON.parse(entry as string)
-      return {key, metadata, url:""}
-    }) : []
-    const tags = formData.get("tags") ? JSON.parse(formData.get("tags") as string) : []
-    const order = formData.get("order") ? parseInt(formData.get("order") as string) : 0
-      return {
-          name: formData.get("name")?.toString() ?? "",
-          description: formData.get("description")?.toString() ?? "",
-          liveSite: formData.get("liveSite")?.toString() ?? "",
-          github: formData.get("github")?.toString() ?? "",
-          order,
-          files,
-          tags,
-      }
-  }
-
-export {createPost, listPosts, findPost, deletePost, updatePost, processInput, parsePostFormData}
+export {createPost, listPosts, findPost, deletePost, updatePost, processInput}

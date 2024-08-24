@@ -1,11 +1,11 @@
+import { listPosts } from "@/src/app/api/data/posts/utils";
 import SortPosts from "@/src/components/posts/sort/sortPosts";
-import { defaultPaging } from "@/src/lib/definitions/pages";
-import { listPosts } from "@/src/lib/posts";
 import { Container } from "@mui/material";
 
 export default async function SortPostsPage() {
-    const posts = (await listPosts(defaultPaging)).items
-
+    const postsResonse = await listPosts({})
+    const responseData = await postsResonse.json()
+    const posts = responseData.items
     return (
         <Container sx={{
             display:"flex",

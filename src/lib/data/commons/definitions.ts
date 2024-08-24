@@ -1,6 +1,6 @@
 import { PagingParams } from "../../definitions/pages";
-import { PostInput } from "../../definitions/posts";
-import { TagInput } from "../../definitions/tags";
+import { PostInput, PostRecord, PostWithTags } from "../../definitions/posts";
+import { TagInput, TagRecord } from "../../definitions/tags";
 
 enum collections {
     tags = "tags",
@@ -9,11 +9,14 @@ enum collections {
 
 interface ListCollectionReq{
     collection:collections,
-    paging?: PagingParams
+    paging?: PagingParams,
+    query?: {[key:string]: any}
 }
 
-interface ListCollectionRes<CollectionType>{
-    items: CollectionType[],
+type ListCollectionItemType = TagRecord | PostRecord | PostWithTags
+
+interface ListCollectionRes<ListCollectionItemType>{
+    items: ListCollectionItemType[],
     total: number
 }
 
@@ -32,4 +35,4 @@ interface UpdateItemReq<CreateItemType>{
 
 export {collections}
 
-export type {ListCollectionReq, ListCollectionRes, CreateItemReq, CreateItemType, UpdateItemReq}
+export type {ListCollectionReq, ListCollectionRes,ListCollectionItemType, CreateItemReq, CreateItemType, UpdateItemReq}
