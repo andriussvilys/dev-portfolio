@@ -53,7 +53,8 @@ const listPosts = async ({paging}:{paging?: PagingParams}):Promise<ListPostsResp
             const postTags = post.tags.map(tagId => tags.find(tag => tag._id === tagId)).filter(tag => !!tag)
             return {...post, tags: postTags, files:post.files}
         })
-        return NextResponse.json({items:postsWithTags, total}, {status: 200});
+        const sortedPosts:PostWithTags[] = postsWithTags.sort((a, b) => a.order - b.order)
+        return NextResponse.json({items:sortedPosts, total}, {status: 200});
     }
     catch(e){
         return NextResponse.json({ status: "fail", error: e }, {status: 500}) as ErrorResponse
