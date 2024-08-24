@@ -6,14 +6,15 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import messages from './errorMessages'
 import LoadingBackdrop from '@/src/components/loading/backdrop/loadingBackdrop';
-import Toast, { ToastData } from '@/src/components/loading/toast/toast';
 import { sendEmail } from '@/src/lib/contact';
+import useLoading from '@/src/components/loading/backdrop/useLoading';
 
 export default function ContactForm() {
     const theme = useTheme();
     const errorColor = theme.palette.error.main;
-    const [loading, setLoading] = useState(false);
-    const [toastStatus, setToastStatus] = useState<ToastData>({message:"", open:false, severity:"info"});
+    const {backdrop, toast} = useLoading()
+    const {loading, setLoading} = backdrop
+    const {toastStatus, setToastStatus, closeToast} = toast
     const {handleSubmit, register, formState: { errors }} = useForm<ContactInput>();
     const onSubmit = async (inputs: ContactInput) => {
         setLoading(true)
@@ -30,13 +31,7 @@ export default function ContactForm() {
     }
     return (
         <>
-            <LoadingBackdrop open={loading}/>
-            <Toast 
-                message={toastStatus.message} 
-                open={toastStatus.open}
-                toggleOpen={()=>setToastStatus(prev => {return {...prev, open:!prev.open}})}
-                severity={toastStatus.severity}
-            /> 
+            <LoadingBackdrop open={loading} toastStatus={toastStatus} closeToast={closeToast}/>
             <Stack 
                 component="form" 
                 onSubmit={handleSubmit(onSubmit)}

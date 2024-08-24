@@ -58,7 +58,7 @@ const findTag = async (id: string) => {
         return tag
     }
     catch(e){
-        throw new Error("failed to find tag: " + (e as Error).message)
+        throw new Error(`failed to find tag: ${id}` + (e as Error).message)
     }
 
 }
@@ -88,7 +88,7 @@ const updateTag = async (formData: FormData, id: string, ) => {
 const listCategories = async () => {
     try{
         const res = await fetch(
-            'http://localhost:3000/api/data/tags/categories', 
+            `${process.env.NEXT_PUBLIC_HOST}/api/data/tags/categories`, 
             {
                 method: 'GET', 
                 cache: 'no-cache'

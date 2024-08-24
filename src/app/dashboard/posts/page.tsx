@@ -1,6 +1,6 @@
 import ActionButton from "@/src/components/overviewPage/actionButton";
 import OverviewPage from "@/src/components/overviewPage/overviewPage";
-import type { PostRecord, PostWithTags } from "@/src/lib/definitions/posts";
+import type { PostWithTags } from "@/src/lib/definitions/posts";
 import { Box, Button, Stack } from "@mui/material";
 import { revalidatePath } from "next/cache";
 import Post from "@/src/components/posts/post";

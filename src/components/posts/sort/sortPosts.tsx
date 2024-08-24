@@ -5,18 +5,19 @@ import Sortable from '../../sortable/sortable'
 import { PostFormInput, PostRecord, PostWithTags } from '@/src/lib/definitions/posts'
 import PostPreview from './postPreview'
 import { processInput, updatePost } from '@/src/lib/posts'
-import Toast, { ToastData } from '../../loading/toast/toast'
 import { Box, Button, Stack } from '@mui/material'
 import LoadingBackdrop from '../../loading/backdrop/loadingBackdrop'
 import { verticalListSortingStrategy } from '@dnd-kit/sortable'
+import useLoading from '../../loading/backdrop/useLoading'
 
 interface SortPostsProps {
     items: PostWithTags[]
 }
 export default function SortPosts(props:SortPostsProps) {
     const [posts, setPosts] = useState(props.items)
-    const [loading, setLoading] = useState(false);
-    const [toastStatus, setToastStatus] = useState<ToastData>({message:"", open:false, severity:"info"});
+    const {backdrop, toast} = useLoading()
+    const {loading, setLoading} = backdrop
+    const {toastStatus, setToastStatus, closeToast} = toast
     
     const handleSubmit = async (items:PostWithTags[]) => {
         setLoading(true)
@@ -59,13 +60,7 @@ export default function SortPosts(props:SortPostsProps) {
             justifyContent:"center",
             alignItems:"center"
         }}>
-            <LoadingBackdrop open={loading}/>
-            <Toast 
-                message={toastStatus.message} 
-                open={toastStatus.open}
-                severity={toastStatus.severity}
-                toggleOpen={()=>setToastStatus(prev => {return {...prev, open:!prev.open}})}
-            />        
+            <LoadingBackdrop open={loading} toastStatus={toastStatus} closeToast={closeToast}/>     
             <Stack 
                 sx={{
                     alignItems:"end"

@@ -6,8 +6,8 @@ import { TagRecord, TagFormInput } from "@/src/lib/definitions/tags"
 import FileUploadField from "../fileUpload/fileUploadField"
 import { FormProvider, useForm} from "react-hook-form"
 import ControlledSelect from "./ControlledSelect"
-import { useState } from "react"
 import LoadingBackdrop from "../loading/backdrop/loadingBackdrop"
+import useLoading from "../loading/backdrop/useLoading"
 
 interface TagFormProps {
     onSubmit: (inputs: TagFormInput) => Promise<any>,
@@ -17,7 +17,9 @@ interface TagFormProps {
 
 export default function TagForm(props: TagFormProps){
     const {tag, categories} = props
-    const [loading, setLoading] = useState(false)
+    const {backdrop, toast} = useLoading()
+    const {loading, setLoading} = backdrop
+    const {toastStatus, setToastStatus, closeToast} = toast
     
     const methods = useForm<TagFormInput>({
         defaultValues: {
@@ -31,12 +33,14 @@ export default function TagForm(props: TagFormProps){
     const initialData = tag ? {key: tag.file.key, url:tag.file.url!, metadata: tag.file.metadata} : undefined
 
     const loadingSubmit = async (inputs: TagFormInput) => {
+        setLoading(true)
         try{
-            setLoading(true)
             await props.onSubmit(inputs)
+            setToastStatus({message:"Tag created", open:true, severity:"success"})
             location.reload()
         }
         catch(e){
+            setToastStatus({message:"Tag create failed", open:true, severity:"error"})
             throw e
         }
         finally{
@@ -46,7 +50,7 @@ export default function TagForm(props: TagFormProps){
 
     return(
         <>
-            <LoadingBackdrop open={loading}/>
+            <LoadingBackdrop open={loading} toastStatus={toastStatus} closeToast={closeToast}/>
             <FormProvider {...methods}>
                 <Box 
                     component="form" 

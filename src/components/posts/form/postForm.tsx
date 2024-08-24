@@ -10,6 +10,7 @@ import { TagRecord } from "@/src/lib/definitions/tags"
 import TagSelect from "./components/tagSelect"
 import MultiFileUpload from "../../fileUpload/multiFileUpload"
 import LoadingBackdrop from "../../loading/backdrop/loadingBackdrop"
+import useLoading from "../../loading/backdrop/useLoading"
 
 interface PostFormProps {
     onSubmit: (input: PostFormInput) => Promise<any>,
@@ -34,7 +35,9 @@ const switchForm = (
 
 export default function PostForm(props: PostFormProps){
     const {initialData} = props
-    const [loading, setLoading] = useState(false)
+    const {backdrop, toast} = useLoading()
+    const {loading, setLoading} = backdrop
+    const {toastStatus, setToastStatus, closeToast} = toast
     const formMethods = useForm<PostFormInput>({
         defaultValues: {
             name: initialData?.name || "",
@@ -47,18 +50,20 @@ export default function PostForm(props: PostFormProps){
             order: initialData?.order || 0,
         }
     })
-    const {handleSubmit, watch} = formMethods
+    const {handleSubmit} = formMethods
 
     const [activeStep, setActiveStep] = useState(0);
     const steps = ["Basic Info", "Media", "Tags"]
 
     const loadingSubmit = async (inputs: PostFormInput) => {
+        setLoading(true)
         try{
-            setLoading(true)
             await props.onSubmit(inputs)
+            setToastStatus({message:"Post created", open:true, severity:"success"})
             location.reload()
         }
         catch(e){
+            setToastStatus({message:(e as Error).message, open:true, severity:"error"})
             throw e
         }
         finally{
@@ -68,7 +73,7 @@ export default function PostForm(props: PostFormProps){
 
     return(
         <>
-            <LoadingBackdrop open={loading}/>
+            <LoadingBackdrop open={loading} toastStatus={toastStatus} closeToast={closeToast}/>
             <FormProvider {...formMethods}>
                 <Box 
                     component="form" 

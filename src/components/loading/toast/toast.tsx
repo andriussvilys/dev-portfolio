@@ -6,17 +6,19 @@ interface ToastData{
     open: boolean,
     severity: AlertColor
 }
-interface ToastProps extends ToastData{
-    toggleOpen: (open:boolean) => void
+interface ToastProps{
+    toastStatus: ToastData,
+    closeToast: () => void
 }
 
 export type {ToastData, ToastProps}
 
-export default function Toast({message, open, toggleOpen, severity}:ToastProps){
+export default function Toast({toastStatus, closeToast}:ToastProps){
+    const {message, open, severity} = toastStatus
     return(
-        <Snackbar open={open} autoHideDuration={5000} onClose={()=>toggleOpen(false)}>
+        <Snackbar open={open} autoHideDuration={5000} onClose={()=>closeToast()}>
             <Alert
-                onClose={()=>toggleOpen(false)}
+                onClose={()=>closeToast()}
                 severity={severity}
                 variant="filled"
                 sx={{ width: '100%' }}

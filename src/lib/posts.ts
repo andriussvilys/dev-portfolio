@@ -37,10 +37,16 @@ const listPosts = async (paging?: PagingParams|undefined):Promise<ListCollection
     const res = await listCollection<PostRecord>({collection: collections.posts, paging})
     const tagPromises = res.items.map(async (post) => {
         try{
-            const postTagPromises = post.tags.filter(id => !!id).map(id => {
-                return findTag(id)
+            const postTagPromises = post.tags.filter(id => !!id).map(async (id) => {
+                try{
+                    const tag = await findTag(id)
+                    return tag
+                }
+                catch(e){
+                    return null
+                }
             })
-            const tags = await Promise.all(postTagPromises)
+            const tags = (await Promise.all(postTagPromises)).filter(tag => !!tag)
             return {...post, tags}
         }
         catch(e){
@@ -48,7 +54,6 @@ const listPosts = async (paging?: PagingParams|undefined):Promise<ListCollection
         }
     })
     const postsWithTags = await Promise.all(tagPromises)
-
     postsWithTags.forEach(post => {
         post.files = post.files.map(file => {return {...file, url: getURL(file.key)}})
     })

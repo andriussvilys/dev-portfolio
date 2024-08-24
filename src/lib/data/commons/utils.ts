@@ -31,7 +31,7 @@ async function listCollection<T>(params:ListCollectionReq):Promise<ListCollectio
     const {collection, paging} = params
     const pagingQuery = paging ? `?page=${paging.page}&limit=${paging.limit}` : ''
     try{
-        const res = await fetch(`http://localhost:3000/api/data/${collection}${pagingQuery}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/data/${collection}${pagingQuery}`, {
             method: 'GET', 
             cache: 'no-cache',
         })
@@ -48,13 +48,10 @@ async function listCollection<T>(params:ListCollectionReq):Promise<ListCollectio
 async function findItem<T>(params: {collection: collections, _id: string}):Promise<T>{
     const {collection, _id} = params
     try{
-        const res = await fetch(`http://localhost:3000/api/data/${collection}/${_id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/data/${collection}/${_id}`, {
             method: 'GET', 
             cache: 'no-cache'
         })
-        if(!res.ok){
-            throw new Error(`${res.status}: ${res.statusText}`)
-        }
         return await res.json()
     }
     catch(e){
@@ -65,7 +62,7 @@ async function findItem<T>(params: {collection: collections, _id: string}):Promi
 async function updateItem(params: {collection: collections, _id: string, body: FormData}){
     const {collection, _id, body} = params
     try{
-        const res = await fetch(`http://localhost:3000/api/data/${collection}/${_id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/data/${collection}/${_id}`, {
             method: 'PUT',
             cache: 'no-cache',
             body: body,
@@ -83,7 +80,7 @@ async function updateItem(params: {collection: collections, _id: string, body: F
 async function deleteItem(params: {collection: collections, _id: string}){
     const {collection, _id} = params
     try{
-        const res = await fetch(`http://localhost:3000/api/data/${collection}/${_id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/data/${collection}/${_id}`, {
             method: 'DELETE',
             cache: 'no-cache',
         })
