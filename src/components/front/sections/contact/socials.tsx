@@ -60,7 +60,10 @@ export default function Socials({theme}:{theme:Theme}) {
                             alt={button.text} 
                             style={{width:28}}/>
                     }>
-                        <Typography variant="overline" sx={{color:grey[700]}}>
+                        <Typography 
+                            variant="overline" 
+                            sx={{color: theme.palette.mode === "dark" ? grey[300] : grey[900]}}
+                        >
                             {button.text}
                         </Typography>
                 </Button>
