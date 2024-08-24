@@ -12,7 +12,7 @@ export default function PostFormEdit({tags, initialData}:PostFormEditProps){
     const handleSubmit = async (inputs: PostFormInput) => {
         try{
             const formData = processInput(inputs);
-            await updatePost(formData, initialData._id);
+            return await updatePost(formData, initialData._id);
         }
         catch(e){
             throw e

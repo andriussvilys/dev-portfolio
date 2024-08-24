@@ -157,7 +157,6 @@ const updatePost = async (formData: FormData, _id: string) => {
         // 3) update post table data
         try{
             const parsedFormData = parsePostFormData(formData)
-            console.log("parsedFormData", parsedFormData)
             const res = await updateItem({collection: collections.posts, _id, body: parsedFormData})
             return res
         }

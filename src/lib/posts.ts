@@ -4,19 +4,16 @@ import { PagingParams } from './definitions/pages';
 import { PostFormInput, PostRecord, PostWithTags } from './definitions/posts';
 
 const createPost = async (formData: FormData) => {
-    const res = await createItem({collection: collections.posts, formData})
-    return res
+    return await createItem({collection: collections.posts, formData})
 }
 
 const listPosts = async (paging?: PagingParams|undefined):Promise<ListCollectionRes<PostWithTags>> => {
-    const res = await listCollection<PostWithTags>({collection: collections.posts, paging})
-    return res
+    return await listCollection<PostWithTags>({collection: collections.posts, paging})
 }
 
 const findPost = async (_id:string):Promise<PostRecord> => {
     const collection = collections.posts
-    const post = await findItem<PostRecord>({collection, _id})
-    return post
+    return await findItem<PostRecord>({collection, _id})
 }
 
 const deletePost = async (_id: string) => {

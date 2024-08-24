@@ -11,6 +11,7 @@ import TagSelect from "./components/tagSelect"
 import MultiFileUpload from "../../fileUpload/multiFileUpload"
 import LoadingBackdrop from "../../loading/backdrop/loadingBackdrop"
 import useLoading from "../../loading/backdrop/useLoading"
+import { useRouter } from "next/navigation"
 
 interface PostFormProps {
     onSubmit: (input: PostFormInput) => Promise<any>,
@@ -38,6 +39,7 @@ export default function PostForm(props: PostFormProps){
     const {backdrop, toast} = useLoading()
     const {loading, setLoading} = backdrop
     const {toastStatus, setToastStatus, closeToast} = toast
+    const router = useRouter();
     const formMethods = useForm<PostFormInput>({
         defaultValues: {
             name: initialData?.name || "",
@@ -58,9 +60,9 @@ export default function PostForm(props: PostFormProps){
     const loadingSubmit = async (inputs: PostFormInput) => {
         setLoading(true)
         try{
-            await props.onSubmit(inputs)
+            const res = await props.onSubmit(inputs)
             setToastStatus({message:"Post created", open:true, severity:"success"})
-            location.reload()
+            router.push(`/dashboard/posts/edit/${res._id}`)
         }
         catch(e){
             setToastStatus({message:(e as Error).message, open:true, severity:"error"})

@@ -27,7 +27,7 @@ async function createItem(params: CreateItemReq<CreateItemType>):Promise<NextRes
     try{
         const collection = await getCollection(collectionName);
         const res = await collection.insertOne(body);
-        return NextResponse.json(res, {status: 200});  
+        return NextResponse.json({...res, _id: res.insertedId}, {status: 200});  
     }
     catch(e){
         return NextResponse.json({ status: "fail", error: e }, {status: 500});
@@ -39,7 +39,7 @@ async function updateItem(params: UpdateItemReq<CreateItemType>):Promise<NextRes
     try{
         const collection = await getCollection(collectionName);
         const res = await collection.replaceOne({_id: new ObjectId(_id)}, body);
-        return NextResponse.json(res, {status: 200});  
+        return NextResponse.json({...res, _id}, {status: 200});  
       }
       catch(e){
         return NextResponse.json({ status: "fail", error: e }, {status: 500});
