@@ -5,14 +5,15 @@ import { Box, Button, Stack } from "@mui/material";
 import { revalidatePath } from "next/cache";
 import Post from "@/src/components/posts/post";
 import { getPaging } from "@/src/lib/data/commons/utils";
-import { listPosts } from "@/src/lib/posts";
 import { defaultPaging } from "@/src/lib/definitions/pages";
 import DeletePostButton from "@/src/components/posts/deletePostButton";
+import { listPosts } from "../../api/data/posts/utils";
 
 export default async function PostsPage({searchParams}:{searchParams:URLSearchParams}){
     revalidatePath("/dashboard/posts")
     const paging = getPaging(searchParams)
-    const postsData = await listPosts(paging ?? defaultPaging)
+    const postsQuery = await listPosts({paging: paging ?? defaultPaging})
+    const postsData = await postsQuery.json()
     const {items:posts, total} = postsData
     return(
         <OverviewPage 
