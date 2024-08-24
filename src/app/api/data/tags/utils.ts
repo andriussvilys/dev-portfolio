@@ -115,10 +115,9 @@ const replaceTagFile = async (file: File, key: string):Promise<NextResponse<Stor
 }
 
 const updateTag = async (formData: FormData, _id: string) => {
-
     try{
         const file = formData.get("file") as File
-        if(file){
+        if(file && file instanceof File){
             const tagQuery = await findTag(_id)
             const tag = await tagQuery.json()
             const storageRes = await replaceTagFile(file, tag.file.key)
