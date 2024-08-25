@@ -7,10 +7,9 @@ interface OverviewPageProps {
     searchParams: URLSearchParams,
     children: React.ReactNode,
     itemCount: number,
-    actionButton: React.ReactNode
 }
 
-export default async function OverviewPage({searchParams, children, itemCount, actionButton}:OverviewPageProps) {
+export default async function OverviewPage({searchParams, children, itemCount}:OverviewPageProps) {
 
     const {page, limit} = getPaging(searchParams) ?? defaultPaging
 
@@ -18,15 +17,13 @@ export default async function OverviewPage({searchParams, children, itemCount, a
         <Container component="section" 
             sx={{
                 overflow:"hidden", 
-                height: "100%",
-                minHeight:"100%",
                 display:"flex",
                 flexDirection:"column",
+                p:0
                 }}
             >
-            {actionButton}
             <Stack sx={{overflow:"auto", width: "100%", alignItems:"center"}} gap={2}>
-                <Box sx={{display:"flex", justifyContent:"center", flexWrap:"wrap"}}>
+                <Box sx={{display:"flex", justifyContent:"center", flexWrap:"wrap", width:"100%"}}>
                     {children}
                 </Box>
                 <Pagination page={page} itemCount={itemCount} limit={limit} />

@@ -1,9 +1,10 @@
-import { Typography } from "@mui/material";
+import { PageName } from "@/src/components/dashboard/constants";
+import DashboardPage from "@/src/components/dashboard/dashboardPage/dashboardPage";
 
 export default function Dashboard() {
     return (
-        <section>
-            <Typography>this is protected content</Typography>
-        </section>
+        <DashboardPage name={PageName.DASHBOARD}>
+            {null}
+        </DashboardPage>
     )
 }
