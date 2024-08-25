@@ -8,7 +8,10 @@ export default async function CreatePost(){
     const tagsQuery = await listTags({})
     const tags = (await tagsQuery.json()).items
     return(
-        <DashboardPage name={PageName.POSTS_CREATE}>
+        <DashboardPage 
+            name={PageName.POSTS_CREATE}
+            breadcrumbs={[{name:PageName.POSTS_OVERVIEW, href:"/dashboard/posts"}]}  
+        >
             <Container sx={{
                 height:"100%", 
                 display: "flex",

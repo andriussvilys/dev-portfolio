@@ -9,7 +9,10 @@ export default async function SortPostsPage() {
     const responseData = await postsResonse.json()
     const posts = responseData.items
     return (
-        <DashboardPage name={PageName.POSTS_SORT}>
+        <DashboardPage 
+            name={PageName.POSTS_SORT}
+            breadcrumbs={[{name:PageName.POSTS_OVERVIEW, href:"/dashboard/posts"}]}    
+        >
             <Container sx={{
                 display:"flex",
                 justifyContent:"center",

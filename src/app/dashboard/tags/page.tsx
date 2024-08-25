@@ -26,8 +26,8 @@ export default async function Page({searchParams}:{searchParams:URLSearchParams}
         <DashboardPage 
             name={PageName.TAGS_OVERVIEW}
             buttons={[
-                {name:PageName.POSTS_CREATE, href:"/dashboard/tags/create"},
-                {name:PageName.POSTS_SORT, href:"/dashboard/tags/sort"}
+                {name:PageName.TAGS_CREATE, href:"/dashboard/tags/create"},
+                {name:PageName.TAGS_SORT, href:"/dashboard/tags/sort"}
             ]}
         >
             <OverviewPage 

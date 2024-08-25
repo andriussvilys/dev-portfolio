@@ -14,7 +14,10 @@ export default async function EditPostPage({params}:{params:{_id:string}}){
     const tags = (await tagsQuery.json()).items
     
     return(
-        <DashboardPage name={PageName.POSTS_EDIT}>
+        <DashboardPage 
+            name={PageName.POSTS_EDIT}
+            breadcrumbs={[{name:PageName.POSTS_OVERVIEW, href:"/dashboard/posts"}]}
+        >
             <PostFormEdit initialData={post} tags={tags}/>
         </DashboardPage>
 

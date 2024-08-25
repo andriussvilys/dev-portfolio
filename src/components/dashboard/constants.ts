@@ -1,6 +1,6 @@
 enum PageName {
     DASHBOARD = 'Dashboard',
-    TAGS_OVERVIEW = 'Profile',
+    TAGS_OVERVIEW = 'Tags',
     TAGS_CREATE = 'Create new tag',
     TAGS_SORT = 'Sort Tags',
     POSTS_OVERVIEW = 'Posts',
