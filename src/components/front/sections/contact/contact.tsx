@@ -1,17 +1,25 @@
-import { Box, Card, Divider, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Card, Stack, Theme, Typography } from "@mui/material";
 import Section from "../section";
 import { SectionName } from "../../constants";
 import ContactForm from "./contactForm";
+import Socials from "./socials";
 
-export default function Contact(){
-    const theme = useTheme()
+export default function Contact({theme}:{theme:Theme}){
     return(
         <Section 
             headline={SectionName.contact} 
             id={SectionName.contact}
             style={{gap:4}}
         >
-            <Stack sx={{flex:1, justifyContent:"center"}}>
+            <Stack sx={{
+                    flex:1, 
+                    justifyContent:"center", 
+                    alignItems:"center", 
+                    width:1 
+                }}
+                gap={4}
+            >
+                <Socials theme={theme}/>
                 <Card sx={{
                     border:"1px solid",
                     borderColor: theme.palette.divider,

@@ -52,7 +52,7 @@ export default function Front({posts, tags}:FrontProps){
                                     minHeight:`calc(100vh - ${appBarHeight})`,
                                 }}
                             >
-                                <Contact />
+                                <Contact theme={theme}/>
                                 <Box component="footer" sx={{
                                     height:"100px",
                                     width:"100%",	

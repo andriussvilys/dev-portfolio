@@ -35,7 +35,7 @@ export default function ContactForm() {
             <Stack 
                 component="form" 
                 onSubmit={handleSubmit(onSubmit)}
-                gap={2}
+                gap={3}
             >
                 <TextField 
                     size="small" 

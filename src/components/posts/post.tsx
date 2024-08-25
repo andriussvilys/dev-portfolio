@@ -22,16 +22,20 @@ export default function Post({data}:{data:PostWithTags}){
             sx={{
                 border:"1px solid",
                 borderColor: theme.palette.divider,
+                height:1,
+                width:1,
             }}
         >
-            <Stack sx={{display:"flex"}}>
+            <Stack sx={{display:"flex", height:1}}>
                 <Box sx={{p:1}}>
                     <Gallery images={images} defaultSize={defaultSize} />
                 </Box>
-                <Stack gap={1}>
-                    <Stack gap={2} sx={{p:2}}>
-                        <Typography variant="h6">{post.name}</Typography>
-                        <Typography variant="subtitle2" maxWidth="42ch">{post.description}</Typography> 
+                <Stack sx={{flex:1}} gap={1}>
+                    <Stack gap={2} sx={{p:2, flex:1}}>
+                        <Stack sx={{flex:1, mt:1, mb:2}} gap={2}>
+                            <Typography variant="h6">{post.name}</Typography>
+                            <Typography lineHeight={1.8} variant="subtitle2" maxWidth="42ch">{post.description}</Typography> 
+                        </Stack>
                         <Box sx={{display:"flex"}} gap={2}>
                             {post.liveSite ? <Button variant="contained" target="_blank" rel="noopener" href={post.liveSite}>Website</Button> : null}
                             {post.github ? <Button variant="outlined" target="_blank" rel="noopener" href={post.github}>Github</Button> : null}

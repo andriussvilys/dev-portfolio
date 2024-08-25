@@ -1,7 +1,7 @@
 "use client"
 
 import { AppBar as MuiAppBar, Box, Divider, Drawer as MuiDrawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, Toolbar, Typography, AppBarProps as MuiAppBarProps } from "@mui/material";
-import {ChevronLeft as ChevronLeftIcon, Menu as MenuIcon, Label as LabelIcon, Article as ArticleIcon, AccountCircle, SentimentSatisfiedAlt } from "@mui/icons-material";
+import {ChevronLeft as ChevronLeftIcon, Menu as MenuIcon, Label as LabelIcon, Article as ArticleIcon, AccountCircle, SentimentSatisfiedAlt, Home as HomeIcon } from "@mui/icons-material";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -96,6 +96,14 @@ export default function Navigation({children}: NavigationProps) {
             </Toolbar>
             <Divider />
             <List>
+                <ListItem disablePadding>
+                    <ListItemButton onClick={() => router.replace("/")}>
+                        <ListItemIcon>
+                            <HomeIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Home" />
+                    </ListItemButton>
+                </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton onClick={() => router.replace("/dashboard/posts")}>
                         <ListItemIcon>
