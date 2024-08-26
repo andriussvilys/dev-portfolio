@@ -1,6 +1,8 @@
 import { findPost } from "@/src/app/api/data/posts/utils"
 import { listTags } from "@/src/app/api/data/tags/utils"
 import PostFormEdit from "@/src/components/posts/form/postFormEdit"
+import DashboardPage from "@/src/components/dashboard/dashboardPage/dashboardPage"
+import { PageName } from "@/src/components/dashboard/constants"
 
 export default async function EditPostPage({params}:{params:{_id:string}}){
     const {_id} = params
@@ -12,6 +14,12 @@ export default async function EditPostPage({params}:{params:{_id:string}}){
     const tags = (await tagsQuery.json()).items
     
     return(
-        <PostFormEdit initialData={post} tags={tags}/>
+        <DashboardPage 
+            name={PageName.POSTS_EDIT}
+            breadcrumbs={[{name:PageName.POSTS_OVERVIEW, href:"/dashboard/posts"}]}
+        >
+            <PostFormEdit initialData={post} tags={tags}/>
+        </DashboardPage>
+
     )
 }

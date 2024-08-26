@@ -19,7 +19,7 @@ export default function Pagination(props:PaginationProps) {
     }
     return(
         <MuiPagination 
-            sx={{alignSelf:"center"}} 
+            sx={{alignSelf:"center", mb:2}} 
             count={limit > 0 ? Math.ceil(itemCount / limit) : 0} 
             page={page} 
             onChange={(e,page) => onPageChange(page)}
