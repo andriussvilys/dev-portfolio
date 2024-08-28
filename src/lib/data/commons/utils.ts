@@ -30,6 +30,7 @@ const getPaging = (params:URLSearchParams):PagingParams|undefined => {
 async function listCollection<T>(params:ListCollectionReq):Promise<ListCollectionRes<T>>{
     const {collection, paging} = params
     const pagingQuery = paging ? `?page=${paging.page}&limit=${paging.limit}` : ''
+    console.log(`listCollection: ${process.env.NEXT_PUBLIC_HOST}/api/data/${collection}${pagingQuery}`)
     try{
         const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/data/${collection}${pagingQuery}`, {
             method: 'GET', 
@@ -47,6 +48,7 @@ async function listCollection<T>(params:ListCollectionReq):Promise<ListCollectio
 
 async function findItem<T>(params: {collection: collections, _id: string}):Promise<T>{
     const {collection, _id} = params
+    console.log(`findItem: ${process.env.NEXT_PUBLIC_HOST}/api/data/${collection}`)
     try{
         const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/data/${collection}/${_id}`, {
             method: 'GET', 
@@ -61,6 +63,7 @@ async function findItem<T>(params: {collection: collections, _id: string}):Promi
 
 async function updateItem(params: {collection: collections, _id: string, body: FormData}){
     const {collection, _id, body} = params
+    console.log(`updateItem: ${process.env.NEXT_PUBLIC_HOST}/api/data/${collection}/${_id}`)
     try{
         const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/data/${collection}/${_id}`, {
             method: 'PUT',
@@ -79,6 +82,7 @@ async function updateItem(params: {collection: collections, _id: string, body: F
 
 async function deleteItem(params: {collection: collections, _id: string}){
     const {collection, _id} = params
+    console.log(`deleteItem: ${process.env.NEXT_PUBLIC_HOST}/api/data/${collection}/${_id}`)
     try{
         const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/data/${collection}/${_id}`, {
             method: 'DELETE',
