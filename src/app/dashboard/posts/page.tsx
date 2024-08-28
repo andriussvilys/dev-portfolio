@@ -7,7 +7,6 @@ import { getPaging } from "@/src/lib/data/commons/utils";
 import { defaultPaging } from "@/src/lib/definitions/pages";
 import DeletePostButton from "@/src/components/posts/deletePostButton";
 import { listPosts } from "../../api/data/posts/utils";
-import Dashboard from "../page";
 import DashboardPage from "@/src/components/dashboard/dashboardPage/dashboardPage";
 import { PageName } from "@/src/components/dashboard/constants";
 
