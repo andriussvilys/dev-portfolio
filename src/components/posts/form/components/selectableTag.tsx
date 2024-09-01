@@ -12,16 +12,14 @@ interface SelectableTagProps{
 }
 
 export default function SelectableTag({data}:SelectableTagProps){
-    const {register, getValues, setValue} = useFormContext()
+    const {getValues, setValue} = useFormContext()
     const {root, index} = data.formField
-    const fieldName = `${root}.${index}`
     const values = getValues(root)
     return(
         <Box sx={{display:"flex", alignItems:"center", justifyContent:"space-between", flex:1}}>
             <Tag data={data} />
             <input 
                 type="checkbox" 
-                // {...register(fieldName)}
                 onChange={(e) => {
                     const checked = e.target.checked
                     if(checked){

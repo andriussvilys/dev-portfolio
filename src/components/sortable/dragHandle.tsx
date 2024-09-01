@@ -10,7 +10,7 @@ type DragHandleProps = {
 export default function DragHandle(props:DragHandleProps) {
     const {listeners} = props;
     return (
-        <Button sx={{cursor:"grab", p:0, m:0, justifyContent:"end"}}>
+        <Button sx={{cursor:"grab", p:0, m:0, justifyContent:"end", minWidth:0}}>
             <DragIndicatorIcon {...listeners} sx={{color:grey[800]}}/>
         </Button>
     )

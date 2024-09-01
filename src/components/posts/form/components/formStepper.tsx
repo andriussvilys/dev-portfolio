@@ -23,7 +23,7 @@ export default function FormStepper({steps, children, activeStep, setActiveStep}
   };
 
   return (
-    <Stack sx={{ width: '100%', height:"100%" }}>
+    <Stack sx={{ width: '100%', height:"100%" , maxWidth:"lg"}}>
       <Stepper nonLinear activeStep={activeStep}>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
