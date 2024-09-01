@@ -2,7 +2,7 @@
 
 import { Box, Button, Divider, Stack, TextField } from "@mui/material"
 import DeleteButton from "./deleteButton"
-import { TagRecord, TagFormInput } from "@/src/lib/definitions/tags"
+import { TagRecord, TagFormInput, TagBackground, TagBackgroundOptions } from "@/src/lib/definitions/tags"
 import FileUploadField from "../fileUpload/fileUploadField"
 import { FormProvider, useForm} from "react-hook-form"
 import ControlledSelect from "./ControlledSelect"
@@ -27,7 +27,8 @@ export default function TagForm(props: TagFormProps){
             file: tag?.file || {key:"", url:"", metadata:{}},
             name: tag?.name ?? "",
             category: tag?.category ?? categories[0],
-            categoryIndex: tag?.categoryIndex ?? Number.MAX_SAFE_INTEGER
+            categoryIndex: tag?.categoryIndex ?? Number.MAX_SAFE_INTEGER,
+            background: tag?.background ?? TagBackground.NONE
         }
     })
     const {handleSubmit, control, register} = methods
@@ -73,7 +74,15 @@ export default function TagForm(props: TagFormProps){
                                     {...register("name")}
                                 />
                                 <ControlledSelect 
+                                    fieldName="category"
+                                    options={categories}
                                     control={control}
+                                />
+                                <ControlledSelect 
+                                    fieldName="background"
+                                    options={TagBackgroundOptions}
+                                    control={control}
+                                    defautValue={TagBackground.NONE}
                                 />
                             </Stack>
                         </Box>

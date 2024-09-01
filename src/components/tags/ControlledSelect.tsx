@@ -4,20 +4,22 @@ import { Control, Controller } from "react-hook-form"
 
 interface ControlledSelectProps{
     control: Control<any>,
+    options:string[],
+    fieldName:string,
     defautValue?: string
 }
 
-export default function ControlledSelect({control, defautValue}:ControlledSelectProps){
+export default function ControlledSelect({control, options, fieldName, defautValue}:ControlledSelectProps){
     return(
         <Controller
             control={control}
-            name="category"
+            name={fieldName}
             defaultValue={defautValue}
             render={({
                 field: { onChange, value, name }
             }) => (
                 <Autocomplete
-                    options={categories}
+                    options={options}
                     onChange={(e, values) => onChange(values)}
                     value={value}
                     renderInput={(params) => (

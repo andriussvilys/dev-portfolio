@@ -4,7 +4,6 @@ import { processInput, updateTag } from "@/src/lib/tags"
 import TagForm from "./tagForm"
 import type {TagFormProps} from "./tagForm"
 import { TagRecord, TagFormInput } from "@/src/lib/definitions/tags"
-import { collections } from "@/src/lib/data/commons/definitions"
 
 interface TagFormEditProps extends Omit<TagFormProps, 'onSubmit'> {
     tag: TagRecord
