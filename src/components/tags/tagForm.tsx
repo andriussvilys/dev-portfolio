@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, Button, Divider, Stack, TextField } from "@mui/material"
+import { Box, Button, Divider, Stack, TextField, Typography } from "@mui/material"
 import DeleteButton from "./deleteButton"
 import { TagRecord, TagFormInput, TagBackground, TagBackgroundOptions } from "@/src/lib/definitions/tags"
 import FileUploadField from "../fileUpload/fileUploadField"
@@ -8,6 +8,7 @@ import { FormProvider, useForm} from "react-hook-form"
 import ControlledSelect from "./ControlledSelect"
 import LoadingBackdrop from "../loading/backdrop/loadingBackdrop"
 import useLoading from "../loading/backdrop/useLoading"
+import Tag from "./tag"
 
 interface TagFormProps {
     onSubmit: (inputs: TagFormInput) => Promise<any>,
@@ -62,28 +63,34 @@ export default function TagForm(props: TagFormProps){
                 >
                     <Stack gap={2}>
                         <Box sx={{display:"flex"}} gap={2}>
-                            <FileUploadField initialData={initialData} rootFieldName="file"/>
+                            <Stack sx={{maxWidth:"20ch", justifyContent:"center"}} gap={1}>
+                                <Typography variant="overline">Upload new icon</Typography>
+                                <FileUploadField rootFieldName="file"/>
+                            </Stack>
                             <Divider orientation="vertical"/>
-                            <Stack gap={2}>
-                                <TextField 
-                                    size="small" 
-                                    InputLabelProps={{shrink:true}} 
-                                    label="name" 
-                                    variant="outlined"
-                                    defaultValue={props.tag?.name}
-                                    {...register("name")}
-                                />
-                                <ControlledSelect 
-                                    fieldName="category"
-                                    options={categories}
-                                    control={control}
-                                />
-                                <ControlledSelect 
-                                    fieldName="background"
-                                    options={TagBackgroundOptions}
-                                    control={control}
-                                    defautValue={TagBackground.NONE}
-                                />
+                            <Stack gap={2} sx={{justifyContent:"start"}}>
+                                {tag ? <Box sx={{alignSelf:"center"}}><Tag data={tag} /></Box> : null}
+                                <Stack gap={2}>
+                                    <TextField 
+                                        size="small" 
+                                        InputLabelProps={{shrink:true}} 
+                                        label="name" 
+                                        variant="outlined"
+                                        defaultValue={props.tag?.name}
+                                        {...register("name")}
+                                    />
+                                    <ControlledSelect 
+                                        fieldName="category"
+                                        options={categories}
+                                        control={control}
+                                    />
+                                    <ControlledSelect 
+                                        fieldName="background"
+                                        options={TagBackgroundOptions}
+                                        control={control}
+                                        defautValue={TagBackground.NONE}
+                                    />
+                                </Stack>
                             </Stack>
                         </Box>
                         <Divider/>
