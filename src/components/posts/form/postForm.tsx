@@ -101,7 +101,6 @@ export default function PostForm(props: PostFormProps){
                                 props.tags
                             )}
                         </Card>
-                    <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
                     </FormStepper>
                 </Box>
             </FormProvider>
