@@ -13,11 +13,12 @@ import Tag from "./tag"
 interface TagFormProps {
     onSubmit: (inputs: TagFormInput) => Promise<any>,
     tag?: TagRecord
-    categories: string[]
+    categories: string[],
+    successMessage?: string
 }
 
 export default function TagForm(props: TagFormProps){
-    const {tag, categories} = props
+    const {tag, categories, successMessage} = props
 
     const {backdrop, toast} = useLoading()
     const {loading, setLoading} = backdrop
@@ -39,11 +40,11 @@ export default function TagForm(props: TagFormProps){
         setLoading(true)
         try{
             await props.onSubmit(inputs)
-            setToastStatus({message:"Tag created", open:true, severity:"success"})
+            setToastStatus({message:successMessage ?? "Operation complete", open:true, severity:"success"})
             location.reload()
         }
         catch(e){
-            setToastStatus({message:"Tag create failed", open:true, severity:"error"})
+            setToastStatus({message:(e as Error).message, open:true, severity:"error"})
             throw e
         }
         finally{

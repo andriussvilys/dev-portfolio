@@ -8,16 +8,14 @@ import { createPost, processInput } from "@/src/lib/posts"
 export default function PostFormCreate({tags}:{tags:TagRecord[]}){
     const handleSubmit = async (inputs: PostFormInput) => {
         const formData = processInput(inputs)
-        console.log(formData)
-        return true
-        // try{
-        //     return await createPost(formData)
-        // }
-        // catch(e){
-        //     throw e
-        // }
+        try{
+            return await createPost(formData)
+        }
+        catch(e){
+            throw e
+        }
     }
     return(
-        <PostForm onSubmit={handleSubmit} tags={tags}/>
+        <PostForm onSubmit={handleSubmit} tags={tags} successMessage="Post created"/>
     )
 }

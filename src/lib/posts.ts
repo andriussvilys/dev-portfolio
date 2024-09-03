@@ -48,8 +48,9 @@ const processInput = (inputs: PostFormInput):FormData => {
         formData.append("file", file)
     })
 
-    const fileOrder = inputs.fileOrder.map((item:any) => item.initialData.key || item.initialKey.name)
-    formData.append("fileOrder", fileOrder)
+    // item._id is used to track order -- its is either storageFile.key or File.name
+    const fileOrder = inputs.fileOrder.map((item:any) => {return item._id})
+    formData.append("fileOrder", JSON.stringify(fileOrder))
 
     return formData
 }

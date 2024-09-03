@@ -16,7 +16,8 @@ import { useRouter } from "next/navigation"
 interface PostFormProps {
     onSubmit: (input: PostFormInput) => Promise<any>,
     tags: TagRecord[],
-    initialData?: PostRecord
+    initialData?: PostRecord,
+    successMessage?: string
 }
 
 const switchForm = (
@@ -35,7 +36,7 @@ const switchForm = (
 }
 
 export default function PostForm(props: PostFormProps){
-    const {initialData} = props
+    const {initialData, successMessage} = props
     const {backdrop, toast} = useLoading()
     const {loading, setLoading} = backdrop
     const {toastStatus, setToastStatus, closeToast} = toast
@@ -59,12 +60,11 @@ export default function PostForm(props: PostFormProps){
     const steps = ["Basic Info", "Media", "Tags"]
 
     const loadingSubmit = async (inputs: PostFormInput) => {
-        console.log(inputs)
         setLoading(true)
         try{
             const res = await props.onSubmit(inputs)
-            setToastStatus({message:"Post created", open:true, severity:"success"})
-            // router.push(`/dashboard/posts/edit/${res._id}`)
+            setToastStatus({message: successMessage ?? "Operation complete", open:true, severity:"success"})
+            router.push(`/dashboard/posts/edit/${res._id}`)
         }
         catch(e){
             setToastStatus({message:(e as Error).message, open:true, severity:"error"})

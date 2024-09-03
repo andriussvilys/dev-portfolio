@@ -5,9 +5,9 @@ import Sortable from "../sortable/sortable";
 import SortableMultiFileUpload from "./sortableMultiFileUpload";
 import { useEffect } from "react";
 import { verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { StorageFile } from "@/src/lib/definitions/fileUpload";
 
 const sortByRef = (ref:any[], src:any[]) => {
-
     const sorted = ref
     .filter((item: any) => src.some((srcItem: any) => item._id === srcItem._id))
     .map((item: any) => src.find((srcItem: any) => item._id === srcItem._id));
@@ -18,7 +18,6 @@ const sortByRef = (ref:any[], src:any[]) => {
     }
     return [...newItems, ...sorted]
 }
-  
 
 export default function MultiFileUpload(){
     const {control, watch, setValue} = useFormContext()
@@ -31,25 +30,26 @@ export default function MultiFileUpload(){
         name: "storageFiles"
     });
     const watchedNewFiles = watch("files")
+    const watchedStorageFiles = watch("storageFiles")
     const watchedFileOrder = watch("fileOrder")
     const lastNewFilesIndex = newFiles.length-1
     const lastNewFilesField = newFiles[lastNewFilesIndex]
 
     useEffect(()=>{
-        const sortableStorageFiles = storageFiles.map((field: object & {id:string}, index: number) => {
+        const sortableStorageFiles = watchedStorageFiles.map((item:StorageFile, index: number) => {
             return {
-                _id: field.id,
-                initialData: field, 
+                _id: item.key,
+                initialData: item, 
                 rootFieldName: "storageFiles",
                 fieldIndex: index,
                 remove: removeStorageFile,
                 disabled: true
             }
         })
-        const sortableNewFiles = newFiles.slice(0,-1).map((field: object & {id:string}, index: number) => {
+        const sortableNewFiles = watchedNewFiles.slice(0,-1).map((item: File, index: number) => {
             return {
-                _id: field.id,
-                initialData: field, 
+                _id: item.name,
+                initialData: item, 
                 rootFieldName: "files",
                 fieldIndex: index,
                 remove: removeNewFile,
@@ -63,7 +63,7 @@ export default function MultiFileUpload(){
         
         setValue("fileOrder", sorted)
 
-    },[storageFiles, newFiles])
+    },[watchedNewFiles, watchedStorageFiles])
 
     return (
         <Box gap={2} sx={{display:"flex", height:1, width:1}}>
@@ -96,7 +96,6 @@ export default function MultiFileUpload(){
                             items={watchedFileOrder} 
                             Component={SortableMultiFileUpload} 
                             rearrangeCallback={(items: any[]): void => {
-                                console.log("rearrangeCallback", items)
                                 setValue("fileOrder", items)
                             }} 
                         />

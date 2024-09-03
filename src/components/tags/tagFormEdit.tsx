@@ -20,7 +20,7 @@ export default function TagFormEdit ({tag, categories}: TagFormEditProps){
         }
     }
     return (
-        <TagForm categories={categories} onSubmit={handleSubmit} tag={tag}/>
+        <TagForm categories={categories} onSubmit={handleSubmit} tag={tag} successMessage="Tag updated"/>
     )
 }
 
