@@ -9,9 +9,6 @@ interface SortableMultiFielUploadProps{
 
 export default function SortableMultiFileUpload({data}:SortableMultiFielUploadProps) {
   return (
-    <div>
-      <span>{data._id}</span>
       <MultiFielUploadField {...data}/>
-    </div>
   )
 }

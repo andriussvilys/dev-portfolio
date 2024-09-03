@@ -1,4 +1,4 @@
-import { Button, Stack, Typography } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import React from 'react'
 import FileUploadField, { FileUploadProps } from './fileUploadField'
 
@@ -11,7 +11,6 @@ export default function MultiFileUploadField(props: MultiFileUploadFieldProps) {
 
     return (
         <Stack sx={{flex:0}} gap={2}>
-            <span>{`${rootFieldName}.${fieldIndex}`}</span>
             <FileUploadField
                 initialData={initialData}
                 rootFieldName={rootFieldName}

@@ -25,7 +25,7 @@ export default function MultiFileUpload(){
         control,
         name: "files"
     });
-    const { fields:storageFiles, remove:removeStorageFile } = useFieldArray({
+    const { remove:removeStorageFile } = useFieldArray({
         control,
         name: "storageFiles"
     });
@@ -67,9 +67,11 @@ export default function MultiFileUpload(){
 
     return (
         <Box gap={2} sx={{display:"flex", height:1, width:1}}>
-            <Stack>
-                <Typography variant="overline">Add new file</Typography>
-                <Divider/>
+            <Stack gap={2}>
+                <Stack>
+                    <Typography variant="overline">Add new file</Typography>
+                    <Divider/>
+                </Stack>
                 <MultiFielUploadField 
                     key={lastNewFilesField.id} 
                     initialData={watchedNewFiles[lastNewFilesIndex]} 
@@ -79,7 +81,7 @@ export default function MultiFileUpload(){
                 />
             </Stack>
             <Divider orientation="vertical"/>
-            <Stack gap={2} sx={{overflow:"auto"}}>
+            <Stack gap={2} sx={{overflow:"auto", flex:1}}>
                 <Stack gap={2}>
                     <Stack>
                         <Typography variant="overline">Storage Files</Typography>
@@ -88,6 +90,7 @@ export default function MultiFileUpload(){
                     <Box sx={{
                             display:"flex",
                             overflow:"auto",
+                            justifyContent:"center"
                         }} 
                         gap={2}
                     >
