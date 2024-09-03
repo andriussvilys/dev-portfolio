@@ -26,7 +26,6 @@ export default function Tag({data}: {data: TagRecord}) {
     const backgroundColor = getBackgroundColor(background)
     const padding = background && background !== TagBackground.NONE ? 1 : 0
     const {width, height} = getFixedSize(file.metadata, defaultSize)
-    console.log(name, background, backgroundColor, padding)
     return (
         <Tooltip title={name}>
             <Box sx={{

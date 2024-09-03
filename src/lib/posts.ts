@@ -48,6 +48,9 @@ const processInput = (inputs: PostFormInput):FormData => {
         formData.append("file", file)
     })
 
+    const fileOrder = inputs.fileOrder.map((item:any) => item.initialData.key || item.initialKey.name)
+    formData.append("fileOrder", fileOrder)
+
     return formData
 }
 

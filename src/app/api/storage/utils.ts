@@ -47,7 +47,7 @@ const uploadFile = async (file: File, collection: string):Promise<UploadFileResp
         if(res.$metadata.httpStatusCode === 200){
             const metadata = await getMetadata(file)
             const url = getURL(Key);
-            return NextResponse.json({...res, key: Key, metadata, url}, {status: 200});
+            return NextResponse.json({...res, key: Key, metadata, url, name:file.name}, {status: 200});
         }
         else{
           return NextResponse.json({ status: "fail", error: "failed to upload to storage" }, {status: 500}) as UploadFileErrorResponse;

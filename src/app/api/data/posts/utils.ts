@@ -141,7 +141,7 @@ const deletePost = async (_id: string) => {
         return NextResponse.json({ status: "fail", error: e }, {status: 500})
     }
 }
-
+  
 const updatePost = async (formData: FormData, _id: string) => {
     try{
         const files:File[] = formData.getAll("file") as File[]

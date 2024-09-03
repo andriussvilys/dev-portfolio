@@ -50,6 +50,7 @@ export default function PostForm(props: PostFormProps){
             files: [{}],
             storageFiles: initialData?.files || [],
             order: initialData?.order || 0,
+            fileOrder: []
         }
     })
     const {handleSubmit} = formMethods
@@ -58,11 +59,12 @@ export default function PostForm(props: PostFormProps){
     const steps = ["Basic Info", "Media", "Tags"]
 
     const loadingSubmit = async (inputs: PostFormInput) => {
+        console.log(inputs)
         setLoading(true)
         try{
             const res = await props.onSubmit(inputs)
             setToastStatus({message:"Post created", open:true, severity:"success"})
-            router.push(`/dashboard/posts/edit/${res._id}`)
+            // router.push(`/dashboard/posts/edit/${res._id}`)
         }
         catch(e){
             setToastStatus({message:(e as Error).message, open:true, severity:"error"})
@@ -94,7 +96,7 @@ export default function PostForm(props: PostFormProps){
                         activeStep={activeStep} 
                         setActiveStep={setActiveStep}
                     >
-                        <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto"}}>
+                        <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto", width:"100%"}}>
                             {
                             switchForm(
                                 activeStep,
