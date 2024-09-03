@@ -84,7 +84,8 @@ export default function Gallery({images, defaultSize}: GalleryProps){
                                 return(
                                     <Box
                                         sx={{
-                                            height:1, 
+                                            height:1,
+                                            width:1,
                                             overflow:"hidden",
                                             p:1,
                                         }}
