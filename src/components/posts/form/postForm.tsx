@@ -16,7 +16,8 @@ import { useRouter } from "next/navigation"
 interface PostFormProps {
     onSubmit: (input: PostFormInput) => Promise<any>,
     tags: TagRecord[],
-    initialData?: PostRecord
+    initialData?: PostRecord,
+    successMessage?: string
 }
 
 const switchForm = (
@@ -35,7 +36,7 @@ const switchForm = (
 }
 
 export default function PostForm(props: PostFormProps){
-    const {initialData} = props
+    const {initialData, successMessage} = props
     const {backdrop, toast} = useLoading()
     const {loading, setLoading} = backdrop
     const {toastStatus, setToastStatus, closeToast} = toast
@@ -50,6 +51,7 @@ export default function PostForm(props: PostFormProps){
             files: [{}],
             storageFiles: initialData?.files || [],
             order: initialData?.order || 0,
+            fileOrder: []
         }
     })
     const {handleSubmit} = formMethods
@@ -61,7 +63,7 @@ export default function PostForm(props: PostFormProps){
         setLoading(true)
         try{
             const res = await props.onSubmit(inputs)
-            setToastStatus({message:"Post created", open:true, severity:"success"})
+            setToastStatus({message: successMessage ?? "Operation complete", open:true, severity:"success"})
             router.push(`/dashboard/posts/edit/${res._id}`)
         }
         catch(e){
@@ -94,14 +96,13 @@ export default function PostForm(props: PostFormProps){
                         activeStep={activeStep} 
                         setActiveStep={setActiveStep}
                     >
-                        <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto"}}>
+                        <Card sx={{flex:1, p: 2, m:1, display:"flex", justifyContent:"center", overflow:"auto", width:"100%"}}>
                             {
                             switchForm(
                                 activeStep,
                                 props.tags
                             )}
                         </Card>
-                    <Button sx={{alignSelf:"end"}} variant="contained" type="submit">Submit</Button>
                     </FormStepper>
                 </Box>
             </FormProvider>

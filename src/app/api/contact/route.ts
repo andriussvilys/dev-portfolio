@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-// import nodemailer from 'nodemailer';
 const nodemailer = require('nodemailer');
 
 export async function POST(req: NextRequest, res:NextResponse){
@@ -20,7 +19,6 @@ export async function POST(req: NextRequest, res:NextResponse){
 
     try {
       await transporter.sendMail({
-        // from: email,
         from: process.env.AUTHORIZED_USER,
         to: process.env.AUTHORIZED_USER,
         subject: `DEV-PORTFOLIO: from ${email}`,

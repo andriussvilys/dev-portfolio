@@ -3,7 +3,7 @@
 import Sortable from "@/src/components/sortable/sortable"
 import SelectableTag, { SelectableTagData } from "./selectableTag"
 import { TagRecord } from "@/src/lib/definitions/tags"
-import { Box, List, ListItem, Stack, Typography, useTheme } from "@mui/material"
+import { Box, Divider, List, ListItem, Stack, Typography, useTheme } from "@mui/material"
 import { useFormContext } from "react-hook-form"
 import { verticalListSortingStrategy } from "@dnd-kit/sortable"
 
@@ -27,8 +27,11 @@ export default function TagSelect({tags}:TagSelectProps){
         <Box 
             sx={{display:"flex", flex:1}} gap={4}
         >
-            <Stack>
-                <Typography variant="h6">Sort Tags</Typography>
+            <Stack sx={{flex:1, maxWidth:"30ch"}} gap={2}>
+                <Stack>
+                    <Typography variant="overline">Sort Tags</Typography>
+                    <Divider/>
+                </Stack>
                 <Sortable 
                     items={selected}
                     Component={SelectableTag}
@@ -36,15 +39,20 @@ export default function TagSelect({tags}:TagSelectProps){
                     strategy={verticalListSortingStrategy}
                 />
             </Stack>
-            <Stack sx={{flex:1}}>
-                <Typography variant="h6">Select tags</Typography>
+            <Divider orientation="vertical"/>
+            <Stack sx={{flex:4}} gap={2}>
+                <Stack>
+                    <Typography variant="overline">Select tags</Typography>
+                    <Divider/>
+                </Stack>
                 <List sx={{
                     width:"100%",
                     display:"grid",
                     gridTemplateColumns:"repeat(auto-fit, 150px)",
                     gridAutoRows:"min-content",
-                    gap:0,
-                    p:0
+                    gap:1,
+                    p:0,
+                    justifyContent:"center"
                 }}>
                     {unselected.map((tag) => {
                         return(

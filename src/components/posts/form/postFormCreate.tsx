@@ -16,6 +16,6 @@ export default function PostFormCreate({tags}:{tags:TagRecord[]}){
         }
     }
     return(
-        <PostForm onSubmit={handleSubmit} tags={tags}/>
+        <PostForm onSubmit={handleSubmit} tags={tags} successMessage="Post created"/>
     )
 }

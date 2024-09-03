@@ -19,6 +19,6 @@ export default function PostFormEdit({tags, initialData}:PostFormEditProps){
         }
     }
     return(
-        <PostForm onSubmit={handleSubmit} tags={tags} initialData={initialData}/>
+        <PostForm onSubmit={handleSubmit} tags={tags} initialData={initialData} successMessage="Post updated"/>
     )
 }

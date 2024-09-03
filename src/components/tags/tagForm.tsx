@@ -1,22 +1,24 @@
 "use client"
 
-import { Box, Button, Divider, Stack, TextField } from "@mui/material"
+import { Box, Button, Divider, Stack, TextField, Typography } from "@mui/material"
 import DeleteButton from "./deleteButton"
-import { TagRecord, TagFormInput } from "@/src/lib/definitions/tags"
+import { TagRecord, TagFormInput, TagBackground, TagBackgroundOptions } from "@/src/lib/definitions/tags"
 import FileUploadField from "../fileUpload/fileUploadField"
 import { FormProvider, useForm} from "react-hook-form"
 import ControlledSelect from "./ControlledSelect"
 import LoadingBackdrop from "../loading/backdrop/loadingBackdrop"
 import useLoading from "../loading/backdrop/useLoading"
+import Tag from "./tag"
 
 interface TagFormProps {
     onSubmit: (inputs: TagFormInput) => Promise<any>,
     tag?: TagRecord
-    categories: string[]
+    categories: string[],
+    successMessage?: string
 }
 
 export default function TagForm(props: TagFormProps){
-    const {tag, categories} = props
+    const {tag, categories, successMessage} = props
 
     const {backdrop, toast} = useLoading()
     const {loading, setLoading} = backdrop
@@ -27,7 +29,8 @@ export default function TagForm(props: TagFormProps){
             file: tag?.file || {key:"", url:"", metadata:{}},
             name: tag?.name ?? "",
             category: tag?.category ?? categories[0],
-            categoryIndex: tag?.categoryIndex ?? Number.MAX_SAFE_INTEGER
+            categoryIndex: tag?.categoryIndex ?? Number.MAX_SAFE_INTEGER,
+            background: tag?.background ?? TagBackground.NONE
         }
     })
     const {handleSubmit, control, register} = methods
@@ -37,11 +40,11 @@ export default function TagForm(props: TagFormProps){
         setLoading(true)
         try{
             await props.onSubmit(inputs)
-            setToastStatus({message:"Tag created", open:true, severity:"success"})
+            setToastStatus({message:successMessage ?? "Operation complete", open:true, severity:"success"})
             location.reload()
         }
         catch(e){
-            setToastStatus({message:"Tag create failed", open:true, severity:"error"})
+            setToastStatus({message:(e as Error).message, open:true, severity:"error"})
             throw e
         }
         finally{
@@ -61,20 +64,34 @@ export default function TagForm(props: TagFormProps){
                 >
                     <Stack gap={2}>
                         <Box sx={{display:"flex"}} gap={2}>
-                            <FileUploadField initialData={initialData} rootFieldName="file"/>
+                            <Stack sx={{maxWidth:"20ch", justifyContent:"center"}} gap={1}>
+                                <Typography variant="overline">Upload new icon</Typography>
+                                <FileUploadField rootFieldName="file"/>
+                            </Stack>
                             <Divider orientation="vertical"/>
-                            <Stack gap={2}>
-                                <TextField 
-                                    size="small" 
-                                    InputLabelProps={{shrink:true}} 
-                                    label="name" 
-                                    variant="outlined"
-                                    defaultValue={props.tag?.name}
-                                    {...register("name")}
-                                />
-                                <ControlledSelect 
-                                    control={control}
-                                />
+                            <Stack gap={2} sx={{justifyContent:"start"}}>
+                                {tag ? <Box sx={{alignSelf:"center"}}><Tag data={tag} /></Box> : null}
+                                <Stack gap={2}>
+                                    <TextField 
+                                        size="small" 
+                                        InputLabelProps={{shrink:true}} 
+                                        label="name" 
+                                        variant="outlined"
+                                        defaultValue={props.tag?.name}
+                                        {...register("name")}
+                                    />
+                                    <ControlledSelect 
+                                        fieldName="category"
+                                        options={categories}
+                                        control={control}
+                                    />
+                                    <ControlledSelect 
+                                        fieldName="background"
+                                        options={TagBackgroundOptions}
+                                        control={control}
+                                        defautValue={TagBackground.NONE}
+                                    />
+                                </Stack>
                             </Stack>
                         </Box>
                         <Divider/>

@@ -2,16 +2,18 @@ import { collections } from "@/src/lib/data/commons/definitions"
 import { createItem, deleteItem, ErrorResponse, findItem, queryCollection, updateItem } from "../commons"
 import { NextResponse } from "next/server"
 import { PagingParams } from "@/src/lib/definitions/pages"
-import { TagInput, TagRecord } from "@/src/lib/definitions/tags"
+import { TagBackground, TagInput, TagRecord } from "@/src/lib/definitions/tags"
 import { deleteFile, uploadFile } from "../../storage/utils"
 import { StorageFile } from "@/src/lib/definitions/fileUpload"
+import Tag from "@/src/components/tags/tag"
 
 const parseTagFormData = (formData: FormData): TagInput => {
     const name = formData.get("name")?.toString() ?? "";
     const category = formData.get("category")?.toString() ?? "";
     const file = JSON.parse(formData.get("file") as string)
     const categoryIndex = JSON.parse(formData.get("categoryIndex") as string)
-    const body:TagInput = {name, category, file, categoryIndex}
+    const background = formData.get("background") ?? TagBackground.NONE
+    const body:TagInput = {name, category, file, categoryIndex, background: background as TagBackground}
     return body
   }
 

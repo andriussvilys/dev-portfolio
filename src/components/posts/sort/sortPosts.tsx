@@ -33,7 +33,8 @@ export default function SortPosts(props:SortPostsProps) {
                 const formInput:PostFormInput = {
                     ...item, 
                     storageFiles: item.files, 
-                    files:[]
+                    files:[],
+                    fileOrder:[]
                 }
                 const formData = processInput(formInput)
                 return updatePost(formData, item._id)

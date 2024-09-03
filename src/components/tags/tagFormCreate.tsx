@@ -18,6 +18,6 @@ export default function TagFormCreate({categories}:TagFormCreateProps){
         }
     }
     return(
-        <TagForm categories={categories} onSubmit={handleSubmit}/>
+        <TagForm categories={categories} onSubmit={handleSubmit} successMessage="Tag created"/>
     )
 }

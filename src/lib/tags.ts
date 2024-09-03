@@ -43,6 +43,7 @@ const processInput = (inputs: TagFormInput):FormData => {
         }
     }
     formData.append("categoryIndex", inputs.categoryIndex.toString())
+    formData.append("background", inputs.background.toString())
     return formData
 }
 

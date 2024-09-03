@@ -88,7 +88,6 @@ export default function Sortable<T extends HasId>(props:SortableProps<T>) {
                 justifyContent:"space-between", 
                 bgcolor:"white",
                 boxShadow: 3,
-                border: "1px solid",
                 padding: "4px",
               }}>
               <Component data={props.items.find(item => item._id === activeId)!}/>

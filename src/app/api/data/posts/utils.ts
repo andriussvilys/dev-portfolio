@@ -8,6 +8,30 @@ import { NextResponse } from "next/server"
 import { deleteFile, uploadFile } from "../../storage/utils"
 import { StorageFile } from "@/src/lib/definitions/fileUpload"
 
+
+const sortByRef = (ref:string[], src:(StorageFile & {name?:string})[]) => {
+    let sorted:any[] = []
+    ref.forEach((name) => {
+        const found = src.find((file) => {
+            if(file.name && file.name === name){
+                const {name, ...rest} = file
+                return rest
+            }
+            else if(file.key === name){
+                return file
+            }
+        })
+        if(found){
+            sorted.push(found)
+        }
+    })
+
+    if(sorted.length === 0){
+        return src
+    }
+    return sorted
+}
+
 const parsePostFormData = (formData: FormData): PostInput => {
     const files = formData.get("storageFile") ? formData.getAll("storageFile").map(entry => {
         return JSON.parse(entry as string)
@@ -16,13 +40,17 @@ const parsePostFormData = (formData: FormData): PostInput => {
     const tags = formData.get("tags") ? JSON.parse(formData.get("tags") as string) : []
     const order = formData.get("order") ? parseInt(formData.get("order") as string) : 0
 
+    const fileOrder = formData.get("fileOrder") ? JSON.parse(formData.get("fileOrder") as string) : []
+
+    const orderedFiles = fileOrder.length > 0 ? sortByRef(fileOrder, files) : files
+
     return {
         name: formData.get("name")?.toString() ?? "",
         description: formData.get("description")?.toString() ?? "",
         liveSite: formData.get("liveSite")?.toString() ?? "",
         github: formData.get("github")?.toString() ?? "",
         order,
-        files,
+        files: orderedFiles,
         tags,
     }
 }
@@ -89,7 +117,7 @@ const uploadPostMedia = async (files: File[]) => {
             throw new Error(errorString)
         }
         const storageData = await Promise.all(storageRes.map(res => res.json()))
-        const storageFiles = storageData.map(res => {return {key: res.key, metadata: res.metadata, url:res.url}})
+        const storageFiles = storageData.map(res => {return {key: res.key, metadata: res.metadata, url:res.url, name:res.name}})
         return storageFiles
     }
     catch(e){
@@ -141,7 +169,7 @@ const deletePost = async (_id: string) => {
         return NextResponse.json({ status: "fail", error: e }, {status: 500})
     }
 }
-
+  
 const updatePost = async (formData: FormData, _id: string) => {
     try{
         const files:File[] = formData.getAll("file") as File[]
