@@ -10,6 +10,10 @@ const darkTheme:ThemeOptions = {
     palette:{
         mode:"dark",
         primary:{
+            // main:"#2c0073",
+            // light: '#7654a1',
+            // dark: '#1e112d',
+            // contrastText: '#000',
             main:"#70f071",
             light: '#b4f8b0',
             dark: '#00af37',

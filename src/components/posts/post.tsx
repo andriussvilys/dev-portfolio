@@ -1,16 +1,16 @@
 "use client"
 
-import { Box, Button, Card, Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Box, Button, Card, Divider, Stack, Theme, Typography, useMediaQuery, useTheme } from "@mui/material"
 import type {PostWithTags} from "../../lib/definitions/posts"
 import Tag from "../tags/tag"
 import Gallery from "./gallery"
 
-export default function Post({data}:{data:PostWithTags}){
-    const post = data
+export default function Post(props:{data:PostWithTags}){
+    const theme = useTheme()
+    const post = props.data
     const images = post.files.map(file => {
         return {file, alt: file.key}
     })
-    const theme = useTheme()
     const isMdDown = useMediaQuery(theme.breakpoints.down('md'));
     const mdDownSize = 240
     const mdUpSize = 300 
