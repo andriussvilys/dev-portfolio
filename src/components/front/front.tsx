@@ -46,7 +46,7 @@ export default function Front({posts, tags}:FrontProps){
                             <Hero />
                             <About />
                             <Skills tags={tags}/>
-                            <Projects posts={posts}/>
+                            <Projects posts={posts} theme={theme}/>
                             <Stack 
                                 sx={{
                                     minHeight:`calc(100vh - ${appBarHeight})`,
@@ -57,7 +57,6 @@ export default function Front({posts, tags}:FrontProps){
                                     height:"100px",
                                     width:"100%",	
                                     }}>
-                                    {/* <Divider/> */}
                                 </Box>
                             </Stack>
                         </Container>

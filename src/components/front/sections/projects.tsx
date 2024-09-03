@@ -1,10 +1,10 @@
-import { Box } from "@mui/material";
+import { Box, Theme } from "@mui/material";
 import Section from "./section";
 import Post from "../../posts/post";
 import { PostWithTags } from "@/src/lib/definitions/posts";
 import { SectionName } from "../constants";
 
-export default function Projects({posts}:{posts:PostWithTags[]}){
+export default function Projects({posts, theme}:{posts:PostWithTags[], theme:Theme}){
     return(
         <Section style={{gap:4}} headline={SectionName.projects} id={SectionName.projects}>
             <Box sx={{width:"100%"}}>
