@@ -1,6 +1,6 @@
 "use client"
 
-import { TagFormInput, TagRecord } from "@/src/lib/definitions/tags";
+import { TagBackground, TagFormInput, TagRecord } from "@/src/lib/definitions/tags";
 import Sortable from "../sortable/sortable";
 import { processInput, updateTag } from "@/src/lib/tags";
 import Tag from "./tag";
@@ -31,7 +31,8 @@ export default function SortTags(props:SortTagsProps) {
                 name: item.name,
                 category: item.category,
                 categoryIndex: item.categoryIndex,
-                file: item.file 
+                file: item.file,
+                background: item.background ?? TagBackground.NONE,
               }
               const formData = processInput(input)
               return updateTag(formData, item._id)
